@@ -3,10 +3,10 @@
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
 > *(An anagram of **SACRU** — Universal Agent Skill & Workflow Stack)*
 
-**`arcus-stack`**은 **Antigravity (`agy`), Claude Code, Codex, Cursor, OpenCode** 5대 AI 코딩 에이전트에서 100% 호환되는 범용(Universal) 스킬 & 플레이북 스택입니다.
+**`arcus-stack`** 은 **Antigravity (`agy`), Claude Code, Codex, Cursor, OpenCode** 5대 AI 코딩 에이전트에서 100% 호환되는 범용(Universal) 스킬 & 플레이북 스택입니다.
 
 MCP 서버 같은 무거운 런타임 의존성 없이 순수 `SKILL.md` 표준과 `AGENTS.md` 규칙만으로 구성되어 있으며, 다음 4대 오픈소스 하네스의 핵심 철학을 하나로 결합했습니다:
-- **[`pstack`](https://github.com/cursor/plugins/tree/main/plugins/pstack)**: *"If you want to go fast, go deep first."* (근본 원인 분석, 최소 변경 반경, 검증 가능한 고품질 코드)
+- **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"If you want to go fast, go deep first."* (근본 원인 분석, 최소 변경 반경, 검증 가능한 고품질 코드)
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: `ultrawork` 자율 실행 루프 및 전략/실행 분리
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: 역할별 전문 에이전트 분업(설계·구현·검증) 및 오토파일럿 워크플로우
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 컨텍스트 엔지니어링 기반 단계별 가드레일과 실제 검증 증거(Verification Evidence) 강제
