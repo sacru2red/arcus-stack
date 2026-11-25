@@ -1,32 +1,40 @@
 ---
 name: arcus-review
 description: >-
-  Strict, adversarial critique and review skill for both architectural plans
-  (arcus-plan) and code changes (diffs/PRs). Use when the user invokes
-  "arcus-review", "/arcus-review", or asks for a critique review of a plan,
-  architectural audit, code review, PR review, or verification check.
+  Strict, context-isolated critique and review skill for both architectural
+  plans (arcus-plan) and code changes (diffs/PRs) with a persistent review
+  ledger. Use when the user invokes "arcus-review", "/arcus-review", or asks for
+  a critique review of a plan, architectural audit, code review, PR review, or
+  verification check.
 ---
 
-# ARCUS Guarded Plan & Code Review (`arcus-review`)
+# ARCUS Context-Isolated Plan & Code Review (`arcus-review`)
 
-Perform a rigorous, adversarial engineering review focused on root-cause alignment, architectural boundaries, failure modes, and verification evidence. Skip superficial bikeshedding.
+> *"A reviewer that shares the author's context shares the author's blind spots."*
 
-Automatically detect the review target from context:
-- **Mode A — Plan & Design Critique** (when invoked after `arcus-plan` or on a design proposal before code is written).
-- **Mode B — Code & Diff Review** (when invoked on uncommitted changes, commits, or a PR after `arcus-work-loop`).
+Never review a plan or diff inside the same mental context that created it. Perform a rigorous, adversarial review in an isolated context using a pinned snapshot and a persistent **Review Ledger**.
 
-## Review Procedure
+## 1. Context Isolation First (Sandbox the Review)
 
-1. **Inspect the Full Target & Surrounding Context**:
-   - **For a Plan (Mode A)**: Read the proposed plan/checklist AND inspect the actual repository files, call sites, and manifests the plan claims to touch. Never trust a plan's assumptions without checking the repo.
-   - **For Code (Mode B)**: Read the full diff (`git diff` or target files) AND the surrounding callers/callees—do not review lines in isolation.
-2. **Audit Against Core Engineering Invariants**:
-   - Apply the rubric in [review-rubric.md](./references/review-rubric.md):
-     - **Root-Cause & Premise Validity**: Does the plan or diff solve the real root cause, or is it a symptom patch built on a flawed premise?
-     - **Boundary, Dependency & Invariant Safety**: Will partial installations, missing links, types, concurrency, or state transitions break?
-     - **Blast Radius & Hidden Regressions**: What existing callers, edge cases, or workflows could break?
-     - **Verification Evidence Quality**: Are the checklist verification steps (Mode A) or executed tests (Mode B) concrete enough to actually fail when the behavior is broken?
-3. **Report Prioritized Findings**:
-   - Categorize findings into `[CRITICAL / BLOCKING]`, `[HIGH / BUG RISK]`, and `[NIT / SUGGESTION]`.
-   - For each finding, cite the exact plan section or file/line range, explain the concrete failure scenario, and provide a minimal fix.
-   - Conclude with an actionable summary of how to revise the plan (before `arcus-work-loop`) or fix the code (before shipping).
+- **Primary (Spawn a Fresh Subagent)**: When a subagent tool (`invoke_subagent`, `delegate_task`, `Agent`, or `spawn_agent`) is available and you are in the parent session that authored the plan or code, delegate the review to a **fresh, read-only subagent**.
+  - **No Framing / No Leading the Witness**: Pass ONLY:
+    1. The pinned snapshot identifier (see [review-ledger-protocol.md](./references/review-ledger-protocol.md)).
+    2. The target file paths, diff command, or the **verbatim** unedited plan text/file path.
+    3. The existing Findings Ledger Table (if Round 2+).
+    4. The path to this `SKILL.md`.
+  - Never include your reasoning, why you rejected alternatives, or defensive explanations in the subagent kickoff prompt.
+- **Fallback (Already in an Isolated Subagent / No Subagent Tool)**: Perform an explicit **Cold-Reader Reset**. Treat all unrecorded chat history as non-existent and judge strictly from the on-disk snapshot and external documentation.
+
+## 2. Mode Detection & Review Procedure
+
+### Mode A — Isolated Plan & Design Critique (After `arcus-plan`)
+1. **Pin Snapshot & Verify Repo Grounding**: Pin `HEAD` SHA and read the actual repository files the plan claims to touch. Never trust a plan's claims without checking the codebase.
+2. **Cold-Reader Extraction Test**: Using *only* the plan document and repo files, extract: (a) the exact root cause/seam, (b) the data/state boundary being changed, and (c) what breaks if step N fails. Any unstated assumption the reader must guess is logged as a ledger finding (`F-xx`).
+3. **External Reference Check**: When the design involves external APIs, third-party libraries, CLI flags, or protocol specs, look up current external references/docs rather than relying purely on internal repo conventions.
+4. **Audit & Ledger Output**: Apply [review-rubric.md](./references/review-rubric.md) and output the prioritized findings and **Review Ledger** per [review-ledger-protocol.md](./references/review-ledger-protocol.md).
+
+### Mode B — Isolated Code & PR Review (After `arcus-work-loop` or on PRs)
+1. **Pin Snapshot**: Pin `base..head` SHA (or `HEAD` SHA + `git diff HEAD | git hash-object --stdin` for uncommitted changes).
+2. **Round 2+ Blind Ledger Check First**: If a Review Ledger exists from an earlier round, follow [review-ledger-protocol.md](./references/review-ledger-protocol.md) strictly—judge every open finding from the **code snapshot alone** *before* opening the author's replies or explanations (`RESOLVED`, `UNRESOLVED`, `VALID_PUSHBACK`, `DISPUTED`).
+3. **Full Diff, Callers & External Docs Audit**: Inspect the diff, surrounding callers/callees, and external library docs against [review-rubric.md](./references/review-rubric.md).
+4. **Report Ledger & Prioritized Findings**: Output the updated Findings Ledger Table (`F-01`, `F-02`, ...) categorized into `[CRITICAL / BLOCKING]`, `[HIGH / BUG RISK]`, and `[NIT / SUGGESTION]` with exact `file:line` citations, failure scenarios, and minimal fixes.

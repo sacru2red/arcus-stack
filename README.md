@@ -36,13 +36,13 @@ It distills and unifies the best ideas from four open-source projects:
 | **`arcus-mode`** | Master Mode | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 22 task playbooks, and disciplined subagent delegation. |
 | **`arcus-plan`** | Planning & Checklist | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
 | **`arcus-work-loop`** | Autonomous Execution | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
-| **`arcus-review`** | Plan & Code Review | Catches flawed design assumptions and superficial symptom patches before they cause rework or regressions. Performs adversarial critique on `arcus-plan` designs as well as rigorous audits on code diffs, edge cases, and test evidence. |
+| **`arcus-review`** | Isolated Plan & Code Review | Prevents confirmation bias by reviewing plans and code in a context-isolated subagent on a pinned snapshot. Runs Cold-Reader comprehension tests on designs, checks external docs, and maintains a code-first Review Ledger across rounds. |
 | **`arcus-in-your-own-words`** | Goal Alignment | Eliminates misunderstandings before a single line of code is touched. Restates your goal and core problem in the agent's own words to confirm alignment. |
 | **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |
 | **`arcus-maintain-verification`** | Verification Upkeep | Keeps your project's automated verification skill from rotting as features evolve. Compares source code against live app behavior to fix outdated verification recipes. |
 | **`arcus-ketchup`** | Catch-up Briefing | Lets you see what changed and what needs your decision at a glance without reading long chat logs. Summarizes progress since your last message in plain language, diagrams, and decision-ready action items. |
-| **`arcus-why`** | History & Rationale | Saves time guessing why existing code was written a certain way. Traces Git commits and PR discussions to return cited design decisions and historical trade-offs. |
-| **`arcus-correct`** | Mistake Prevention | Stops you from having to repeat the same corrections to agents over and over. Turns recurring mistakes into architectural constraints, types, lint rules, or behavior tests so they cannot happen again. |
+| **`arcus-why`** | History & Rationale | Saves time guessing why existing code was written a certain way. Traces `DECISIONS.md`, Git commits, and PR discussions to return cited design decisions and historical trade-offs. |
+| **`arcus-correct`** | Mistake Prevention & Rule Hygiene | Stops you from repeating the same corrections while keeping rule files lean. Escalates recurring mistakes into architecture, types, lint rules, or tests, and prunes dead, redundant, or brittle fact-claim rules. |
 | **`arcus-automate-me`** | Personal Style | Frees you from re-explaining your coding preferences and workflow habits in every session. Mines your recent transcripts and runs a quick interview to build a personal `*-mode` skill. |
 | **`arcus-skill-maker`** | Skill Converter | Makes external skills locked to a single tool usable across all 5 agents. Converts any workflow or external skill into the universal `arcus-*` standard. |
 
@@ -133,6 +133,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-005)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
