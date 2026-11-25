@@ -21,6 +21,7 @@ The remaining triggers live only here:
 - Starting any subagent or worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path.
 - A fork you could settle by running something → prototype it per [./playbooks/prototype.md](./playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [./internal/architect.md](./internal/architect.md). Fan-out → [./internal/swarm.md](./internal/swarm.md). Bakeoff → [./internal/arena.md](./internal/arena.md). Contested design → [./internal/interrogate.md](./internal/interrogate.md).
+- Web UI, HTML/CSS layout or animation, or client-side JS/DOM → [./internal/modern-web-guidance.md](./internal/modern-web-guidance.md) first before writing code.
 - Prose, your reply included → [./internal/unslop.md](./internal/unslop.md). Docs, PR descriptions, commit messages → [./internal/technical-writing.md](./internal/technical-writing.md).
 - Before commit or review → [./internal/no-comments.md](./internal/no-comments.md) and [`arcus-review`](../arcus-review/SKILL.md).
 - Multi-step planning or tracking progress against a goal → [./internal/checklist.md](./internal/checklist.md) and [`arcus-plan`](../arcus-plan/SKILL.md).

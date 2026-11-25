@@ -80,3 +80,15 @@ This document records the core architectural and directional decisions of **`arc
     3. **Tier 3 (Non-Git folder fallback)**: Merge `"decisions": "off"` into `.agents/settings.json`.
   - Pre-check all three tiers (ignoring `git config` exit codes `1`/`128` when unset/non-Git) and stay silent whenever any tier is `off`.
 - **Enforced By**: [`skills/arcus-mode/internal/decisions.md`](./skills/arcus-mode/internal/decisions.md), [`skills/arcus-plan/SKILL.md`](./skills/arcus-plan/SKILL.md), and [`skills/arcus-correct/SKILL.md`](./skills/arcus-correct/SKILL.md).
+
+---
+
+## `D-007`: Live Web Platform Guidance via Encapsulated `modern-web-guidance` CLI
+- **Date / Pin**: `2026-11-25` (Current)
+- **Status**: `ACTIVE`
+- **Context**: Web platform APIs (`<dialog>`, Popover API, Anchor Positioning, Container Queries, View Transitions, Scroll-Driven Animations, Baseline fallbacks) evolve rapidly, causing base model training weights to emit obsolete patterns. However, hardcoding static web API rules in `AGENTS.md` violates `D-005` (Fact-Claim Ban), and adding `modern-web-guidance` as a 13th top-level skill would clutter the `arcus-*` slash menu (`D-002`).
+- **Decision & Tradeoff**:
+  - Encapsulate Google Chrome's `modern-web-guidance` (Apache-2.0, with Section 4(b) modification notice) as a private internal sub-skill at [`skills/arcus-mode/internal/modern-web-guidance.md`](./skills/arcus-mode/internal/modern-web-guidance.md).
+  - Remove upstream's pinned `--skill-version` flag and blocking pre-execution permission prompts, replacing them with a non-blocking offline fallback chain (`npx -y modern-web-guidance@latest` ➔ `npx --offline -y` ➔ 1-line skip note) so autonomous subagents (`worker.md`) and `arcus-work-loop` never stall.
+  - Wire automatic triggers for HTML/CSS/client-side JS tasks across `rules/AGENTS.md`, `arcus-mode`, `arcus-plan`, `arcus-work-loop`, and `arcus-review`.
+- **Enforced By**: [`skills/arcus-mode/internal/modern-web-guidance.md`](./skills/arcus-mode/internal/modern-web-guidance.md) and [`rules/AGENTS.md`](./rules/AGENTS.md).

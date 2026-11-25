@@ -10,7 +10,7 @@
 ## 2. Guarded Execution, Isolated Review & Rule Hygiene
 - **Separate Strategy from Execution**: For non-trivial tasks, establish a concrete plan and checklist (`arcus-plan`) before modifying production files.
 - **Context-Isolated Review & Ledger**: Design reviews and code/PR reviews (`arcus-review`) run in an isolated subagent context on a pinned snapshot so the reviewer does not inherit the author's blind spots. Multi-round reviews track findings in a Review Ledger and judge code changes *before* reading author replies.
-- **Rule Hygiene & No Volatile Fact Claims**: Never write static claims about library/API behavior (*"API X works like Y"*) in rules; they rot on version upgrades. Repeatedly violated rules must be escalated into architecture, types, or lints (`arcus-correct`), while unused or redundant rules are pruned.
+- **Rule Hygiene & No Volatile Fact Claims**: Never write static claims about library/API behavior (*"API X works like Y"*) in rules; they rot on version upgrades. For HTML, CSS, or client-side JS/DOM tasks, query live web platform standards via `npx -y modern-web-guidance@latest search "<query>"` and `retrieve "<id>"` ([`skills/arcus-mode/internal/modern-web-guidance.md`](../skills/arcus-mode/internal/modern-web-guidance.md)) rather than relying on outdated training-weight patterns. Repeatedly violated rules must be escalated into architecture, types, or lints (`arcus-correct`), while unused or redundant rules are pruned.
 - **Evidence-Driven Completion**: A task is never complete until verified by real execution evidence (typecheck, linter, unit/integration tests, or reproducible CLI check).
 
 ## 3. Active Rule Enforcement Table (`arcus-correct`)
@@ -22,6 +22,7 @@
 | Stale `arcus-*` junctions and `.skill-lock.json` entries pruned on rename/update | [`scripts/install-global.ps1`](../scripts/install-global.ps1) & [`scripts/install-global.sh`](../scripts/install-global.sh) |
 | Context-isolated review, Cold-Reader test, and code-first Review Ledger | [`skills/arcus-review/SKILL.md`](../skills/arcus-review/SKILL.md) & [`review-ledger-protocol.md`](../skills/arcus-review/references/review-ledger-protocol.md) |
 | User-authorized `DECISIONS.md` proposals & 3-tier opt-out persistence (Git config / `AGENTS.md` comment / `.agents/settings.json`) | [`skills/arcus-mode/internal/decisions.md`](../skills/arcus-mode/internal/decisions.md) & [`DECISIONS.md` (`D-006`)](../DECISIONS.md) |
+| Live modern web platform lookup (`npx -y modern-web-guidance@latest search/retrieve`) before authoring or reviewing HTML/CSS/client-side JS | [`skills/arcus-mode/internal/modern-web-guidance.md`](../skills/arcus-mode/internal/modern-web-guidance.md) & [`DECISIONS.md` (`D-007`)](../DECISIONS.md) |
 
 ## 4. Available Core Skills (`arcus-*`)
 - `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.

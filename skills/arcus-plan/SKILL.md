@@ -18,6 +18,7 @@ Do not write or modify production code during the planning phase. Your goal is t
 1. **Trace to the Root Cause (No Guessing)**:
    - Read the actual implementation files, types, and call sites along the data/control flow.
    - Distinguish the **underlying invariant or root cause** from surface symptoms.
+   - For web UI, HTML/CSS, or client-side JS/DOM tasks, query live web platform standards first via `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `npx -y modern-web-guidance@latest retrieve "<id>"` (with `npx --offline -y` fallback if offline) instead of designing around legacy patterns.
 2. **Map the Blast Radius & Boundaries**:
    - Identify every module, interface, test, and consumer affected by the proposed change.
    - Prefer the smallest structural change that preserves clean boundaries over sprawling edits.

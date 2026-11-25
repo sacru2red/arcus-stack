@@ -21,11 +21,12 @@
 
 **`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用五大工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
 
-本项目融合了以下四个开源项目的核心优势：
+本项目融合了以下五个开源项目的核心优势：
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**：*“欲速则先深潜”*（深挖根本原因、最小化改动范围、编写可验证的代码）
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**：自主循环直至任务彻底完成的 `ultrawork` 模式与策略/执行分离
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**：规划、实现、审查角色分工与自动化工作流
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**：分阶段质量护栏与基于真实运行证据的完成校验
+- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**：在编写 HTML、CSS 与客户端 JS 时实时检索最新现代 Web 标准指南（`npx -y modern-web-guidance@latest`，Apache-2.0）
 
 ---
 
@@ -85,7 +86,7 @@
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
 1. **面向用户的核心技能（12 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 12 个高频入口。
-2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 16 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
+2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 17 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
 

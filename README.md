@@ -21,11 +21,12 @@ When working in multi-agent environments like **T3 Code** or **Orca**, you const
 
 **`arcus-stack` was built to solve this fragmentation.** With zero MCP runtime overhead and strictly universal `SKILL.md` and `AGENTS.md` standards, it lets you invoke the exact same battle-tested skills no matter which agent or harness you are running.
 
-It distills and unifies the best ideas from four open-source projects:
+It distills and unifies the best ideas from five open-source projects:
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: `ultrawork` autonomous execution loops and strategy/execution separation
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: Specialized role delegation (planning, execution, review) and autopilot workflows
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: Context-engineered guardrails and mandatory verification evidence
+- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: Live web platform best-practice lookup (`npx -y modern-web-guidance@latest`) for HTML, CSS, and client-side JS/DOM (Apache-2.0)
 
 ---
 
@@ -87,7 +88,7 @@ When the same agent session that wrote a plan or code reviews its own work, it i
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (12 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 12 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, 24 principles, 22 playbooks, and 16 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `modern-web-guidance`, 24 principles, 22 playbooks, and 17 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 
@@ -167,7 +168,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
-├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-006)
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-007)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
@@ -186,7 +187,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Internal] 22 task playbooks
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 16 helper sub-skills (unslop, bro, architect, etc.)
+    │   ├── internal/            # [Internal] 17 helper sub-skills (unslop, bro, modern-web-guidance, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

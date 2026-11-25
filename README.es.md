@@ -21,11 +21,12 @@ Al trabajar en entornos multiagente como **T3 Code** u **Orca**, es habitual alt
 
 **`arcus-stack` nació para eliminar esta fragmentación.** Sin depender de servidores MCP pesados y utilizando únicamente los estándares universales `SKILL.md` y `AGENTS.md`, te permite invocar exactamente las mismas habilidades y reglas sin importar qué agente estés ejecutando.
 
-Reúne e integra las mejores ideas de cuatro proyectos de código abierto:
+Reúne e integra las mejores ideas de cinco proyectos de código abierto:
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"Si quieres ir rápido, profundiza primero."* (Análisis de causa raíz, radio de impacto mínimo y código verificable)
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: Bucles de ejecución autónoma (`ultrawork`) y separación entre estrategia y ejecución
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: Delegación por roles especializados (planificación, implementación, revisión) y flujos autopilot
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: Barreras de calidad por etapas y exigencia de evidencia real de verificación
+- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: Consulta en tiempo real de estándares y buenas prácticas de la plataforma web moderna (`npx -y modern-web-guidance@latest`) para HTML, CSS y JS del lado del cliente (Apache-2.0)
 
 ---
 
@@ -85,7 +86,7 @@ Cuando la misma sesión que diseñó un plan o escribió el código revisa su pr
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
 1. **Habilidades Principales para el Usuario (12 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 12 habilidades principales aparecen en tu menú.
-2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 16 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
+2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 17 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
 

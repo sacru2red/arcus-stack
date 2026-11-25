@@ -21,11 +21,12 @@
 
 **`arcus-stack` 은 이 파편화 문제를 해결하기 위해 만들었습니다.** 무거운 MCP 서버 의존성 없이 5개 도구가 공통으로 인식하는 표준 `SKILL.md`와 `AGENTS.md` 규격만 사용하여, 어떤 환경에서 어떤 에이전트를 부르든 똑같은 스킬과 작업 원칙을 바로 사용할 수 있습니다.
 
-다음 4대 오픈소스 프로젝트의 핵심 장점을 하나로 모았습니다:
+다음 5대 오픈소스 프로젝트의 핵심 장점을 하나로 모았습니다:
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"빠르게 가려면 먼저 깊게 파고들어라."* (근본 원인 파악, 최소한의 코드 변경, 검증 가능한 코드 작성)
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: 작업이 끝날 때까지 스스로 반복 실행하는 `ultrawork` 루프와 전략·실행 분리
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: 설계·구현·검증 역할 분담 및 자율 실행 워크플로우
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 단계별 품질 가드레일과 실제 실행 증거 기반의 완료 검증
+- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: HTML, CSS, 클라이언트 JS 작업 시 최신 웹 표준 가이드를 실시간 조회(`npx -y modern-web-guidance@latest`)하는 모던 웹 베스트 프랙티스 (Apache-2.0)
 
 ---
 
@@ -87,7 +88,7 @@
 수십 개의 세부 스킬을 최상위 `skills/` 폴더에 그대로 풀어놓으면 슬래시 명령어(`/`) 목록이 너무 길어지고 에이전트의 컨텍스트를 불필요하게 차지합니다. `arcus-stack` 은 이를 **2계층 캡슐화 구조**로 해결했습니다.
 
 1. **사용자 호출용 코어 스킬 (12종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 12개의 핵심 스킬만 깔끔하게 표시됩니다.
-2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 16개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
+2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 17개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
 
 ---
 
@@ -164,7 +165,7 @@ arcus-stack/
 ├── README.ja.md                 # 일본어 문서 (Japanese)
 ├── README.zh-CN.md              # 중국어 간체 문서 (Simplified Chinese)
 ├── README.es.md                 # 스페인어 문서 (Spanish)
-├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-006)
+├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-007)
 ├── plugin.json                  # Antigravity (agy) 플러그인 매니페스트
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 플러그인 매니페스트
@@ -183,7 +184,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [내부 전용] 22개 작업 플레이북
     │   ├── principles/          # [내부 전용] 24개 엔지니어링 원칙
-    │   ├── internal/            # [내부 전용] 16개 보조 스킬 (unslop, bro, architect 등)
+    │   ├── internal/            # [내부 전용] 17개 보조 스킬 (unslop, bro, modern-web-guidance 등)
     │   └── references/          # [내부 전용] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

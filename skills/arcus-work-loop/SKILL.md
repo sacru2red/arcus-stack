@@ -18,6 +18,7 @@ Execute the task autonomously in an iterative implementation-and-verification lo
    - Otherwise, perform a fast parallel discovery of the relevant files/tests and construct a goal-aligned checklist where every item pairs a concrete edit with a verification check.
 2. **Minimal, High-Precision Implementation**:
    - Work through the checklist systematically, following existing codebase conventions, types, and module boundaries.
+   - For HTML/CSS or client-side JS/DOM changes, consult `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `retrieve "<id>"` (falling back to `npx --offline -y` or skipping non-blockingly if offline) before writing custom UI or DOM workarounds.
    - Never apply symptom patches (e.g., swallowing errors, arbitrary timeouts, blind null checks). Fix the underlying logic.
    - If new requirements or edge cases surface mid-task, update the checklist dynamically so nothing is forgotten.
 3. **Self-Diagnostics & Guarded Repair**:
