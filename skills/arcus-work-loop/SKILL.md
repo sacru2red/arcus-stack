@@ -25,7 +25,8 @@ Execute the task autonomously in an iterative implementation-and-verification lo
 3. **Self-Diagnostics & Guarded Repair**:
    - Immediately run each item's verification check (typecheck, linter, unit/integration tests, build) after editing.
    - Mark an item `- [x]` **only** after its verification check passes with real evidence. If a check fails, diagnose the root cause and fix all reported issues before re-running.
-4. **Evidence-Gated Completion**:
+4. **Evidence-Gated Completion & `arcus-explain` Briefing**:
    - Audit your final state against [work-loop-checklist.md](./references/work-loop-checklist.md).
    - Present the completed checklist (`- [x]`) alongside the concrete verification evidence (commands run and their outputs).
+   - Immediately after the verification evidence (and before any optional `DECISIONS.md` prompt), include a concise **Completion Briefing** following [`arcus-explain`](../arcus-explain/SKILL.md) (when co-installed). *Inline fallback*: Pitch the briefing to a **20-something Software Engineering / CS undergraduate graduate (fresh junior engineer)**—decode repo-specific domain jargon into standard CS mental models without childish analogies or architectural fluff, covering **(1) One-Line Essence (`What`)**, **(2) CS Mental Model (`How to picture it`)**, **(3) Mechanism & Trade-offs (`Why this way`)**, and **(4) Impact & Done Criteria (`So what`)**.
    - If a new architectural decision was made during the loop and the workspace has not opted out of `DECISIONS.md`, propose recording `D-xxx` (or opting out) in your final handoff turn—never pause the loop mid-flight to ask.

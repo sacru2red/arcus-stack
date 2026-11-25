@@ -63,7 +63,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 | ⭐ **`arcus-plan`** | **Clave · Planificación y Checklist** | Evita perder tiempo reescribiendo código o pasando por alto requisitos. Investiga primero la causa raíz y el alcance del cambio para generar una lista de verificación (`- [ ]`) de ejecución y pruebas adaptada al objetivo de tu tarea. |
 | ⭐ **`arcus-work-loop`** | **Clave · Bucle de Ejecución Autónoma** | Completa tareas complejas de principio a fin sin detenerse a mitad de camino ni dejar código incompleto. Avanza ítem por ítem sobre la lista de verificación, marcando cada paso como completado (`- [x]`) solo tras superar pruebas y compilación reales. |
 | ⭐ **`arcus-review`** | **Clave · Revisión Aislada de Planes y Código** | Evita heredar los puntos ciegos del autor ejecutando las revisiones en un subagente con contexto aislado sobre un snapshot fijo. Incluye pruebas de comprensión para lectores sin contexto previo, consulta de referencias externas y un registro de hallazgos (Review Ledger) que evalúa el código antes de leer respuestas. |
-| **`arcus-in-your-own-words`** | Alineación de Objetivos | Ahorra tiempo evitando que el agente programe algo distinto a lo que pediste. Hace que el agente resuma con sus propias palabras tu objetivo y el problema principal antes de actuar. |
+| ⭐ **`arcus-explain`** | **Clave · Explicación y Briefing Nivel Graduado CS** | Explica objetivos, planes arquitectónicos, cambios de código completados o conceptos complejos en el **tono claro de explicarle a un graduado veinteañero de Ingeniería de Software / CS** (modelos mentales de CS, mecanismos y trade-offs, sin analogías infantiles ni relleno). Proporciona un briefing automático al finalizar `arcus-plan`, `arcus-work-loop` y ejecuciones no triviales de `arcus-mode`. |
 | **`arcus-create-verification`** | Verificación de App | Te ahorra tener que abrir y probar manualmente la aplicación tras cada cambio. Crea y comprueba una habilidad local del proyecto (`verify-<app>`) que ejecuta y opera tu app como un usuario real. |
 | **`arcus-maintain-verification`** | Mantenimiento de Verificación | Evita que las recetas de verificación de tu proyecto queden obsoletas cuando cambia el código. Compara el código fuente con la ejecución en vivo de la app para mantener actualizada la guía de verificación. |
 | **`arcus-ketchup`** | Resumen de Avance | Te permite ver de un vistazo qué cambió y qué decisiones están pendientes sin leer historiales largos. Resume todo desde tu último mensaje con lenguaje sencillo, diagramas y opciones listas para decidir. |
@@ -87,9 +87,9 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 
 ### 2. Flujo de Trabajo Paso a Paso Recomendado
 
-1. **Planificación y Checklist (`$arcus-plan`)**: Identifica la causa raíz, mapea archivos afectados y genera una lista de verificación (`- [ ]`) con condiciones de prueba.
+1. **Planificación y Checklist (`$arcus-plan`)**: Identifica la causa raíz, mapea archivos afectados, genera una lista de verificación (`- [ ]`) con condiciones de prueba y cierra con un briefing automático de **`arcus-explain`** (modelo mental CS y resumen de trade-offs).
 2. **Crítica Aislada del Plan (`$arcus-review`)**: Lanza un subagente con contexto aislado para auditar los supuestos del plan antes de modificar código.
-3. **Bucle de Ejecución Autónoma (`$arcus-work-loop`)**: Ejecuta y verifica cada punto de la lista hasta que todos estén marcados como `- [x]`.
+3. **Bucle de Ejecución Autónoma (`$arcus-work-loop`)**: Ejecuta y verifica cada punto de la lista hasta que todos estén marcados como `- [x]`, finalizando con un briefing de **`arcus-explain`**.
 4. **Revisión Final y Registro de Decisiones (`$arcus-review` / `DECISIONS.md`)**: Audita el código frente al Review Ledger. Si hubo decisiones arquitectónicas importantes o graduación de reglas (`$arcus-correct`), solicita tu autorización explícita para registrarlas en `DECISIONS.md` (o recuerda tu exclusión por proyecto en `.git/config`, `AGENTS.md` o `.agents/settings.json`).
 
 ---
@@ -123,9 +123,9 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
-> **Nota sobre habilidades renombradas o eliminadas:** `npx skills` no elimina automáticamente las habilidades que cambiaron de nombre o se eliminaron en el repositorio (por ejemplo, `arcus-work` renombrada a `arcus-work-loop`). Si una habilidad antigua sigue apareciendo tras actualizar, elimínala con:
+> **Nota sobre habilidades renombradas o eliminadas:** `npx skills` no elimina automáticamente las habilidades que cambiaron de nombre o se eliminaron en el repositorio (por ejemplo, `arcus-work` → `arcus-work-loop` o `arcus-in-your-own-words` → `arcus-explain`). Si una habilidad antigua sigue apareciendo tras actualizar, elimínala con:
 > ```bash
-> npx skills remove arcus-work -g -y
+> npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
 ### Método 2. Gestores de Plugins Nativos de cada Agente
@@ -200,7 +200,7 @@ arcus-stack/
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
-    ├── arcus-in-your-own-words/
+    ├── arcus-explain/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/
     ├── arcus-ketchup/

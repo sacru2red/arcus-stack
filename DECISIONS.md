@@ -37,7 +37,7 @@ This document records the core architectural and directional decisions of **`arc
 ## `D-003`: Namespace Isolation (`arcus-*`) & Stale Link / Lockfile Pruning on Rename
 - **Date / Pin**: `2026-11-25` (`9cca575`, `671cacf`)
 - **Status**: `ACTIVE`
-- **Context**: Generic skill names or trigger keywords (such as `ulw` / `ultrawork`) collide with co-installed plugins (`oh-my-openagent`, `oh-my-claudecode`, `oh-my-antigravity`), causing ambiguous or double skill activation. Additionally, `npx skills add/update` does not prune upstream-renamed skills (e.g., `arcus-work` → `arcus-work-loop`), leaving ghost entries in `~/.agents/.skill-lock.json` and agent skill folders.
+- **Context**: Generic skill names or trigger keywords (such as `ulw` / `ultrawork`) collide with co-installed plugins (`oh-my-openagent`, `oh-my-claudecode`, `oh-my-antigravity`), causing ambiguous or double skill activation. Additionally, `npx skills add/update` does not prune upstream-renamed skills (e.g., `arcus-work` → `arcus-work-loop`, `arcus-in-your-own-words` → `arcus-explain`), leaving ghost entries in `~/.agents/.skill-lock.json` and agent skill folders.
 - **Decision & Tradeoff**:
   - Prefix all public skills with `arcus-` and remove colliding third-party trigger keywords (`ulw`, `ultrawork`) from descriptions.
   - Automatically prune stale `arcus-*` junctions/symlinks and `.skill-lock.json` entries in `scripts/install-global.ps1` and `scripts/install-global.sh`, and document `npx skills remove <old-skill> -g -y` in all 5 language READMEs.

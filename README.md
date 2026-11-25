@@ -63,7 +63,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 | ⭐ **`arcus-plan`** | **Core · Planning & Checklist** | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
 | ⭐ **`arcus-work-loop`** | **Core · Autonomous Execution** | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
 | ⭐ **`arcus-review`** | **Core · Isolated Plan & Code Review** | Prevents confirmation bias by reviewing plans and code in a context-isolated subagent on a pinned snapshot. Runs Cold-Reader comprehension tests on designs, checks external docs, and maintains a code-first Review Ledger across rounds. |
-| **`arcus-in-your-own-words`** | Goal Alignment | Eliminates misunderstandings before a single line of code is touched. Restates your goal and core problem in the agent's own words to confirm alignment. |
+| ⭐ **`arcus-explain`** | **Core · 20s CS Grad Explainer & Briefing** | Translates goals, architectural plans, completed code changes, or complex concepts into the clear, jargon-decoded tone of explaining to a 20-something SW/CS graduate (CS mental models, mechanism & trade-offs, zero childish analogies or fluff). Automatically briefs you at the end of `arcus-plan`, `arcus-work-loop`, and non-trivial `arcus-mode` runs. |
 | **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |
 | **`arcus-maintain-verification`** | Verification Upkeep | Keeps your project's automated verification skill from rotting as features evolve. Compares source code against live app behavior to fix outdated verification recipes. |
 | **`arcus-ketchup`** | Catch-up Briefing | Lets you see what changed and what needs your decision at a glance without reading long chat logs. Summarizes progress since your last message in plain language, diagrams, and decision-ready action items. |
@@ -87,9 +87,9 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 
 ### 2. Recommended Step-by-Step Pipeline
 
-1. **Align & Plan (`$arcus-plan`)**: Investigate the root cause, map affected files, and generate an actionable execution & verification checklist (`- [ ]`).
+1. **Align & Plan (`$arcus-plan`)**: Investigate the root cause, map affected files, generate an actionable execution & verification checklist (`- [ ]`), and get an automatic **`arcus-explain`** briefing (20s CS grad mental model & trade-off summary).
 2. **Isolated Critique (`$arcus-review`)**: Spawn a context-isolated subagent to critique the plan (Cold-Reader test & premise check) before touching production code.
-3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`).
+3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`), closing with an automatic **`arcus-explain`** completion briefing.
 4. **Final Code Review & Decision Log (`$arcus-review` / `DECISIONS.md`)**: Run an isolated diff review against the Review Ledger. When major architectural trade-offs or rule graduations (`$arcus-correct`) occur, agents ask for your explicit authorization to record them in `DECISIONS.md` (or remember your project opt-out via `.git/config`, `AGENTS.md`, or `.agents/settings.json`).
 
 ---
@@ -123,9 +123,9 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
-> **Note on Renamed or Removed Skills:** `npx skills` does not automatically delete skills that were renamed or removed upstream (for example, `arcus-work` renamed to `arcus-work-loop`). If an old skill name still appears in your agent list after updating, remove it once with:
+> **Note on Renamed or Removed Skills:** `npx skills` does not automatically delete skills that were renamed or removed upstream (for example, `arcus-work` → `arcus-work-loop` or `arcus-in-your-own-words` → `arcus-explain`). If an old skill name still appears in your agent list after updating, remove it once with:
 > ```bash
-> npx skills remove arcus-work -g -y
+> npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
 ### Method 2. Native Agent Plugin Managers
@@ -203,7 +203,7 @@ arcus-stack/
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
-    ├── arcus-in-your-own-words/
+    ├── arcus-explain/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/
     ├── arcus-ketchup/

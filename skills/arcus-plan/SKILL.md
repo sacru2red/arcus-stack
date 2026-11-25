@@ -29,6 +29,9 @@ Do not write or modify production code during the planning phase. Your goal is t
 4. **Produce the Plan & Actionable Verification Checklist**:
    - Follow the exact structure in [plan-template.md](./references/plan-template.md).
    - Never write vague checklist items like `- [ ] Fix bug` or `- [ ] Update tests`. Every checklist item (`- [ ]`) must pair a **concrete file/module change** with its **exact verification condition** (`➔ Verify: <command or observable proof>`).
-5. **Propose `DECISIONS.md` Record (When Architectural Trade-offs Exist)**:
+5. **Deliver End-of-Plan Briefing via `arcus-explain` (20s CS Grad Persona)**:
+   - Immediately after the checklist (and before any optional `DECISIONS.md` authorization prompt), include a concise **Plan Briefing** following [`arcus-explain`](../arcus-explain/SKILL.md) (when co-installed).
+   - *Inline fallback (when `arcus-explain` is not co-installed)*: Pitch the briefing to a **20-something Software Engineering / CS undergraduate graduate (fresh junior engineer)**—assume standard CS fundamentals (no childish toy/candy analogies and no pompous architectural fluff), decode repo-specific domain jargon into clean CS mental models, and cover 4 bullets: **(1) One-Line Essence (`What`)**, **(2) CS Mental Model (`How to picture it`)**, **(3) Mechanism & Trade-offs (`Why this way`)**, and **(4) Impact & Done Criteria (`So what`)**.
+6. **Propose `DECISIONS.md` Record (When Architectural Trade-offs Exist)**:
    - If the plan settles a significant architectural trade-off, check the workspace's 3-tier opt-out status (`git config --local --get arcus.decisions` == `off`, `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, or `"decisions": "off"` in `.agents/settings.json`).
    - If not opted out, offer an optional checklist item or prompt asking user authorization to record `D-xxx` in `DECISIONS.md` (or to opt out for this project via the 3-tier fallback chain). Never create `DECISIONS.md` or write opt-out configs without explicit user authorization.

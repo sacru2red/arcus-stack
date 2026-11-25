@@ -63,7 +63,7 @@
 | ⭐ **`arcus-plan`** | **核心 · 规划与检查清单** | 避免一上来就改代码导致方向跑偏或遗漏需求。在写代码前先定位根本原因与改动影响范围，并围绕当前任务目标生成可逐项追踪的执行与验证检查清单（`- [ ]`）。 |
 | ⭐ **`arcus-work-loop`** | **核心 · 自主执行循环** | 杜绝半途而废或留下未完成的占位代码，将任务一气呵成执行到底。按任务检查清单逐项推进，仅在真实测试与构建验证通过后才将条目勾选为完成（`- [x]`）。 |
 | ⭐ **`arcus-review`** | **核心 · 上下文隔离的计划与代码审查** | 在不继承作者上下文与盲区的隔离子智能体中，基于固定快照审查设计方案与代码。涵盖无背景读者的文档可理解性测试、外部参考资料核对，以及基于问题台账的“先看代码、后看回复”多轮评审机制。 |
-| **`arcus-in-your-own-words`** | 目标对齐 | 避免助手理解偏差写出南辕北辙的代码而浪费时间。在动手之前，让助手用自己的话复述你的目标与核心问题以确认理解一致。 |
+| ⭐ **`arcus-explain`** | **核心 · 目标对齐与 CS 科班视角深度解说** | 以**向 20 多岁软件工程/计算机专业本科毕业生（初级工程师）讲解的清晰语调**，解说需求目标、架构方案、已完成的代码改动或复杂概念（拒绝幼稚比喻与空洞套话，用标准 CS 心智模型、运行机制与权衡取舍进行拆解）。在 `arcus-plan`、`arcus-work-loop` 和 `arcus-mode` 结束时自动提供核心简报。 |
 | **`arcus-create-verification`** | 生成应用验证技能 | 免去每次改动后人工启动应用逐一点选测试的繁琐工作。自动生成并实测一个像真实用户一样启动并操作应用的项目专属验证技能（`verify-<app>`）。 |
 | **`arcus-maintain-verification`** | 维护应用验证技能 | 防止业务代码更新后原有的验证流程过期失效。对比最新源码与真实运行表现，自动校准并更新项目的验证技能与功能清单。 |
 | **`arcus-ketchup`** | 进度简报 | 无需从头翻阅冗长的聊天记录，一眼看清当前进展以及需要你拍板的事项。用大白话、流程图和带推荐理由的待决策清单总结你上一条消息以来的所有变化。 |
@@ -87,9 +87,9 @@
 
 ### 2. 推荐分步流水线
 
-1. **规划与生成检查清单 (`$arcus-plan`)**：动手写代码前先定位根本原因与影响范围，生成带验证条件的检查清单（`- [ ]`）。
+1. **规划与生成检查清单 (`$arcus-plan`)**：动手写代码前先定位根本原因与影响范围，生成带验证条件的检查清单（`- [ ]`），并在结尾通过 **`arcus-explain`**（20 岁 CS 毕业生视角的架构心智模型与取舍简报）清晰解说方案。
 2. **上下文隔离的方案评审 (`$arcus-review`)**：启动无历史偏见的隔离子智能体对方案进行冷读者测试与前提批判。
-3. **检查清单自主执行循环 (`$arcus-work-loop`)**：按确认后的清单逐项实现与实测，直到所有条目均被验证勾选为 `- [x]`。
+3. **检查清单自主执行循环 (`$arcus-work-loop`)**：按确认后的清单逐项实现与实测，直到所有条目均被验证勾选为 `- [x]`，并在结束时通过 **`arcus-explain`** 简报改动的底层机制。
 4. **最终代码审查与架构决策记录 (`$arcus-review` / `DECISIONS.md`)**：基于问题台账（Review Ledger）对代码变更进行隔离审查。当产生重要架构取舍或规则升级（`$arcus-correct`）时，会在获得用户明确授权后记录至 `DECISIONS.md`（若用户拒绝，则通过 `.git/config`、`AGENTS.md` 或 `.agents/settings.json` 持久记住不再打扰）。
 
 ---
@@ -123,9 +123,9 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
-> **关于重命名或已移除技能的清理说明：** `npx skills` 的 `add`/`update` 不会自动删除仓库中已重命名或移除的旧技能（例如 `arcus-work` 重命名为 `arcus-work-loop`）。如果更新后列表中仍显示旧技能，请运行以下命令将其移除：
+> **关于重命名或已移除技能的清理说明：** `npx skills` 的 `add`/`update` 不会自动删除仓库中已重命名或移除的旧技能（例如 `arcus-work` → `arcus-work-loop`、`arcus-in-your-own-words` → `arcus-explain`）。如果更新后列表中仍显示旧技能，请运行以下命令将其移除：
 > ```bash
-> npx skills remove arcus-work -g -y
+> npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
 ### 方法 2. 使用助手自带的插件管理器
@@ -200,7 +200,7 @@ arcus-stack/
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
-    ├── arcus-in-your-own-words/
+    ├── arcus-explain/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/
     ├── arcus-ketchup/

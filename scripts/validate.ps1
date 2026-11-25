@@ -63,7 +63,7 @@ foreach ($File in $AllMarkdownFiles) {
 Write-Host "[2/4] Checked $LinksChecked relative Markdown links across $($AllMarkdownFiles.Count) files."
 
 # 3. Forbidden Unadapted pstack/Cursor Dependency Check in skills/
-$ForbiddenPattern = "disable-model-invocation|comment-sicko|decision-log-template\.tsv|scripts/log\.sh|watch-pr/watch-pr|worktree-audit\.sh|pstack-models\.mdc|cursor-team-kit|/deslop|control-ui|control-cli|(?<!make a )control skill|create-skill|/loop\b|claude-opus-5-5-|claude-fable-5-2|gemini-4-neon-xhigh|poteto-mode|poteto-agent|subagent_type|generalPurpose|environment:\s*`"(cloud|local)`"|Cursor cloud agent|Cursor's|~/.cursor/projects|\.cursor/worktrees|\*\*(ketchup|why|in-your-own-words)\*\*"
+$ForbiddenPattern = "disable-model-invocation|arcus-in-your-own-words|comment-sicko|decision-log-template\.tsv|scripts/log\.sh|watch-pr/watch-pr|worktree-audit\.sh|pstack-models\.mdc|cursor-team-kit|/deslop|control-ui|control-cli|(?<!make a )control skill|create-skill|/loop\b|claude-opus-5-5-|claude-fable-5-2|gemini-4-neon-xhigh|poteto-mode|poteto-agent|subagent_type|generalPurpose|environment:\s*`"(cloud|local)`"|Cursor cloud agent|Cursor's|~/.cursor/projects|\.cursor/worktrees|\*\*(ketchup|why|in-your-own-words|explain)\*\*"
 $ForbiddenHits = @($SkillMarkdownFiles | Select-String -Pattern $ForbiddenPattern)
 foreach ($Hit in $ForbiddenHits) {
     $Failures.Add("[Forbidden Dependency] $($Hit.Path):$($Hit.LineNumber): $($Hit.Line.Trim())")

@@ -20,7 +20,14 @@ Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action**
 - [ ] **Step 3 — [Edge Cases & Regression Tests]**: Specific failure modes, empty/boundary inputs, or regression tests added/updated.
   - ➔ **Verify**: Test suite execution command and expected passing output.
 
-## 4. Architectural Decision Record Proposal (Optional — Only for Non-Trivial Trade-offs)
+## 4. Plan Briefing (`arcus-explain` — 20s CS Grad Tone)
+Immediately after the checklist, explain the plan in the tone of briefing a **20-something Software Engineering / CS undergraduate graduate (fresh junior engineer)** per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed; no childish analogies, no pompous architectural fluff, translate repo-specific domain jargon into standard CS mental models):
+- **One-Line Essence (`What`)**: One plain sentence capturing what this plan changes and why.
+- **CS Mental Model (`How to picture it`)**: Map the design seam to a familiar CS construct or data-flow model.
+- **Mechanism & Trade-offs (`Why this way`)**: The concrete input ➔ transformation ➔ output flow and why this approach wins over alternatives.
+- **Impact & Done Criteria (`So what`)**: What changes in runtime/developer behavior and what verification proof closes the loop.
+
+## 5. Architectural Decision Record Proposal (Optional — Only for Non-Trivial Trade-offs)
 If this plan settles a major architectural trade-off and the workspace has not opted out (`git config --local --get arcus.decisions` != `off`, no `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, and no `"decisions": "off"` in `.agents/settings.json`), ask the user for authorization:
 1. Record `D-xxx` in `DECISIONS.md` (or existing `ADR.md` / `docs/adr/`).
 2. Skip for this task.

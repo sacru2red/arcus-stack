@@ -30,7 +30,7 @@
 - `arcus-plan`: Deep-first root-cause analysis, blast-radius mapping, and an actionable execution and verification checklist tailored to the task goal.
 - `arcus-work-loop`: Autonomous checklist-driven execution loop that implements, diagnoses, and checks off each task item with real verification evidence.
 - `arcus-review`: Context-isolated critique and review for both architectural plans (`arcus-plan`) and code changes (`arcus-work-loop`), maintaining a persistent Review Ledger.
-- `arcus-in-your-own-words`: Restate the user's goal and core problem in your own words to verify alignment before acting.
+- `arcus-explain`: Explain goals, architectural plans, completed code changes, or complex concepts in a 20-something SW/CS graduate tone (CS mental models, mechanism & trade-offs, no childish analogies or fluff); automatically briefs at the end of `arcus-plan`, `arcus-work-loop`, and non-trivial `arcus-mode` runs.
 - `arcus-create-verification`: Generate and prove a project-local verification skill (`verify-<app>`) and user-POV feature map.
 - `arcus-maintain-verification`: Audit and update an existing project verification skill via parallel source readers and a live driving pass.
 - `arcus-ketchup`: Catch the user up on what changed since their last message in plain words, visuals, and decision-ready action items.

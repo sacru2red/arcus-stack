@@ -17,7 +17,7 @@ The Principles section below grounds every trigger. In your reply, name each pri
 
 The remaining triggers live only here:
 
-- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
+- First message → restate the user's goal and the smallest change that meets it (using [`arcus-explain`](../arcus-explain/SKILL.md) when the goal or architecture needs unpacking), then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
 - Starting any subagent or worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path.
 - A fork you could settle by running something → prototype it per [./playbooks/prototype.md](./playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [./internal/architect.md](./internal/architect.md). Fan-out → [./internal/swarm.md](./internal/swarm.md). Bakeoff → [./internal/arena.md](./internal/arena.md). Contested design → [./internal/interrogate.md](./internal/interrogate.md).
@@ -96,6 +96,8 @@ You own every subagent's work. Review the diff and write your own summary. A sec
 ## Writing the reply
 
 Write short declarative sentences with no long dash and no colon as a connector. Lead with what changes for the user. Give each claim its evidence or a label (measured, inferred, or guess). Never hand the human a check you could run.
+
+When finishing a top-level non-trivial plan, a multi-file implementation, or an explanation request (never inside [`worker.md`](./worker.md) subagents or trivial 1-line replies), close with a concise [`arcus-explain`](../arcus-explain/SKILL.md) briefing pitched to a 20-something SW/CS graduate. Translate repo-specific domain jargon into standard CS mental models, state the concrete mechanism and trade-offs, and keep every sentence `unslop`-clean.
 
 ## Playbooks
 
