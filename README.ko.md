@@ -65,6 +65,21 @@
 3. **체크리스트 자율 실행 (`$arcus-work-loop`)**: 확정된 체크리스트를 하나씩 구현·검증하여 모든 항목이 `- [x]`가 될 때까지 완주합니다.
 4. **최종 코드 리뷰 및 의사결정 기록 (`$arcus-review` / `DECISIONS.md`)**: 지적 장부(Review Ledger)를 기반으로 구현 코드를 격리 리뷰합니다. 중요한 아키텍처 결정이나 규칙 승격(`$arcus-correct`)이 있었다면 사용자의 명시적 인가를 받아 `DECISIONS.md`에 기록하거나, 원치 않을 경우 프로젝트별 거절 설정(`.git/config`, `AGENTS.md` 주석, `.agents/settings.json`)을 영구 기억합니다.
 
+### 3. 컨텍스트 격리 리뷰와 지적 장부 (`arcus-review`)
+
+설계나 구현을 진행한 바로 그 세션에서 검토까지 수행하면, 에이전트는 자신이 왜 그 전제를 택했는지 이미 알고 있어 전제 자체를 의심하지 않고 함께 버린 대안은 다시 꺼내지 않습니다. **맥락을 공유한 검토자는 사각지대도 공유합니다.** `arcus-review`는 이를 막기 위해 **컨텍스트 격리**와 **지적 장부(Review Ledger)** 로 동작합니다:
+
+- **구현 컨텍스트와 격리된 리뷰**: 검토할 커밋이나 스냅샷을 고정한 뒤, 작성자의 대화 맥락이나 변명에 오염되지 않은 새로운 격리 서브에이전트가 설계 문서와 코드를 처음 보는 눈으로 검토합니다. 레포 내부에만 머물지 않고 외부 공식 레퍼런스를 교차 확인하며, 배경지식이 없는 독자에게 설계 문서만 주었을 때 온전히 이해되는지 시험합니다.
+- **지적 장부 (Review Ledger — `F-01`, `F-02`, ...)**: 리뷰마다 발견된 문제들을 고유 번호가 붙은 장부 테이블로 관리하며, 지적 장부와 작성자의 답글 영역을 물리적으로 분리합니다.
+- **선(先) 코드 확인 · 후(後) 답글 대조**: 2회차 이후 리뷰에서는 새 코드를 보거나 **작성자의 답글(해명)을 열어보기 전에, 고정된 최신 코드·문서 스냅샷만 먼저 보고** 장부의 기존 지적 사항이 실제로 해결됐는지(`RESOLVED`), 미해결인지(`UNRESOLVED`), 반박이 타당한지(`VALID_PUSHBACK`), 이견이 갈리는지(`DISPUTED`)부터 먼저 판정합니다:
+
+| ID | 회차 | 고정 스냅샷 | 심각도 | 대상 위치 | 문제 시나리오 및 요구 조치 | 상태 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 자율 실행 서브에이전트 도중 질문 호출 시 작업이 멈춤. 최상위 턴으로 질문 위임 필요. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 부분 설치 시 상대 경로 참조 실패 가능성. 본문 내 폴백 규칙 내장. | `VALID_PUSHBACK` |
+
+*(판정 상태: `OPEN` 신규 · `RESOLVED` 해결됨 · `UNRESOLVED` 미해결 · `VALID_PUSHBACK` 반박 타당 · `DISPUTED` 이견/결정 필요)*
+
 ---
 
 ## 🏗️ 아키텍처: 2계층 스킬 캡슐화 구조
@@ -72,7 +87,7 @@
 수십 개의 세부 스킬을 최상위 `skills/` 폴더에 그대로 풀어놓으면 슬래시 명령어(`/`) 목록이 너무 길어지고 에이전트의 컨텍스트를 불필요하게 차지합니다. `arcus-stack` 은 이를 **2계층 캡슐화 구조**로 해결했습니다.
 
 1. **사용자 호출용 코어 스킬 (12종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 12개의 핵심 스킬만 깔끔하게 표시됩니다.
-2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 14개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
+2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 16개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
 
 ---
 
@@ -149,7 +164,7 @@ arcus-stack/
 ├── README.ja.md                 # 일본어 문서 (Japanese)
 ├── README.zh-CN.md              # 중국어 간체 문서 (Simplified Chinese)
 ├── README.es.md                 # 스페인어 문서 (Spanish)
-├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-005)
+├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-006)
 ├── plugin.json                  # Antigravity (agy) 플러그인 매니페스트
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 플러그인 매니페스트
@@ -168,7 +183,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [내부 전용] 22개 작업 플레이북
     │   ├── principles/          # [내부 전용] 24개 엔지니어링 원칙
-    │   ├── internal/            # [내부 전용] 14개 보조 스킬 (unslop, bro, architect 등)
+    │   ├── internal/            # [내부 전용] 16개 보조 스킬 (unslop, bro, architect 등)
     │   └── references/          # [내부 전용] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

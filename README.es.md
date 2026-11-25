@@ -65,6 +65,19 @@ Reúne e integra las mejores ideas de cuatro proyectos de código abierto:
 3. **Bucle de Ejecución Autónoma (`$arcus-work-loop`)**: Ejecuta y verifica cada punto de la lista hasta que todos estén marcados como `- [x]`.
 4. **Revisión Final y Registro de Decisiones (`$arcus-review` / `DECISIONS.md`)**: Audita el código frente al Review Ledger. Si hubo decisiones arquitectónicas importantes o graduación de reglas (`$arcus-correct`), solicita tu autorización explícita para registrarlas en `DECISIONS.md` (o recuerda tu exclusión por proyecto en `.git/config`, `AGENTS.md` o `.agents/settings.json`).
 
+### 3. Revisión con Contexto Aislado y Registro de Hallazgos (Review Ledger)
+
+Cuando la misma sesión que diseñó un plan o escribió el código revisa su propio trabajo, hereda exactamente los mismos sesgos y alternativas descartadas: **un revisor que comparte el contexto también comparte los puntos ciegos.** `arcus-review` rompe este ciclo mediante **Aislamiento de Contexto** y un **Registro de Hallazgos (Review Ledger)**:
+
+- **Sandbox de Revisión Aislado**: Fija el commit o snapshot a revisar y lanza un nuevo subagente sin el historial del autor para evaluar el documento de diseño y el código desde cero. Consulta referencias externas más allá del repositorio y aplica una **Prueba de Lector en Frío (Cold-Reader Test)** para comprobar si el diseño se entiende solo con leer el documento.
+- **Registro de Hallazgos (`F-01`, `F-02`, ...)**: Cada revisión mantiene una tabla estructurada de hallazgos separada físicamente de las respuestas del autor.
+- **Veredicto a Ciegas Basado en Código (Ronda 2+)**: En rondas posteriores, antes de revisar código nuevo o **antes de abrir las respuestas/explicaciones del autor, el revisor inspecciona únicamente el snapshot de código** para decidir el estado de cada punto pendiente (`RESOLVED` resuelto, `UNRESOLVED` no resuelto, `VALID_PUSHBACK` contraargumento válido, o `DISPUTED` en disputa):
+
+| ID | Ronda | Snapshot Fijo | Severidad | Destino | Escenario de Fallo y Solución | Estado |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Preguntar a mitad de un bucle autónomo bloquea al subagente. Diferir al turno principal. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Ruta relativa falla en instalación parcial. Incluir reglas de respaldo en línea. | `VALID_PUSHBACK` |
+
 ---
 
 ## 🏗️ Arquitectura: Encapsulación de Habilidades en Dos Niveles
@@ -72,7 +85,7 @@ Reúne e integra las mejores ideas de cuatro proyectos de código abierto:
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
 1. **Habilidades Principales para el Usuario (12 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 12 habilidades principales aparecen en tu menú.
-2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 14 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
+2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 16 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
 

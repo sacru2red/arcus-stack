@@ -65,6 +65,21 @@ It distills and unifies the best ideas from four open-source projects:
 3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`).
 4. **Final Code Review & Decision Log (`$arcus-review` / `DECISIONS.md`)**: Run an isolated diff review against the Review Ledger. When major architectural trade-offs or rule graduations (`$arcus-correct`) occur, agents ask for your explicit authorization to record them in `DECISIONS.md` (or remember your project opt-out via `.git/config`, `AGENTS.md`, or `.agents/settings.json`).
 
+### 3. Context-Isolated Review & The Review Ledger (`arcus-review`)
+
+When the same agent session that wrote a plan or code reviews its own work, it inherits its own confirmation bias and blind spots. `arcus-review` breaks this cycle through **Context Isolation** and a **Review Ledger**:
+
+- **Context-Isolated Sandbox**: Reviews run in a fresh subagent session on a pinned snapshot (`HEAD` SHA or diff hash) without the author's chat history or defensive framing. For design docs, it runs a **Cold-Reader Test** to verify an uninitiated reader can understand the design from the document alone, and checks external documentation beyond the repository.
+- **Persistent Review Ledger (`F-01`, `F-02`, ...)**: Every review tracks findings in a structured ledger table physically separated from the author's replies.
+- **Code-First Blind Verdict on Round 2+**: In multi-round reviews, the reviewer evaluates every open finding in the ledger (`OPEN`, `UNRESOLVED`, `DISPUTED`) by inspecting the **new code/doc snapshot first—before reading the author's replies or explanations**—to prevent being swayed by excuses before checking the facts:
+
+| ID | Round | Pinned Snapshot | Severity | Target | Failure Scenario & Fix | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Mid-loop question prompts block autonomous subagents. Defer prompt to top-level turn. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Relative path breaks on partial install. Inline fallback rules. | `VALID_PUSHBACK` |
+
+*(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+
 ---
 
 ## 🏗️ Architecture: Two-Tier Skill Encapsulation
@@ -72,7 +87,7 @@ It distills and unifies the best ideas from four open-source projects:
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (12 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 12 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, 24 principles, and 22 playbooks remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, 24 principles, 22 playbooks, and 16 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 
@@ -152,7 +167,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
-├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-005)
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-006)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
@@ -171,7 +186,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Internal] 22 task playbooks
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 14 helper sub-skills (unslop, bro, architect, etc.)
+    │   ├── internal/            # [Internal] 16 helper sub-skills (unslop, bro, architect, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/
