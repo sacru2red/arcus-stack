@@ -79,6 +79,14 @@ Cuando la misma sesión que diseñó un plan o escribió el código revisa su pr
 | `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Preguntar a mitad de un bucle autónomo bloquea al subagente. Diferir al turno principal. | `RESOLVED` |
 | `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Ruta relativa falla en instalación parcial. Incluir reglas de respaldo en línea. | `VALID_PUSHBACK` |
 
+### 4. Aplicación Automática de Estándares Web Modernos y Compatibilidad (`modern-web-guidance`)
+
+Al trabajar con HTML, CSS o JS del lado del cliente (incluso dentro de React, Vue o Svelte), no necesitas invocar una habilidad adicional ni consultar manualmente `caniuse.com`. `arcus-stack` activa internamente `modern-web-guidance` de forma automática durante la planificación (`arcus-plan`), implementación (`arcus-work-loop`) y revisión (`arcus-review`):
+
+1. **Consulta en Vivo de Guías Oficiales**: Antes de escribir código UI, el agente ejecuta `npx -y modern-web-guidance@latest search "<función>"` y `retrieve "<id>"` para consultar las prácticas más recientes del equipo de Google Chrome en lugar de usar patrones obsoletos.
+2. **Verificación Integrada de Baseline y Navegadores**: Cada guía incluye el estado actual de **Web Platform Baseline** (`Widely available`, `Newly available`, `Limited availability`) y las versiones exactas soportadas en Chrome, Edge, Firefox y Safari.
+3. **Fallbacks Automáticos**: Las funciones ampliamente soportadas se implementan de forma nativa y limpia, mientras que las APIs más recientes reciben automáticamente los bloques `@supports` o estrategias de degradación elegante recomendadas por la guía.
+
 ---
 
 ## 🏗️ Arquitectura: Encapsulación de Habilidades en Dos Niveles

@@ -81,6 +81,14 @@
 
 *(판정 상태: `OPEN` 신규 · `RESOLVED` 해결됨 · `UNRESOLVED` 미해결 · `VALID_PUSHBACK` 반박 타당 · `DISPUTED` 이견/결정 필요)*
 
+### 4. 모던 웹 표준 및 브라우저 호환성 자동 적용 (`modern-web-guidance`)
+
+HTML, CSS, 클라이언트 JS(React, Vue, Svelte 등 프레임워크 내부 포함) 작업을 할 때는 별도의 스킬을 직접 호출하거나 매번 `caniuse.com`에 들어가 브라우저 지원 여부를 확인할 필요가 없습니다. 설계(`arcus-plan`), 구현(`arcus-work-loop`), 리뷰(`arcus-review`) 단계에서 내부적으로 `modern-web-guidance`가 자동 실행됩니다:
+
+1. **최신 웹 표준 가이드 실시간 조회**: 에이전트가 자신의 오래된 학습 기억에 의존해 구식 JS 땜질 코드를 짜는 대신, 작업 시작 전에 `npx -y modern-web-guidance@latest search "<기능>"` 및 `retrieve "<가이드ID>"`를 자동 호출해 Google Chrome 팀의 최신 웹 표준 가이드를 먼저 읽습니다.
+2. **브라우저 지원 현황(Baseline) 자동 판별**: 조회된 가이드 문서에는 각 웹 API의 **Web Platform Baseline 등급**(`Widely available`, `Newly available`, `Limited availability`)과 4대 브라우저(Chrome, Edge, Firefox, Safari)별 지원 버전이 함께 포함되어 있습니다.
+3. **맞춤형 폴백(Fallback) 코드 자동 적용**: 모든 브라우저에 널리 보급된 기능(`Widely available`)은 군더더기 없이 바로 사용하고, 일부 브라우저에서 아직 지원하지 않는 최신 기능은 가이드에 명시된 `@supports`나 점진적 향상(Graceful Degradation) 폴백 코드를 자동으로 함께 작성합니다.
+
 ---
 
 ## 🏗️ 아키텍처: 2계층 스킬 캡슐화 구조

@@ -79,6 +79,14 @@
 | `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自律サブエージェント実行中の質問呼び出しによる停止リスク。最上位ターンへの委譲が必要。 | `RESOLVED` |
 | `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分インストール時の相対パス参照切れ。フォールバック規則の内蔵。 | `VALID_PUSHBACK` |
 
+### 4. モダンWeb標準とブラウザ互換性の自動適用（`modern-web-guidance`）
+
+HTML、CSS、クライアントサイドJS（React、Vue、Svelteなどのフレームワーク内を含む）の作業では、専用スキルを手動で呼び出したり、毎回 `caniuse.com` でブラウザ対応状況を確認したりする必要はありません。設計（`arcus-plan`）、実装（`arcus-work-loop`）、レビュー（`arcus-review`）の各段階で、内部的に `modern-web-guidance` が自動実行されます：
+
+1. **最新Web標準ガイドのリアルタイム照会**: エージェントの古い学習知識に頼る代わりに、`npx -y modern-web-guidance@latest search "<機能>"` と `retrieve "<ID>"` を自動実行し、Google Chromeチームの最新ガイドラインを参照します。
+2. **Baselineとブラウザ対応状況の自動判定**: 取得したガイドには **Web Platform Baseline** のステータスと主要4ブラウザ（Chrome、Edge、Firefox、Safari）の対応バージョンが含まれています。
+3. **適切なフォールバックの自動実装**: 広く普及した機能（`Widely available`）は余計なポリフィルなしでシンプルに実装し、一部ブラウザで未対応の最新機能にはガイド推奨の `@supports` やプログレッシブエンハンスメント用フォールバックを自動的に適用します。
+
 ---
 
 ## 🏗️ アーキテクチャ：2階層スキルカプセル化構造

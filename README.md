@@ -81,6 +81,14 @@ When the same agent session that wrote a plan or code reviews its own work, it i
 
 *(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
+### 4. Automatic Modern Web Standards & Browser Compatibility (`modern-web-guidance`)
+
+When you work on HTML, CSS, or client-side JS/DOM (including inside React, Vue, or Svelte), you don't need to invoke a separate web skill or manually check `caniuse.com` for browser support. `arcus-stack` triggers `modern-web-guidance` automatically under the hood during planning (`arcus-plan`), implementation (`arcus-work-loop`), and review (`arcus-review`):
+
+1. **Live Official Guide Lookup**: Before writing UI code, the agent queries Google Chrome's latest web guidance catalog via `npx -y modern-web-guidance@latest search "<capability>"` and `retrieve "<id>"` rather than relying on outdated training weights.
+2. **Built-in Baseline & Browser Support Check**: Every retrieved guide includes current **Web Platform Baseline** status (`Widely available`, `Newly available`, or `Limited availability`) and exact browser version support (Chrome, Edge, Firefox, Safari).
+3. **Automatic Fallback Code**: Features that are `Baseline Widely available` are used cleanly without unnecessary polyfills, while newer features (`interpolate-size`, Anchor Positioning, View Transitions, etc.) automatically receive the guide's recommended `@supports` or graceful-degradation fallbacks.
+
 ---
 
 ## 🏗️ Architecture: Two-Tier Skill Encapsulation

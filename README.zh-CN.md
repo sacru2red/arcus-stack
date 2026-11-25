@@ -79,6 +79,14 @@
 | `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自主子智能体运行中途弹窗提问会导致流程挂起，需移交顶层交互回合。 | `RESOLVED` |
 | `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分安装时跨目录相对路径可能失效，需内联兜底规则。 | `VALID_PUSHBACK` |
 
+### 4. 自动应用现代 Web 标准与浏览器兼容性（`modern-web-guidance`）
+
+在开发 HTML、CSS 或客户端 JS（包括 React、Vue、Svelte 等框架内部）时，你无需手动调用额外技能，也不必每次去 `caniuse.com` 查阅浏览器支持率。在规划（`arcus-plan`）、实现（`arcus-work-loop`）和审查（`arcus-review`）阶段，系统会在底层自动触发 `modern-web-guidance`：
+
+1. **实时检索官方最新指南**：助手不会依赖模型训练权重中过时的旧写法，而是在动手前自动调用 `npx -y modern-web-guidance@latest search "<功能>"` 与 `retrieve "<ID>"`，获取 Google Chrome 团队维护的最新 Web 最佳实践。
+2. **内置 Baseline 与浏览器兼容性判定**：检索出的每篇指南均附带 **Web Platform Baseline** 等级以及四大主流浏览器（Chrome、Edge、Firefox、Safari）的具体支持版本。
+3. **自动编写降级与兜底代码（Fallback）**：对已广泛支持（`Widely available`）的特性直接采用原生简洁写法；对部分浏览器尚未支持的新特性，则严格按照指南自动补齐 `@supports` 或渐进增强兜底代码。
+
 ---
 
 ## 🏗️ 架构设计：双层技能封装结构
