@@ -22,11 +22,11 @@ Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action**
   - ➔ **Verify**: Test suite execution command and expected passing output.
 
 ## 4. Plan Briefing (Localized to the User's Language)
-Immediately after the checklist, include a concise 4-bullet briefing per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed). Calibrate the depth internally to a 20-something SW/CS graduate (no childish analogies, no pompous architectural fluff, translate repo-specific domain jargon into standard CS mental models), **never print the internal persona name (`20s CS Grad` / `20대 SW 학과 졸업생...`) in the heading or text**, and localize both the section heading and all 4 bullet labels into the user's conversation language:
-- **Core Essence / 핵심 요약**: One plain sentence capturing what this plan changes and why.
-- **Mental Model / 구조 및 동작 모델**: Map the design seam to a familiar CS construct or data-flow model.
-- **Mechanism & Trade-offs / 동작 원리 및 트레이드오프**: The concrete input ➔ transformation ➔ output flow and why this approach wins over alternatives.
-- **Impact & Verification / 적용 효과 및 검증 기준**: What changes in runtime/developer behavior and what verification proof closes the loop.
+Immediately after the checklist, include a concise 4-bullet briefing per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed). Calibrate the depth internally to a 20-something SW/CS graduate (no childish analogies, no pompous architectural fluff, translate repo-specific domain jargon into standard CS mental models), **never print the internal persona name (`20s CS Grad` / `20대 SW 학과 졸업생...`) in the heading or text**, and output **only the single label matching the user's conversation language** for each bullet (never print slash-joined bilingual labels; e.g., use **핵심 요약**, **구조 및 동작 모델**, **동작 원리 및 트레이드오프**, **적용 효과 및 검증 기준** in Korean):
+- **Core Essence** *(or single localized label)*: One plain sentence capturing what this plan changes and why.
+- **Mental Model** *(or single localized label)*: Map the design seam to a familiar CS construct or data-flow model.
+- **Mechanism & Trade-offs** *(or single localized label)*: The concrete input ➔ transformation ➔ output flow and why this approach wins over alternatives.
+- **Impact & Verification** *(or single localized label)*: What changes in runtime/developer behavior and what verification proof closes the loop.
 
 ## 5. Architectural Decision Record Proposal (Optional — Only for Non-Trivial Trade-offs)
 If this plan settles a major architectural trade-off and the workspace has not opted out (`git config --local --get arcus.decisions` != `off`, no `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, and no `"decisions": "off"` in `.agents/settings.json`), ask the user for authorization:

@@ -47,7 +47,7 @@ Triggered automatically at the conclusion of:
 
 ## 3. The 4-Part Explanation Structure (Localized to the User's Language)
 
-Scale length proportionally to task complexity (4 concise bullets for focused tasks; short paragraphs or a compact diagram/table for multi-module changes). Localize the section heading and all 4 bullet labels naturally into the user's conversation language (and never include the internal persona name in the heading):
+Scale length proportionally to task complexity (4 concise bullets for focused tasks; short paragraphs or a compact diagram/table for multi-module changes). Pick **only the single column matching the user's active conversation language** from the table below for your section heading and 4 bullet labels (never print slash-joined bilingual labels like `Core Essence / 핵심 요약`, and never include the internal persona name in the heading):
 
 | Part | English Label | Korean Label (`한국어`) | Japanese Label (`日本語`) | Chinese Label (`简体中文`) | Spanish Label (`Español`) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -57,13 +57,13 @@ Scale length proportionally to task complexity (4 concise bullets for focused ta
 | **3. Why/How** | **Mechanism & Trade-offs** | **동작 원리 및 트레이드오프** | **仕組みとトレードオフ** | **运行机制与权衡** | **Mecanismo y Trade-offs** |
 | **4. So What** | **Impact & Verification** | **적용 효과 및 검증 기준** | **影響と検証基準** | **实际影响与验证标准** | **Impacto y Verificación** |
 
-1. **Core Essence / 핵심 요약**:
+1. **`<Localized Label 1>`** (e.g., **Core Essence** in English, or **핵심 요약** in Korean):
    - Capture the core problem, design, or completed change in one plain sentence.
-2. **Mental Model / 구조 및 동작 모델**:
+2. **`<Localized Label 2>`** (e.g., **Mental Model** in English, or **구조 및 동작 모델** in Korean):
    - Map the domain logic or architectural seam to a familiar CS construct or data-flow model (e.g., state machine transition, read-through cache invalidation, idempotent reconciliation loop, two-phase commit).
-3. **Mechanism & Trade-offs / 동작 원리 및 트레이드오프**:
+3. **`<Localized Label 3>`** (e.g., **Mechanism & Trade-offs** in English, or **동작 원리 및 트레이드오프** in Korean):
    - Walk through the concrete input ➔ transformation ➔ output mechanism, the root cause vs. symptom, and the key trade-off or edge case that made this approach win over the alternative.
-4. **Impact & Verification / 적용 효과 및 검증 기준**:
+4. **`<Localized Label 4>`** (e.g., **Impact & Verification** in English, or **적용 효과 및 검증 기준** in Korean):
    - State what tangibly changes in runtime behavior or developer workflow, and what concrete verification check proves the contract holds.
 
 ---
