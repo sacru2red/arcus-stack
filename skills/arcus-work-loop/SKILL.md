@@ -13,10 +13,14 @@ Execute the task autonomously in an iterative implementation-and-verification lo
 
 ## Execution Loop
 
-1. **Adopt or Build the Task Checklist**:
-   - If `ONBOARDING.md` (or `CONTEXT.md`) exists in the workspace, consult it first so your implementation respects domain-to-code mappings, business invariants, authz tiers, and legacy red-line minefields (verifying cited code paths against live code).
-   - If an `arcus-plan` checklist already exists in the conversation, adopt its `- [ ]` items as your live execution tracker.
-   - Otherwise, perform a fast parallel discovery of the relevant files/tests and construct a goal-aligned checklist where every item pairs a concrete edit with a verification check.
+1. **Resolve or Self-Seed the Task Checklist (4-Tier Discovery — Never Abort If Missing)**:
+   - **Domain Grounding First**: If `ONBOARDING.md` (or `CONTEXT.md`) exists in the workspace, consult it first so your implementation respects domain-to-code mappings, business invariants, authz tiers, and legacy red-line minefields (verifying cited code paths against live code).
+   - **Role Boundary Note**: [`./references/work-loop-checklist.md`](./references/work-loop-checklist.md) is this skill's **meta sign-off rubric**, NOT the user's project task file. Never abort or exit the loop claiming you "could not find the checklist document on disk."
+   - Resolve the active **Task Checklist** using this strict 4-tier priority order:
+     1. **Tier 1 (Explicit Path or Inline Prompt)**: If the user's message names a plan/checklist file path or includes `- [ ]` items directly, load those items.
+     2. **Tier 2 (In-Conversation `arcus-plan` Output)**: Scan earlier messages in the current conversation (including `## 3. Actionable Execution & Verification Checklist` or `arcus-review` Plan v2 checklists) and adopt all unchecked `- [ ]` items.
+     3. **Tier 3 (Workspace Plan / Task Files)**: If the conversation has no prior checklist (e.g., fresh thread or post-handoff), check the workspace for an active plan document (`PLAN.md`, `TODO.md`, `TASKS.md`, or `.audit/*.md`) that matches the current task goal.
+     4. **Tier 4 (Mandatory Self-Seeding Fallback — Never Bail Out)**: If Tiers 1–3 yield no checklist, **never stop, complain, or ask where the checklist is**. Perform a fast parallel discovery of the relevant codebase files/tests, construct a concrete 3–7 step `- [ ]` execution & verification checklist yourself in your working state (and native step tracker tool such as `update_steps` / `TodoWrite` when available), and immediately proceed to Step 2.
 2. **Minimal, High-Precision Implementation**:
    - Work through the checklist systematically, following existing codebase conventions, types, and module boundaries.
    - For HTML/CSS or client-side JS/DOM changes, consult `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `retrieve "<id>"` (falling back to `npx --offline -y` or skipping non-blockingly if offline) before writing custom UI or DOM workarounds.
