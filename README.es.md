@@ -48,6 +48,25 @@ Reúne e integra las mejores ideas de cuatro proyectos de código abierto:
 
 ---
 
+## 🎯 Guía de Uso: `arcus-mode` vs. `arcus-work-loop` y Flujo Recomendado
+
+### 1. ¿Cuál es la diferencia entre `arcus-mode` y `arcus-work-loop`?
+
+| Dimensión | 👑 **`arcus-mode` (Modo Maestro / Sistema Operativo)** | 🔄 **`arcus-work-loop` (Motor de Ejecución de Checklist)** |
+| :--- | :--- | :--- |
+| **Rol Principal** | Establece el criterio de ingeniería, el estilo de respuesta conciso y la coordinación de subagentes para toda la sesión. | Toma una lista de verificación (`- [ ]`) y ejecuta el bucle **implementar ➔ probar ➔ corregir ➔ marcar (`[x]`)** hasta completar cada ítem. |
+| **Alcance** | Amplio: selecciona entre 24 principios de ingeniería y 22 playbooks (investigación, refactorización, comparativas de diseño, optimización, gestión de PRs). | Enfocado: toma la lista generada por `arcus-plan`, aplica cambios mínimos y marca `- [x]` únicamente tras validar con tests y compilación reales. |
+| **Cuándo Usarlo** | Al iniciar una sesión para activar estándares de ingeniería senior, o en tareas abiertas de investigación, arquitectura y depuración. | Justo después de `$arcus-plan` (y `$arcus-review`), cuando el plan ya está decidido y quieres que el agente implemente y verifique todo sin detenerse a mitad de camino. |
+
+### 2. Flujo de Trabajo Paso a Paso Recomendado
+
+1. **Planificación y Checklist (`$arcus-plan`)**: Identifica la causa raíz, mapea archivos afectados y genera una lista de verificación (`- [ ]`) con condiciones de prueba.
+2. **Crítica Aislada del Plan (`$arcus-review`)**: Lanza un subagente con contexto aislado para auditar los supuestos del plan antes de modificar código.
+3. **Bucle de Ejecución Autónoma (`$arcus-work-loop`)**: Ejecuta y verifica cada punto de la lista hasta que todos estén marcados como `- [x]`.
+4. **Revisión Final y Registro de Decisiones (`$arcus-review` / `DECISIONS.md`)**: Audita el código frente al Review Ledger. Si hubo decisiones arquitectónicas importantes o graduación de reglas (`$arcus-correct`), solicita tu autorización explícita para registrarlas en `DECISIONS.md` (o recuerda tu exclusión por proyecto en `.git/config`, `AGENTS.md` o `.agents/settings.json`).
+
+---
+
 ## 🏗️ Arquitectura: Encapsulación de Habilidades en Dos Niveles
 
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:

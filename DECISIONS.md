@@ -65,3 +65,18 @@ This document records the core architectural and directional decisions of **`arc
   - `arcus-correct` audits rules against all four signals: escalate repeatedly violated rules into architecture/types/lints; delete orphaned rules; prune 100%-obeyed rules that duplicate base-model defaults or automated checks; and strip volatile API fact claims from rule files.
   - Keep `rules/AGENTS.md` strictly for active behavioral constraints and their enforcement table, while storing historical rationale in on-demand `DECISIONS.md`.
 - **Enforced By**: [`skills/arcus-correct/SKILL.md`](./skills/arcus-correct/SKILL.md), [`skills/arcus-why/SKILL.md`](./skills/arcus-why/SKILL.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
+## `D-006`: User-Authorized `DECISIONS.md` Proposals & 3-Tier Opt-Out Persistence
+- **Date / Pin**: `2026-11-25` (Current)
+- **Status**: `ACTIVE`
+- **Context**: Proposing an Architectural Decision Record (`DECISIONS.md` / ADR) when a major trade-off or rule graduation occurs keeps long-term rationale discoverable for `arcus-why`. However, agents must never create files or modify workspace configs without explicit user authorization—and if a user declines for a project, agents across future sessions must remember that opt-out in both Git and non-Git workspaces without blocking autonomous subagents.
+- **Decision & Tradeoff**:
+  - **Top-Level Interactive Authorization Only**: Subagents (`worker.md`) and mid-flight `arcus-work-loop` runs never block to ask questions; only the top-level interactive turn asks for user authorization (`1: Record D-xxx`, `2: Skip this time`, `3: Opt out for this project`).
+  - **3-Tier Opt-Out Persistence Fallback Chain**: When the user authorizes opting out (Option 3), persist via:
+    1. **Tier 1 (Git repo — zero working-tree pollution)**: `git config --local arcus.decisions off`
+    2. **Tier 2 (Non-Git with `AGENTS.md`/`CLAUDE.md`, or explicit team-shared opt-out)**: Append `<!-- arcus:decisions=off -->`
+    3. **Tier 3 (Non-Git folder fallback)**: Merge `"decisions": "off"` into `.agents/settings.json`.
+  - Pre-check all three tiers (ignoring `git config` exit codes `1`/`128` when unset/non-Git) and stay silent whenever any tier is `off`.
+- **Enforced By**: [`skills/arcus-mode/internal/decisions.md`](./skills/arcus-mode/internal/decisions.md), [`skills/arcus-plan/SKILL.md`](./skills/arcus-plan/SKILL.md), and [`skills/arcus-correct/SKILL.md`](./skills/arcus-correct/SKILL.md).

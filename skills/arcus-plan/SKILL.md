@@ -27,3 +27,6 @@ Do not write or modify production code during the planning phase. Your goal is t
 4. **Produce the Plan & Actionable Verification Checklist**:
    - Follow the exact structure in [plan-template.md](./references/plan-template.md).
    - Never write vague checklist items like `- [ ] Fix bug` or `- [ ] Update tests`. Every checklist item (`- [ ]`) must pair a **concrete file/module change** with its **exact verification condition** (`➔ Verify: <command or observable proof>`).
+5. **Propose `DECISIONS.md` Record (When Architectural Trade-offs Exist)**:
+   - If the plan settles a significant architectural trade-off, check the workspace's 3-tier opt-out status (`git config --local --get arcus.decisions` == `off`, `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, or `"decisions": "off"` in `.agents/settings.json`).
+   - If not opted out, offer an optional checklist item or prompt asking user authorization to record `D-xxx` in `DECISIONS.md` (or to opt out for this project via the 3-tier fallback chain). Never create `DECISIONS.md` or write opt-out configs without explicit user authorization.

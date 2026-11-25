@@ -19,3 +19,9 @@ Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action**
   - ➔ **Verify**: Exact check or command.
 - [ ] **Step 3 — [Edge Cases & Regression Tests]**: Specific failure modes, empty/boundary inputs, or regression tests added/updated.
   - ➔ **Verify**: Test suite execution command and expected passing output.
+
+## 4. Architectural Decision Record Proposal (Optional — Only for Non-Trivial Trade-offs)
+If this plan settles a major architectural trade-off and the workspace has not opted out (`git config --local --get arcus.decisions` != `off`, no `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, and no `"decisions": "off"` in `.agents/settings.json`), ask the user for authorization:
+1. Record `D-xxx` in `DECISIONS.md` (or existing `ADR.md` / `docs/adr/`).
+2. Skip for this task.
+3. Opt out for this project (with user authorization, persist via Tier 1 `git config --local arcus.decisions off`, Tier 2 `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, or Tier 3 `.agents/settings.json` merge).

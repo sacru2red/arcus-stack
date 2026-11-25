@@ -38,9 +38,9 @@ Every line in `AGENTS.md` spends context tokens on every turn. Audit existing ru
 | **3. Never-Violated Rule (`0` violations / 100% obeyed)** | Either (a) already enforced by a compiler/linter/test, (b) standard knowledge already baked into base model weights, or (c) a non-obvious repo judgment call. | **Prune (a) and (b) immediately** as token-wasting redundancy. Keep *only* (c) genuine repo-specific judgment calls that no tool can check. |
 | **4. Brittle Fact Claims** (statements like *"API X behaves like Y"* or *"Library Z returns null on error"*) | Library upgrades and code changes silently turn static fact claims into lies. | **Delete the fact claim from rules.** Replace with a pointer to the source-of-truth type definition, executable contract test, or official docs lookup. |
 
-## 4. Keep the Rule Enforcement Table & `DECISIONS.md`
+## 4. Keep the Rule Enforcement Table & Authorized `DECISIONS.md`
 
 - In `AGENTS.md`, maintain a concise rule table that pairs each active rule with **what enforces it** (lint script, type, test, or judgment). Drop a prose rule once its mistake cannot happen.
-- Record *why* an architectural boundary or rule graduation was chosen in [`DECISIONS.md`](../../DECISIONS.md) (if present in the repo) with a pinned commit SHA, keeping historical narrative out of always-on `AGENTS.md` files.
+- **User-Authorized `DECISIONS.md` Recording**: When an architectural boundary or rule graduation is established, check the workspace's 3-tier opt-out status (`git config --local --get arcus.decisions` == `off`, `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md`, or `"decisions": "off"` in `.agents/settings.json`). If not opted out, ask the user for explicit authorization to: (1) record `D-xxx` in the workspace's `DECISIONS.md` with a pinned commit SHA, (2) skip this time, or (3) opt out for this project (persisting via Tier 1 `git config --local arcus.decisions off` if `.git` exists → Tier 2 `<!-- arcus:decisions=off -->` in `AGENTS.md`/`CLAUDE.md` → Tier 3 `.agents/settings.json` merge). Never write `DECISIONS.md` or opt-out settings without user authorization.
 
 **Reply:** each mistake class or audited rule with its evidence, the enforcement level or pruning action you picked, and why a higher level didn't work.

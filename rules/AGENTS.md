@@ -21,6 +21,7 @@
 | Two-tier encapsulation (only 12 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`)](../DECISIONS.md) |
 | Stale `arcus-*` junctions and `.skill-lock.json` entries pruned on rename/update | [`scripts/install-global.ps1`](../scripts/install-global.ps1) & [`scripts/install-global.sh`](../scripts/install-global.sh) |
 | Context-isolated review, Cold-Reader test, and code-first Review Ledger | [`skills/arcus-review/SKILL.md`](../skills/arcus-review/SKILL.md) & [`review-ledger-protocol.md`](../skills/arcus-review/references/review-ledger-protocol.md) |
+| User-authorized `DECISIONS.md` proposals & 3-tier opt-out persistence (Git config / `AGENTS.md` comment / `.agents/settings.json`) | [`skills/arcus-mode/internal/decisions.md`](../skills/arcus-mode/internal/decisions.md) & [`DECISIONS.md` (`D-006`)](../DECISIONS.md) |
 
 ## 4. Available Core Skills (`arcus-*`)
 - `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.

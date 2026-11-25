@@ -26,3 +26,4 @@ Execute the task autonomously in an iterative implementation-and-verification lo
 4. **Evidence-Gated Completion**:
    - Audit your final state against [work-loop-checklist.md](./references/work-loop-checklist.md).
    - Present the completed checklist (`- [x]`) alongside the concrete verification evidence (commands run and their outputs).
+   - If a new architectural decision was made during the loop and the workspace has not opted out of `DECISIONS.md`, propose recording `D-xxx` (or opting out) in your final handoff turn—never pause the loop mid-flight to ask.

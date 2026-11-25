@@ -48,6 +48,25 @@ It distills and unifies the best ideas from four open-source projects:
 
 ---
 
+## 🎯 How to Use: `arcus-mode` vs. `arcus-work-loop` & Recommended Workflow
+
+### 1. `arcus-mode` vs. `arcus-work-loop` — What's the Difference?
+
+| Dimension | 👑 **`arcus-mode` (Master Operating System)** | 🔄 **`arcus-work-loop` (Checklist Execution Engine)** |
+| :--- | :--- | :--- |
+| **Role** | Sets the agent's overall engineering persona, prose discipline, and decision rules for the entire session. | Drives a concrete implementation-and-verification checklist item by item until every check passes. |
+| **Scope** | Broad: selects from 24 engineering principles and 22 task playbooks (investigation, bug-fix, refactoring, arena comparison, PR babysitting, etc.), enforces concise `unslop` writing, and coordinates subagents. | Focused: takes the `- [ ]` checklist from `arcus-plan` (or builds one), edits code, runs tests/builds, repairs failures, and marks items `- [x]` only with real verification proof. |
+| **When to Invoke** | At the start of a session when you want senior-level engineering judgment, or when tackling open-ended problems (architecture, debugging, perf tuning, PR management). | Right after `arcus-plan` (and `arcus-review`) when the plan is decided and you want the agent to execute and verify every checklist step to completion without stopping halfway. |
+
+### 2. Recommended Step-by-Step Pipeline
+
+1. **Align & Plan (`$arcus-plan`)**: Investigate the root cause, map affected files, and generate an actionable execution & verification checklist (`- [ ]`).
+2. **Isolated Critique (`$arcus-review`)**: Spawn a context-isolated subagent to critique the plan (Cold-Reader test & premise check) before touching production code.
+3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`).
+4. **Final Code Review & Decision Log (`$arcus-review` / `DECISIONS.md`)**: Run an isolated diff review against the Review Ledger. When major architectural trade-offs or rule graduations (`$arcus-correct`) occur, agents ask for your explicit authorization to record them in `DECISIONS.md` (or remember your project opt-out via `.git/config`, `AGENTS.md`, or `.agents/settings.json`).
+
+---
+
 ## 🏗️ Architecture: Two-Tier Skill Encapsulation
 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
