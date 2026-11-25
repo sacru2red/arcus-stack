@@ -13,7 +13,15 @@
 - **Parallelism with Isolation**: Delegate independent read-only research or isolated verification tasks to subagents when available, keeping the primary context clean and focused.
 
 ## 3. Available Core Skills (`arcus-*`)
+- `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.
 - `arcus-plan`: Deep-first root-cause analysis, blast-radius mapping, and step-by-step execution planning.
 - `arcus-work`: Autonomous end-to-end execution loop (`ultrawork` / `autopilot`) from research to verified implementation.
 - `arcus-review`: Strict adversarial code review checking root-cause validity, architectural boundaries, edge cases, and test evidence.
+- `arcus-in-your-own-words`: Restate the user's goal and core problem in your own words to verify alignment before acting.
+- `arcus-create-verification`: Generate and prove a project-local verification skill (`verify-<app>`) and user-POV feature map.
+- `arcus-maintain-verification`: Audit and update an existing project verification skill via parallel source readers and a live driving pass.
+- `arcus-ketchup`: Catch the user up on what changed since their last message in plain words, visuals, and decision-ready action items.
+- `arcus-why`: Answer "why does X work this way" from git commit and PR history rather than guessing from current code.
+- `arcus-correct`: Find repeated agent mistakes in the repo and make them impossible via architecture, types, lints, or behavior tests.
+- `arcus-automate-me`: Mine recent conversation transcripts and interview the user to draft or update a personal `<handle>-mode` skill.
 - `arcus-skill-maker`: Meta-skill for absorbing, remixing, and standardizing external skills into universal 5-agent compatible `arcus-*` skills.
