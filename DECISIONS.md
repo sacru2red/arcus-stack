@@ -12,7 +12,7 @@ This document records the core architectural and directional decisions of **`arc
 ## `D-001`: Zero-MCP, Universal `SKILL.md` & `AGENTS.md` Standard Across 5 Agents
 - **Date / Pin**: `2026-11-25` (`e1c549a`)
 - **Status**: `ACTIVE`
-- **Context**: In multi-agent environments like **T3 Code** and **Orca**, operators frequently switch or delegate across **Antigravity (`agy`), Claude Code, Codex, Cursor, and OpenCode**. Agent-specific frontmatter keys (`disable-model-invocation`, `allowed-tools`, `globs`, `icon`) and custom runtime servers break portability.
+- **Context**: In multi-agent environments like **T3 Code** and **Orca**, operators frequently switch or delegate across **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor`, and `OpenCode`**. Agent-specific frontmatter keys (`disable-model-invocation`, `allowed-tools`, `globs`, `icon`) and custom runtime servers break portability.
 - **Decision & Tradeoff**:
   - Build `arcus-stack` exclusively on pure Markdown (`SKILL.md` + `AGENTS.md`) with zero MCP runtime dependencies.
   - Restrict `SKILL.md` YAML frontmatter strictly to `name` and `description`. Express tool constraints and trigger postures in plain Markdown body text.

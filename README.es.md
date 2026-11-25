@@ -11,13 +11,13 @@
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
 > *(Un anagrama de **SACRU** — Stack universal de habilidades y flujos de trabajo para agentes de IA)*
 
-**`arcus-stack`** es un paquete universal de habilidades y flujos de trabajo compatible de forma nativa con **Antigravity (`agy`), Claude Code, Codex, Cursor y OpenCode**.
+**`arcus-stack`** es un paquete universal de habilidades y flujos de trabajo compatible de forma nativa con **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor` y `OpenCode`**.
 
 ---
 
 ## 💡 ¿Por qué se creó `arcus-stack`?
 
-Al trabajar en entornos multiagente como **T3 Code** u **Orca**, es habitual alternar o delegar tareas entre distintos agentes de programación (`agy`, Claude Code, Codex, Cursor, OpenCode). Sin embargo, cada herramienta exige rutas de carpetas y formatos de configuración distintos, lo que hacía muy frustrante **no poder usar las mismas habilidades al invocar a diferentes agentes**.
+Al trabajar en entornos multiagente como **T3 Code** u **Orca**, es habitual alternar o delegar tareas entre distintos agentes de programación (`agy`, `Claude Code`, `Codex`, `Cursor`, `OpenCode`). Sin embargo, cada herramienta exige rutas de carpetas y formatos de configuración distintos, lo que hacía muy frustrante **no poder usar las mismas habilidades al invocar a diferentes agentes**.
 
 **`arcus-stack` nació para eliminar esta fragmentación.** Sin depender de servidores MCP pesados y utilizando únicamente los estándares universales `SKILL.md` y `AGENTS.md`, te permite invocar exactamente las mismas habilidades y reglas sin importar qué agente estés ejecutando.
 

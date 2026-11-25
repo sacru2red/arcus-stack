@@ -11,13 +11,13 @@
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
 > *(An anagram of **SACRU** — Universal Agent Skill & Workflow Stack)*
 
-**`arcus-stack`** is a universal skill and workflow pack that works out of the box across **Antigravity (`agy`), Claude Code, Codex, Cursor, and OpenCode**.
+**`arcus-stack`** is a universal skill and workflow pack that works out of the box across **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor`, and `OpenCode`**.
 
 ---
 
 ## 💡 Why `arcus-stack`?
 
-When working in multi-agent environments like **T3 Code** or **Orca**, you constantly switch between or delegate across different coding agents (`agy`, Claude Code, Codex, Cursor, OpenCode). However, every agent expects skills and rules in different directories and frontmatter formats—making it frustratingly difficult to share the same workflows across all of them.
+When working in multi-agent environments like **T3 Code** or **Orca**, you constantly switch between or delegate across different coding agents (`agy`, `Claude Code`, `Codex`, `Cursor`, `OpenCode`). However, every agent expects skills and rules in different directories and frontmatter formats—making it frustratingly difficult to share the same workflows across all of them.
 
 **`arcus-stack` was built to solve this fragmentation.** With zero MCP runtime overhead and strictly universal `SKILL.md` and `AGENTS.md` standards, it lets you invoke the exact same battle-tested skills no matter which agent or harness you are running.
 

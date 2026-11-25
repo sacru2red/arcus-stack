@@ -11,13 +11,13 @@
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
 > *(**SACRU** 的字母异位词 — 兼容五大 AI 编程助手的通用技能与工作流栈)*
 
-**`arcus-stack`** 是一套无需修改即可在 **Antigravity (`agy`)、Claude Code、Codex、Cursor 和 OpenCode** 五大 AI 编程助手中通用的技能与工作流合集。
+**`arcus-stack`** 是一套无需修改即可在 **`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor` 和 `OpenCode`** 五大 AI 编程助手中通用的技能与工作流合集。
 
 ---
 
 ## 💡 为什么要做这个项目？
 
-在 **T3 Code** 或 **Orca** 等多智能体编排环境中开发时，我们经常需要根据任务在不同编程助手（`agy`、Claude Code、Codex、Cursor、OpenCode）之间切换或并行调用。然而，不同工具读取技能的目录结构和配置格式各不相同，**导致在某个工具中顺手的技能无法在调用其他助手时直接复用**，非常不便。
+在 **T3 Code** 或 **Orca** 等多智能体编排环境中开发时，我们经常需要根据任务在不同编程助手（`agy`、`Claude Code`、`Codex`、`Cursor`、`OpenCode`）之间切换或并行调用。然而，不同工具读取技能的目录结构和配置格式各不相同，**导致在某个工具中顺手的技能无法在调用其他助手时直接复用**，非常不便。
 
 **`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用五大工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
 
