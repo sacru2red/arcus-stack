@@ -21,12 +21,12 @@ This document records the core architectural and directional decisions of **`arc
 
 ---
 
-## `D-002`: Two-Tier Skill Encapsulation (12 Public Core Skills + Private Internal Modules)
-- **Date / Pin**: `2026-11-25` (`5f2bb3c`)
+## `D-002`: Two-Tier Skill Encapsulation (13 Public Core Skills + Private Internal Modules)
+- **Date / Pin**: `2026-11-25` (`5f2bb3c`, updated by `D-008`)
 - **Status**: `ACTIVE`
-- **Context**: Flattening 70+ granular skills (24 principles, 22 playbooks, 15 helper sub-skills) directly under `skills/` pollutes user slash-command menus (`/`) and wastes always-on skill description tokens.
+- **Context**: Flattening 70+ granular skills (24 principles, 22 playbooks, 17 helper sub-skills) directly under `skills/` pollutes user slash-command menus (`/`) and wastes always-on skill description tokens.
 - **Decision & Tradeoff**:
-  - Expose only **12 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
+  - Expose only **13 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
   - Encapsulate all 60+ internal modules (`principles/`, `playbooks/`, `internal/`, `references/`) inside `skills/arcus-mode/` (and self-contained skill `references/`), loaded on-demand via relative Markdown links.
   - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
   - *Rejected Alternative*: Flat top-level `skills/principle-*` folders or cross-skill hard dependencies that break on partial installation.
@@ -86,9 +86,21 @@ This document records the core architectural and directional decisions of **`arc
 ## `D-007`: Live Web Platform Guidance via Encapsulated `modern-web-guidance` CLI
 - **Date / Pin**: `2026-11-25` (Current)
 - **Status**: `ACTIVE`
-- **Context**: Web platform APIs (`<dialog>`, Popover API, Anchor Positioning, Container Queries, View Transitions, Scroll-Driven Animations, Baseline fallbacks) evolve rapidly, causing base model training weights to emit obsolete patterns. However, hardcoding static web API rules in `AGENTS.md` violates `D-005` (Fact-Claim Ban), and adding `modern-web-guidance` as a 13th top-level skill would clutter the `arcus-*` slash menu (`D-002`).
+- **Context**: Web platform APIs (`<dialog>`, Popover API, Anchor Positioning, Container Queries, View Transitions, Scroll-Driven Animations, Baseline fallbacks) evolve rapidly, causing base model training weights to emit obsolete patterns. However, hardcoding static web API rules in `AGENTS.md` violates `D-005` (Fact-Claim Ban), and adding `modern-web-guidance` as an extra top-level skill would clutter the `arcus-*` slash menu (`D-002`).
 - **Decision & Tradeoff**:
   - Encapsulate Google Chrome's `modern-web-guidance` (Apache-2.0, with Section 4(b) modification notice) as a private internal sub-skill at [`skills/arcus-mode/internal/modern-web-guidance.md`](./skills/arcus-mode/internal/modern-web-guidance.md).
   - Remove upstream's pinned `--skill-version` flag and blocking pre-execution permission prompts, replacing them with a non-blocking offline fallback chain (`npx -y modern-web-guidance@latest` ➔ `npx --offline -y` ➔ 1-line skip note) so autonomous subagents (`worker.md`) and `arcus-work-loop` never stall.
   - Wire automatic triggers for HTML/CSS/client-side JS tasks across `rules/AGENTS.md`, `arcus-mode`, `arcus-plan`, `arcus-work-loop`, and `arcus-review`.
 - **Enforced By**: [`skills/arcus-mode/internal/modern-web-guidance.md`](./skills/arcus-mode/internal/modern-web-guidance.md) and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
+## `D-008`: Engineering & Domain Brain Onboarding (`arcus-onboard` / `ONBOARDING.md`) with Code-vs-Domain Reconciliation
+- **Date / Pin**: `2026-11-25` (Current)
+- **Status**: `ACTIVE`
+- **Context**: High-severity agent mistakes in unfamiliar repositories stem from guessing implicit domain knowledge: mismatches between product terminology and DB/code identifiers, unstated settlement/timezone/rounding invariants, authz & plan-tier boundaries, authoritative systems of record, and frozen legacy code minefields. A generic corporate/HR onboarding template does not help software engineering agents, whereas dumping volatile domain facts into always-on `AGENTS.md` violates `D-005`.
+- **Decision & Tradeoff**:
+  - Add `arcus-onboard` as the 13th public core skill ([`skills/arcus-onboard/SKILL.md`](./skills/arcus-onboard/SKILL.md)) to generate and maintain a 1–2 page Engineering & Domain Brain (`ONBOARDING.md`, or `CONTEXT.md` when `ONBOARDING.md` is already used for dev setup).
+  - Focus the 7 pillars strictly on software engineering & domain architecture (System Boundaries, Ubiquitous Language ↔ Code Mapping, Core Business Formulas & Invariants, Authz Roles & Plan/Tier Gating, Legacy Minefields & Red Lines, Systems of Record, and Error/UX/PR Conventions) per [`domain-brain-template.md`](./skills/arcus-onboard/references/domain-brain-template.md).
+  - **Code-vs-Domain Reconciliation (`D-005` harmony)**: Stamp every entry with `[as of YYYY-MM-DD | Source: <File/Schema/System/Owner>]`. When consumer skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-mode`) read `ONBOARDING.md`, they must cross-check cited code paths against live code—trusting live code if refactored and proposing a Mode 2 update for stale onboarding entries.
+- **Enforced By**: [`skills/arcus-onboard/SKILL.md`](./skills/arcus-onboard/SKILL.md), [`skills/arcus-onboard/references/domain-brain-template.md`](./skills/arcus-onboard/references/domain-brain-template.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).

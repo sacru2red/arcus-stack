@@ -70,6 +70,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 | **`arcus-why`** | History & Rationale | Saves time guessing why existing code was written a certain way. Traces `DECISIONS.md`, Git commits, and PR discussions to return cited design decisions and historical trade-offs. |
 | **`arcus-correct`** | Mistake Prevention & Rule Hygiene | Stops you from repeating the same corrections while keeping rule files lean. Escalates recurring mistakes into architecture, types, lint rules, or tests, and prunes dead, redundant, or brittle fact-claim rules. |
 | **`arcus-automate-me`** | Personal Style | Frees you from re-explaining your coding preferences and workflow habits in every session. Mines your recent transcripts and runs a quick interview to build a personal `*-mode` skill. |
+| **`arcus-onboard`** | Engineering & Domain Brain | Prevents agents from guessing domain rules or stepping on legacy code landmines. Mines your schemas/routes and runs a targeted interview to build a 1–2 page `ONBOARDING.md` covering system boundaries, domain term ↔ code/DB mappings, business formulas, authz/tier gates, legacy minefields, systems of record, and error conventions with `[as of YYYY-MM-DD \| Source: ...]` tags. |
 | **`arcus-skill-maker`** | Skill Converter | Makes external skills locked to a single tool usable across all 5 agents. Converts any workflow or external skill into the universal `arcus-*` standard. |
 
 ---
@@ -97,7 +98,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
-1. **User-Facing Core Skills (12 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 12 high-level entrypoints appear in your skill menu.
+1. **User-Facing Core Skills (13 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 13 high-level entrypoints appear in your skill menu.
 2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, 24 principles, 22 playbooks, and 17 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
@@ -149,7 +150,7 @@ npx skills update
 
 ### Method 3. Local Clone + Global Symlinks (`scripts/install-global.ps1` / `.sh`)
 
-If you clone this repository locally and run the symlink script, all 12 skills are linked directly to the global directories of all 5 agents (including T3 Code's isolated Antigravity sandbox).
+If you clone this repository locally and run the symlink script, all 13 skills are linked directly to the global directories of all 5 agents (including T3 Code's isolated Antigravity sandbox).
 
 ```powershell
 # Windows (PowerShell)
@@ -178,7 +179,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
-├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-007)
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-008)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
@@ -191,7 +192,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows global symlink installer (5 agents + T3 Code)
 │   └── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
-└── skills/                      # ⭐ 12 User-Facing Core Skills
+└── skills/                      # ⭐ 13 User-Facing Core Skills
     ├── arcus-mode/              # Master mode + encapsulated internal modules
     │   ├── SKILL.md
     │   ├── worker.md
@@ -209,5 +210,6 @@ arcus-stack/
     ├── arcus-why/
     ├── arcus-correct/
     ├── arcus-automate-me/
+    ├── arcus-onboard/
     └── arcus-skill-maker/
 ```

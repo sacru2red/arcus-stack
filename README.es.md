@@ -70,6 +70,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 | **`arcus-why`** | Historial y Decisiones | Ahorra tiempo adivinando por qué cierto código se escribió de esa manera. Rastrea `DECISIONS.md`, los commits de Git y discusiones en PRs para explicarte las razones de diseño originales con citas y evidencias. |
 | **`arcus-correct`** | Prevención de Errores y Limpieza de Reglas | Elimina el desgaste de corregir una y otra vez el mismo error manteniendo limpios tus archivos de reglas. Convierte fallos repetidos en restricciones de arquitectura, tipos, lints o tests, y depura reglas huérfanas, redundantes o afirmaciones sobre APIs que caducan al actualizar versiones. |
 | **`arcus-automate-me`** | Estilo Personal | Te libera de explicar tus preferencias de código y formato en cada nueva sesión. Analiza tus conversaciones recientes y realiza una breve entrevista de opción múltiple para crear tu propia habilidad `*-mode`. |
+| **`arcus-onboard`** | Mapa de Dominio y Minas Legadas | Evita que el agente adivine reglas de negocio o pise zonas intocables de código legado. Analiza esquemas/rutas y realiza una entrevista breve para construir un `ONBOARDING.md` de 1 a 2 páginas (límites del sistema, mapeo de términos de dominio ↔ identificadores de código/BD, fórmulas e invariantes de negocio, permisos y niveles de plan, minas de código legado, sistemas de referencia y contratos de error) con etiquetas `[as of YYYY-MM-DD \| Source: ...]`. |
 | **`arcus-skill-maker`** | Conversor de Habilidades | Permite usar habilidades externas diseñadas para una sola herramienta en los 5 agentes. Analiza cualquier flujo o prompt externo y lo convierte al estándar universal `arcus-*`. |
 
 ---
@@ -97,7 +98,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
-1. **Habilidades Principales para el Usuario (12 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 12 habilidades principales aparecen en tu menú.
+1. **Habilidades Principales para el Usuario (13 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 13 habilidades principales aparecen en tu menú.
 2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 17 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
@@ -175,7 +176,7 @@ arcus-stack/
 ├── README.ja.md                 # Documentación en japonés (Japanese)
 ├── README.zh-CN.md              # Documentación en chino simplificado (Simplified Chinese)
 ├── README.es.md                 # Documentación en español (Spanish)
-├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-007)
+├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-008)
 ├── plugin.json                  # Manifiesto de plugin para Antigravity (agy)
 ├── .claude-plugin/
 │   └── plugin.json              # Manifiesto de plugin para Claude Code
@@ -188,7 +189,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Instalador global de enlaces simbólicos en Windows (5 agentes + T3 Code)
 │   └── install-global.sh        # Instalador global de enlaces simbólicos en macOS/Linux (5 agentes + T3 Code)
-└── skills/                      # ⭐ 12 Habilidades Principales para el Usuario
+└── skills/                      # ⭐ 13 Habilidades Principales para el Usuario
     ├── arcus-mode/              # Modo maestro + módulos internos encapsulados
     │   ├── SKILL.md
     │   ├── worker.md
@@ -206,5 +207,6 @@ arcus-stack/
     ├── arcus-why/
     ├── arcus-correct/
     ├── arcus-automate-me/
+    ├── arcus-onboard/
     └── arcus-skill-maker/
 ```

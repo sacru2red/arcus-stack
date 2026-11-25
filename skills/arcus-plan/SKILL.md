@@ -16,6 +16,7 @@ Do not write or modify production code during the planning phase. Your goal is t
 ## Workflow
 
 1. **Trace to the Root Cause (No Guessing)**:
+   - If `ONBOARDING.md` (or `CONTEXT.md`) exists in the workspace, read it first to align on domain-to-code identifier mappings, business formulas/invariants, authz boundaries, systems of record, and legacy minefields (always cross-checking cited file/schema paths against live code; if live code was refactored, trust live code and note the stale onboarding entry for `arcus-onboard` Mode 2 update).
    - Read the actual implementation files, types, and call sites along the data/control flow.
    - Distinguish the **underlying invariant or root cause** from surface symptoms.
    - For web UI, HTML/CSS, or client-side JS/DOM tasks, query live web platform standards first via `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `npx -y modern-web-guidance@latest retrieve "<id>"` (with `npx --offline -y` fallback if offline) instead of designing around legacy patterns.

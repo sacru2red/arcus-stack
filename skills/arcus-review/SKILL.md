@@ -28,7 +28,7 @@ Never review a plan or diff inside the same mental context that created it. Perf
 ## 2. Mode Detection & Review Procedure
 
 ### Mode A — Isolated Plan & Design Critique (After `arcus-plan`)
-1. **Pin Snapshot & Verify Repo Grounding**: Pin `HEAD` SHA and read the actual repository files the plan claims to touch. Never trust a plan's claims without checking the codebase.
+1. **Pin Snapshot & Verify Repo Grounding**: Pin `HEAD` SHA and read the actual repository files the plan claims to touch (plus `ONBOARDING.md` / `CONTEXT.md` if present, verifying whether the plan respects documented domain mappings, business invariants, and legacy minefields). Never trust a plan's claims without checking the codebase.
 2. **Cold-Reader Extraction Test**: Using *only* the plan document and repo files, extract: (a) the exact root cause/seam, (b) the data/state boundary being changed, and (c) what breaks if step N fails. Any unstated assumption the reader must guess is logged as a ledger finding (`F-xx`).
 3. **External Reference Check**: When the design involves external APIs, third-party libraries, CLI flags, or protocol specs, look up current external references/docs rather than relying purely on internal repo conventions. For HTML, CSS, or client-side JS/DOM designs and diffs, verify platform capabilities and Baseline fallbacks via `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `retrieve "<id>"`.
 4. **Audit & Ledger Output**: Apply [review-rubric.md](./references/review-rubric.md) and output the prioritized findings and **Review Ledger** per [review-ledger-protocol.md](./references/review-ledger-protocol.md).
@@ -36,5 +36,5 @@ Never review a plan or diff inside the same mental context that created it. Perf
 ### Mode B — Isolated Code & PR Review (After `arcus-work-loop` or on PRs)
 1. **Pin Snapshot**: Pin `base..head` SHA (or `HEAD` SHA + `git diff HEAD | git hash-object --stdin` for uncommitted changes).
 2. **Round 2+ Blind Ledger Check First**: If a Review Ledger exists from an earlier round, follow [review-ledger-protocol.md](./references/review-ledger-protocol.md) strictly—judge every open finding from the **code snapshot alone** *before* opening the author's replies or explanations (`RESOLVED`, `UNRESOLVED`, `VALID_PUSHBACK`, `DISPUTED`).
-3. **Full Diff, Callers & External Docs Audit**: Inspect the diff, surrounding callers/callees, and external library docs against [review-rubric.md](./references/review-rubric.md).
+3. **Full Diff, Callers & External Docs Audit**: Inspect the diff, surrounding callers/callees, `ONBOARDING.md` / `CONTEXT.md` domain invariants and minefields (when present), and external library docs against [review-rubric.md](./references/review-rubric.md).
 4. **Report Ledger & Prioritized Findings**: Output the updated Findings Ledger Table (`F-01`, `F-02`, ...) categorized into `[CRITICAL / BLOCKING]`, `[HIGH / BUG RISK]`, and `[NIT / SUGGESTION]` with exact `file:line` citations, failure scenarios, and minimal fixes.

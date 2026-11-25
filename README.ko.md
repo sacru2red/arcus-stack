@@ -70,6 +70,7 @@ AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 A
 | **`arcus-why`** | 변경 이력 추적 | 기존 코드가 왜 이렇게 작성되었는지 추측하느라 헤매는 시간을 아껴줍니다. 현재 코드만 보고 넘겨짚지 않고 `DECISIONS.md`, Git 커밋 기록, PR 논의를 추적해 당시의 설계 이유와 선택 배경을 근거와 함께 알려줍니다. |
 | **`arcus-correct`** | 반복 실수 방지 및 룰 정리 | 에이전트에게 같은 지적을 반복해야 하는 피로감을 없애고 불필요한 규칙이 토큰을 낭비하지 않게 관리합니다. 반복 위반되는 규칙은 코드 구조·타입·린트·테스트로 막고, 안 읽히거나 당연한 규칙 및 버전 변화에 취약한 사실 주장은 정리합니다. |
 | **`arcus-automate-me`** | 개인 스타일 학습 | 새 대화를 열 때마다 내 코딩 취향과 응답 스타일을 다시 설명할 필요가 없어집니다. 최근 작업 대화 기록을 분석하고 간단한 객관식 질문을 거쳐 내 작업 방식을 그대로 따르는 개인 맞춤형 모드 스킬을 만들어 줍니다. |
+| **`arcus-onboard`** | 도메인·지뢰밭 온보딩 | 에이전트가 도메인 규칙을 추측해 코드를 짜거나 건드리면 안 되는 레거시 지뢰밭을 건드리는 사고를 막아줍니다. 코드 스키마/라우터를 먼저 스캔하고 핵심만 질문해 1~2페이지 분량의 `ONBOARDING.md`(시스템 경계, 도메인 용어 ↔ 코드/DB 매핑, 핵심 비즈니스 계산 규칙, 권한·티어 경계, 레거시 지뢰밭, 데이터 원천, 에러·문구 규격)를 기준일 태그(`[as of YYYY-MM-DD \| Source: ...]`)와 함께 구축·관리합니다. |
 | **`arcus-skill-maker`** | 스킬 변환 및 제작 | 특정 도구에서만 작동하던 외부 스킬을 5개 에이전트 어디서나 쓸 수 있게 해줍니다. 외부 스킬이나 프롬프트를 분석해 모든 에이전트에서 호환되는 `arcus-*` 규격 스킬로 깔끔하게 변환합니다. |
 
 ---
@@ -97,7 +98,7 @@ AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 A
 
 수십 개의 세부 스킬을 최상위 `skills/` 폴더에 그대로 풀어놓으면 슬래시 명령어(`/`) 목록이 너무 길어지고 에이전트의 컨텍스트를 불필요하게 차지합니다. `arcus-stack` 은 이를 **2계층 캡슐화 구조**로 해결했습니다.
 
-1. **사용자 호출용 코어 스킬 (12종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 12개의 핵심 스킬만 깔끔하게 표시됩니다.
+1. **사용자 호출용 코어 스킬 (13종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 13개의 핵심 스킬만 깔끔하게 표시됩니다.
 2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 17개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
 
 ---
@@ -175,7 +176,7 @@ arcus-stack/
 ├── README.ja.md                 # 일본어 문서 (Japanese)
 ├── README.zh-CN.md              # 중국어 간체 문서 (Simplified Chinese)
 ├── README.es.md                 # 스페인어 문서 (Spanish)
-├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-007)
+├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-008)
 ├── plugin.json                  # Antigravity (agy) 플러그인 매니페스트
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 플러그인 매니페스트
@@ -188,7 +189,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows용 5대 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
 │   └── install-global.sh        # macOS/Linux용 5대 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
-└── skills/                      # ⭐ 사용자 노출 12대 코어 스킬
+└── skills/                      # ⭐ 사용자 노출 13대 코어 스킬
     ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈
     │   ├── SKILL.md
     │   ├── worker.md
@@ -206,5 +207,6 @@ arcus-stack/
     ├── arcus-why/
     ├── arcus-correct/
     ├── arcus-automate-me/
+    ├── arcus-onboard/
     └── arcus-skill-maker/
 ```

@@ -14,6 +14,7 @@ Execute the task autonomously in an iterative implementation-and-verification lo
 ## Execution Loop
 
 1. **Adopt or Build the Task Checklist**:
+   - If `ONBOARDING.md` (or `CONTEXT.md`) exists in the workspace, consult it first so your implementation respects domain-to-code mappings, business invariants, authz tiers, and legacy red-line minefields (verifying cited code paths against live code).
    - If an `arcus-plan` checklist already exists in the conversation, adopt its `- [ ]` items as your live execution tracker.
    - Otherwise, perform a fast parallel discovery of the relevant files/tests and construct a goal-aligned checklist where every item pairs a concrete edit with a verification check.
 2. **Minimal, High-Precision Implementation**:

@@ -25,6 +25,7 @@ The remaining triggers live only here:
 - Prose, your reply included → [./internal/unslop.md](./internal/unslop.md). Docs, PR descriptions, commit messages → [./internal/technical-writing.md](./internal/technical-writing.md).
 - Before commit or review → [./internal/no-comments.md](./internal/no-comments.md) and [`arcus-review`](../arcus-review/SKILL.md).
 - Multi-step planning or tracking progress against a goal → [./internal/checklist.md](./internal/checklist.md) and [`arcus-plan`](../arcus-plan/SKILL.md).
+- Domain terminology, code/DB identifier mappings, business invariants, authz tiers, or legacy minefields → check the workspace's `ONBOARDING.md` (or `CONTEXT.md`) first and cross-check cited paths against live code, or build/update it via [`arcus-onboard`](../arcus-onboard/SKILL.md).
 - Settling an architectural trade-off or graduating a rule → [./internal/decisions.md](./internal/decisions.md) (propose recording in `DECISIONS.md` with user authorization unless opted out).
 - A number you measured → [./internal/benchmark-checklist.md](./internal/benchmark-checklist.md).
 - PR status → the [./playbooks/babysit.md](./playbooks/babysit.md) playbook (and [./references/bugbot-triage.md](./references/bugbot-triage.md)). Landing a green stack → the [./playbooks/shipping.md](./playbooks/shipping.md) playbook.

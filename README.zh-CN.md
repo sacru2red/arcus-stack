@@ -70,6 +70,7 @@
 | **`arcus-why`** | 历史变更溯源 | 省去对着现有代码盲目猜测“当时为什么这么写”的时间。通过追溯 `DECISIONS.md`、Git 提交记录与 PR 讨论，有理有据地还原当初的设计考量与权衡。 |
 | **`arcus-correct`** | 杜绝重复犯错与规则瘦身 | 摆脱反复纠正同一个错误的疲劳感，同时防止规则文件臃肿浪费 Token。将反复违反的规则升级为架构、类型、Lint 或测试约束，并清理从未读取、无需提醒的常识规则以及易过时的 API 事实断言。 |
 | **`arcus-automate-me`** | 个人风格定制 | 不用在每次新建会话时重新解释你的代码偏好与回复风格。通过分析近期对话记录并进行简短的多选访谈，为你生成或更新专属的 `*-mode` 技能。 |
+| **`arcus-onboard`** | 工程领域与雷区地图 | 防止助手靠猜测编写业务逻辑或误触不可修改的遗留代码雷区。先扫描数据库Schema与路由再针对盲区提问，生成 1–2 页的 `ONBOARDING.md`（涵盖系统边界、业务术语 ↔ 代码/DB 标识符映射、核心业务计算公式与不变量、权限与套餐门槛、遗留代码雷区与安全红线、权威数据源、错误响应与文风规范），并附带日期与代码来源标签（`[as of YYYY-MM-DD \| Source: ...]`）。 |
 | **`arcus-skill-maker`** | 技能转换与制作 | 让原本只能在单一工具中使用的外部技能在五大助手中通用。分析外部技能或提示词，将其转换为跨工具兼容的 `arcus-*` 标准技能。 |
 
 ---
@@ -97,7 +98,7 @@
 
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
-1. **面向用户的核心技能（12 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 12 个高频入口。
+1. **面向用户的核心技能（13 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 13 个高频入口。
 2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 17 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
@@ -175,7 +176,7 @@ arcus-stack/
 ├── README.ja.md                 # 日文文档 (Japanese)
 ├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
 ├── README.es.md                 # 西班牙文文档 (Spanish)
-├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-007)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-008)
 ├── plugin.json                  # Antigravity (agy) 插件清单
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 插件清单
@@ -188,7 +189,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 大助手 + T3 Code)
 │   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 大助手 + T3 Code)
-└── skills/                      # ⭐ 面向用户的 12 个核心技能
+└── skills/                      # ⭐ 面向用户的 13 个核心技能
     ├── arcus-mode/              # 主控模式 + 内部封装模块
     │   ├── SKILL.md
     │   ├── worker.md
@@ -206,5 +207,6 @@ arcus-stack/
     ├── arcus-why/
     ├── arcus-correct/
     ├── arcus-automate-me/
+    ├── arcus-onboard/
     └── arcus-skill-maker/
 ```

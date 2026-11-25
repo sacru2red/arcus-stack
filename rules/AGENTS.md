@@ -18,11 +18,12 @@
 | Rule / Invariant | Enforced By |
 | :--- | :--- |
 | Universal 5-agent `SKILL.md` frontmatter (`name` + `description` only, no broken relative links) | Automated PowerShell validation check & [`universal-skill-spec.md`](../skills/arcus-skill-maker/references/universal-skill-spec.md) |
-| Two-tier encapsulation (only 12 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`)](../DECISIONS.md) |
+| Two-tier encapsulation (only 13 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`, `D-008`)](../DECISIONS.md) |
 | Stale `arcus-*` junctions and `.skill-lock.json` entries pruned on rename/update | [`scripts/install-global.ps1`](../scripts/install-global.ps1) & [`scripts/install-global.sh`](../scripts/install-global.sh) |
 | Context-isolated review, Cold-Reader test, and code-first Review Ledger | [`skills/arcus-review/SKILL.md`](../skills/arcus-review/SKILL.md) & [`review-ledger-protocol.md`](../skills/arcus-review/references/review-ledger-protocol.md) |
 | User-authorized `DECISIONS.md` proposals & 3-tier opt-out persistence (Git config / `AGENTS.md` comment / `.agents/settings.json`) | [`skills/arcus-mode/internal/decisions.md`](../skills/arcus-mode/internal/decisions.md) & [`DECISIONS.md` (`D-006`)](../DECISIONS.md) |
 | Live modern web platform lookup (`npx -y modern-web-guidance@latest search/retrieve`) before authoring or reviewing HTML/CSS/client-side JS | [`skills/arcus-mode/internal/modern-web-guidance.md`](../skills/arcus-mode/internal/modern-web-guidance.md) & [`DECISIONS.md` (`D-007`)](../DECISIONS.md) |
+| Engineering & Domain Brain (`ONBOARDING.md` 7-pillar domain-to-code mappings, business invariants, authz tiers, and legacy minefields with `[as of YYYY-MM-DD \| Source: ...]` tags) | [`skills/arcus-onboard/SKILL.md`](../skills/arcus-onboard/SKILL.md) & [`DECISIONS.md` (`D-008`)](../DECISIONS.md) |
 
 ## 4. Available Core Skills (`arcus-*`)
 - `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.
@@ -36,4 +37,5 @@
 - `arcus-why`: Answer "why does X work this way" from `DECISIONS.md`, git commit history, and PR discussions rather than guessing from current code.
 - `arcus-correct`: Eliminate repeated agent mistakes via architecture, types, lints, or behavior tests, and prune dead, redundant, or brittle fact-claim rules.
 - `arcus-automate-me`: Mine recent conversation transcripts and interview the user to draft or update a personal `<handle>-mode` skill.
+- `arcus-onboard`: Build and maintain a 1–2 page Engineering & Domain Brain (`ONBOARDING.md`) covering the 7 non-guessable domain and codebase pillars (system boundaries, domain term ↔ code/DB mappings, business formulas & invariants, authz & plan/tier gating, legacy minefields & red lines, systems of record, and error/UX/PR conventions) with date and provenance tags.
 - `arcus-skill-maker`: Meta-skill for absorbing, remixing, and standardizing external skills into universal 5-agent compatible `arcus-*` skills.
