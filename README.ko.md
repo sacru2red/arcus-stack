@@ -21,7 +21,7 @@
 
 **`arcus-stack` 은 이 파편화 문제를 해결하기 위해 만들었습니다.** 무거운 MCP 서버 의존성 없이 5개 도구가 공통으로 인식하는 표준 `SKILL.md`와 `AGENTS.md` 규격만 사용하여, 어떤 환경에서 어떤 에이전트를 부르든 똑같은 스킬과 작업 원칙을 바로 사용할 수 있습니다.
 
-다음 5대 오픈소스 프로젝트의 핵심 장점을 하나로 모았습니다:
+다음 5개의 오픈소스 프로젝트의 핵심 장점을 하나로 모았습니다:
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"빠르게 가려면 먼저 깊게 파고들어라."* (근본 원인 파악, 최소한의 코드 변경, 검증 가능한 코드 작성)
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: 작업이 끝날 때까지 스스로 반복 실행하는 `ultrawork` 루프와 전략·실행 분리
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: 설계·구현·검증 역할 분담 및 자율 실행 워크플로우
