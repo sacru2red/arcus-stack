@@ -9,9 +9,9 @@
 </p>
 
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(**SACRU** 的字母异位词 — 兼容五大 AI 编程助手的通用技能与工作流栈)*
+> *(**SACRU** 的字母异位词 — 兼容 5 个 AI 编程助手的通用技能与工作流栈)*
 
-**`arcus-stack`** 是一套无需修改即可在 **`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor` 和 `OpenCode`** 五大 AI 编程助手中通用的技能与工作流合集。
+**`arcus-stack`** 是一套无需修改即可在 **`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor` 和 `OpenCode`** 5 个 AI 编程助手中通用的技能与工作流合集。
 
 ---
 
@@ -19,7 +19,7 @@
 
 在 **T3 Code** 或 **Orca** 等多智能体编排环境中开发时，我们经常需要根据任务在不同编程助手（`agy`、`Claude Code`、`Codex`、`Cursor`、`OpenCode`）之间切换或并行调用。然而，不同工具读取技能的目录结构和配置格式各不相同，**导致在某个工具中顺手的技能无法在调用其他助手时直接复用**，非常不便。
 
-**`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用五大工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
+**`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用 5 个工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
 
 本项目融合了以下五个开源项目的核心优势：
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**：*“欲速则先深潜”*（深挖根本原因、最小化改动范围、编写可验证的代码）
@@ -71,7 +71,7 @@
 | **`arcus-correct`** | 杜绝重复犯错与规则瘦身 | 摆脱反复纠正同一个错误的疲劳感，同时防止规则文件臃肿浪费 Token。将反复违反的规则升级为架构、类型、Lint 或测试约束，并清理从未读取、无需提醒的常识规则以及易过时的 API 事实断言。 |
 | **`arcus-automate-me`** | 个人风格定制 | 不用在每次新建会话时重新解释你的代码偏好与回复风格。通过分析近期对话记录并进行简短的多选访谈，为你生成或更新专属的 `*-mode` 技能。 |
 | **`arcus-onboard`** | 工程领域与雷区地图 | 防止助手靠猜测编写业务逻辑或误触不可修改的遗留代码雷区。先扫描数据库Schema与路由再针对盲区提问，生成 1–2 页的 `ONBOARDING.md`（涵盖系统边界、业务术语 ↔ 代码/DB 标识符映射、核心业务计算公式与不变量、权限与套餐门槛、遗留代码雷区与安全红线、权威数据源、错误响应与文风规范），并附带日期与代码来源标签（`[as of YYYY-MM-DD \| Source: ...]`）。 |
-| **`arcus-skill-maker`** | 技能转换与制作 | 让原本只能在单一工具中使用的外部技能在五大助手中通用。分析外部技能或提示词，将其转换为跨工具兼容的 `arcus-*` 标准技能。 |
+| **`arcus-skill-maker`** | 技能转换与制作 | 让原本只能在单一工具中使用的外部技能在 5 个助手中通用。分析外部技能或提示词，将其转换为跨工具兼容的 `arcus-*` 标准技能。 |
 
 ---
 
@@ -108,7 +108,7 @@
 ### 方法 1. 使用 `npx skills` CLI（推荐 — 全局或按项目安装）
 
 ```bash
-# 在当前电脑的五大助手全局环境中一次性安装所有技能
+# 在当前电脑的 5 个助手全局环境中一次性安装所有技能
 npx skills add sacru2red/arcus-stack -g -y
 
 # 仅在当前项目中按需安装指定技能
@@ -147,7 +147,7 @@ npx skills update
 
 ### 方法 3. 本地克隆 + 全局符号链接 (`scripts/install-global.ps1` / `.sh`)
 
-将本仓库克隆到本地并运行脚本，即可将所有技能直接链接到五大助手（包括 T3 Code 内置的 Antigravity 隔离目录）的全局技能路径。
+将本仓库克隆到本地并运行脚本，即可将所有技能直接链接到 5 个助手（包括 T3 Code 内置的 Antigravity 隔离目录）的全局技能路径。
 
 ```powershell
 # Windows (PowerShell)
@@ -185,10 +185,10 @@ arcus-stack/
 ├── AGENTS.md                    # 根目录规则桥接文件
 ├── CLAUDE.md                    # Claude Code 规则桥接文件
 ├── rules/
-│   └── AGENTS.md                # 五大助手共享的核心工程准则
+│   └── AGENTS.md                # 5 个助手共享的核心工程准则
 ├── scripts/
-│   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 大助手 + T3 Code)
-│   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 大助手 + T3 Code)
+│   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 个助手 + T3 Code)
+│   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
 └── skills/                      # ⭐ 面向用户的 13 个核心技能
     ├── arcus-mode/              # 主控模式 + 内部封装模块
     │   ├── SKILL.md

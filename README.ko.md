@@ -9,9 +9,9 @@
 </p>
 
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(**SACRU**의 애너그램 — 5대 에이전트 통합 스킬 & 워크플로우 스택)*
+> *(**SACRU**의 애너그램 — 5개 에이전트 통합 스킬 & 워크플로우 스택)*
 
-**`arcus-stack`** 은 **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor`, `OpenCode`** 5대 AI 코딩 에이전트 어디서나 동일하게 작동하는 범용 스킬 & 워크플로우 스택입니다.
+**`arcus-stack`** 은 **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor`, `OpenCode`** 5개 AI 코딩 에이전트 어디서나 동일하게 작동하는 범용 스킬 & 워크플로우 스택입니다.
 
 ---
 
@@ -50,7 +50,7 @@
 AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 API로 깔끔하게 해결된 기능도 구식 JS 땜질 코드로 짜는 경우가 많습니다. `arcus-stack`을 쓰면 HTML, CSS, 클라이언트 JS(React, Vue, Svelte 등 프레임워크 내부 포함) 작업을 할 때 별도의 스킬을 직접 호출하거나 매번 `caniuse.com`에 들어가 브라우저 지원 여부를 확인할 필요가 없습니다. 설계(`arcus-plan`), 구현(`arcus-work-loop`), 리뷰(`arcus-review`) 단계에서 내부적으로 `modern-web-guidance`가 자동 실행됩니다:
 
 1. **최신 웹 표준 가이드 실시간 조회**: 에이전트가 자신의 오래된 학습 기억에 의존해 구식 JS 땜질 코드를 짜는 대신, 작업 시작 전에 `npx -y modern-web-guidance@latest search "<기능>"` 및 `retrieve "<가이드ID>"`를 자동 호출해 Google Chrome 팀의 최신 웹 표준 가이드를 먼저 읽습니다.
-2. **브라우저 지원 현황(Baseline) 자동 판별**: 조회된 가이드 문서에는 각 웹 API의 **Web Platform Baseline 등급**(`Widely available`, `Newly available`, `Limited availability`)과 4대 브라우저(Chrome, Edge, Firefox, Safari)별 지원 버전이 함께 포함되어 있습니다.
+2. **브라우저 지원 현황(Baseline) 자동 판별**: 조회된 가이드 문서에는 각 웹 API의 **Web Platform Baseline 등급**(`Widely available`, `Newly available`, `Limited availability`)과 주요 브라우저(Chrome, Edge, Firefox, Safari)별 지원 버전이 함께 포함되어 있습니다.
 3. **맞춤형 폴백(Fallback) 코드 자동 적용**: 모든 브라우저에 널리 보급된 기능(`Widely available`)은 군더더기 없이 바로 사용하고, 일부 브라우저에서 아직 지원하지 않는 최신 기능은 가이드에 명시된 `@supports`나 점진적 향상(Graceful Degradation) 폴백 코드를 자동으로 함께 작성합니다.
 
 ---
@@ -185,11 +185,11 @@ arcus-stack/
 ├── AGENTS.md                    # 루트 규칙 연결 파일
 ├── CLAUDE.md                    # Claude Code 규칙 연결 파일
 ├── rules/
-│   └── AGENTS.md                # 5대 에이전트 공통 핵심 엔지니어링 원칙
+│   └── AGENTS.md                # 5개 에이전트 공통 핵심 엔지니어링 원칙
 ├── scripts/
-│   ├── install-global.ps1       # Windows용 5대 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
-│   └── install-global.sh        # macOS/Linux용 5대 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
-└── skills/                      # ⭐ 사용자 노출 13대 코어 스킬
+│   ├── install-global.ps1       # Windows용 5개 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
+│   └── install-global.sh        # macOS/Linux용 5개 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
+└── skills/                      # ⭐ 사용자 노출 13개 코어 스킬
     ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈
     │   ├── SKILL.md
     │   ├── worker.md

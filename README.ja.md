@@ -9,9 +9,9 @@
 </p>
 
 > **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(**SACRU**のアナグラム — 5大コーディングエージェント対応の汎用スキル＆ワークフロースタック)*
+> *(**SACRU**のアナグラム — 5つのコーディングエージェント対応の汎用スキル＆ワークフロースタック)*
 
-**`arcus-stack`** は、**`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor`、`OpenCode`** の5大AIコーディングエージェントすべてでそのまま動作する汎用スキル＆ワークフロースタックです。
+**`arcus-stack`** は、**`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor`、`OpenCode`** の5つのAIコーディングエージェントすべてでそのまま動作する汎用スキル＆ワークフロースタックです。
 
 ---
 
@@ -147,7 +147,7 @@ npx skills update
 
 ### 方法 3. ローカルクローン + シンボリックリンク (`scripts/install-global.ps1` / `.sh`)
 
-リポジトリをローカルにクローンしてスクリプトを実行すると、5大エージェントのグローバルスキルパス（T3 Code内のAntigravity環境を含む）へ即座にリンクされます。
+リポジトリをローカルにクローンしてスクリプトを実行すると、5つのエージェントのグローバルスキルパス（T3 Code内のAntigravity環境を含む）へ即座にリンクされます。
 
 ```powershell
 # Windows (PowerShell)
@@ -185,11 +185,11 @@ arcus-stack/
 ├── AGENTS.md                    # ルートルールブリッジ
 ├── CLAUDE.md                    # Claude Code ルールブリッジ
 ├── rules/
-│   └── AGENTS.md                # 5大エージェント共通のコアエンジニアリング原則
+│   └── AGENTS.md                # 5つのエージェント共通のコアエンジニアリング原則
 ├── scripts/
 │   ├── install-global.ps1       # Windows用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
 │   └── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
-└── skills/                      # ⭐ ユーザー呼び出し用 13大コアスキル
+└── skills/                      # ⭐ ユーザー呼び出し用 13個のコアスキル
     ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール
     │   ├── SKILL.md
     │   ├── worker.md
