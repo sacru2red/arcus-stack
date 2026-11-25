@@ -45,7 +45,7 @@
 
 *(裁定状态: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. 突破过时训练数据的现代 Web 标准与浏览器兼容性自动应用（`modern-web-guidance`）
+### 2. 现代 Web 标准与浏览器兼容性自动应用（`modern-web-guidance`）
 
 受限于训练数据截止时间，AI 模型经常会用过时的 JS 补丁去实现早已被现代 CSS 或 Web 标准原生支持的功能。使用 `arcus-stack` 开发 HTML、CSS 或客户端 JS（包括 React、Vue、Svelte 等框架内部）时，你无需手动调用额外技能，也不必每次去 `caniuse.com` 查阅浏览器支持率。在规划（`arcus-plan`）、实现（`arcus-work-loop`）和审查（`arcus-review`）阶段，系统会在底层自动触发 `modern-web-guidance`：
 

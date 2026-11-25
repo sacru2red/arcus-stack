@@ -45,7 +45,7 @@
 
 *(판정 상태: `OPEN` 신규 · `RESOLVED` 해결됨 · `UNRESOLVED` 미해결 · `VALID_PUSHBACK` 반박 타당 · `DISPUTED` 이견/결정 필요)*
 
-### 2. 구식 학습 데이터를 넘어서는 모던 웹 표준 & 브라우저 호환성 자동 적용 (`modern-web-guidance`)
+### 2. 최신 웹 표준 & 브라우저 호환성 자동 적용 (`modern-web-guidance`)
 
 AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 API로 깔끔하게 해결된 기능도 구식 JS 땜질 코드로 짜는 경우가 많습니다. `arcus-stack`을 쓰면 HTML, CSS, 클라이언트 JS(React, Vue, Svelte 등 프레임워크 내부 포함) 작업을 할 때 별도의 스킬을 직접 호출하거나 매번 `caniuse.com`에 들어가 브라우저 지원 여부를 확인할 필요가 없습니다. 설계(`arcus-plan`), 구현(`arcus-work-loop`), 리뷰(`arcus-review`) 단계에서 내부적으로 `modern-web-guidance`가 자동 실행됩니다:
 
