@@ -28,6 +28,31 @@
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 段階的な品質ガードレールと実際の実行結果（証拠）に基づく完了検証
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: HTML、CSS、クライアントJS作業時に最新のWeb標準ベストプラクティスを動的に照会（`npx -y modern-web-guidance@latest`）する仕組み（Apache-2.0）
 
+さらに、`arcus-stack` を使うべき理由はエージェント間の互換性だけではありません。従来のAIコーディングが抱える2つの構造的な死角を解決します：
+
+### 1. 思い込みに騙されないコンテキスト隔離レビューと指摘台帳（`arcus-review`）
+
+設計や実装を行った同じセッションでレビューまで行うと、前提を選んだ経緯や捨てた代替案のバイアスをそのまま引き継いでしまいます。**文脈を共有するレビュアーは死角も共有します。** `arcus-review` はこれを防ぐため、**コンテキスト隔離** と **指摘台帳（Review Ledger）** を導入しています：
+
+- **実装コンテキストから隔離されたレビュー**: 対象コミットやスナップショットを固定し、作成者の対話履歴に汚染されていない新規サブエージェントが設計書とコードをゼロベースで検証します。リポジトリ内にとどまらず外部の公式リファレンスも参照し、前提知識のない読者が設計書だけで理解できるか（コールドリーダーテスト）を試験します。
+- **指摘台帳（Review Ledger — `F-01`, `F-02`, ...）**: レビューごとに指摘事項を台帳テーブルで管理し、指摘一覧と作成者の返信セクションを物理的に分離します。
+- **コード優先のブラインド判定（2回目以降）**: 2回目以降のレビューでは、新しいコードを見る前、かつ **作成者の返信や釈明を開く前に、まず最新のコード・文書スナップショットだけを見て** 台帳の各指摘が解決されたか（`RESOLVED`）、未解決か（`UNRESOLVED`）、反論が妥当か（`VALID_PUSHBACK`）、見解が分かれるか（`DISPUTED`）を先に判定します：
+
+| ID | 回次 | 固定スナップショット | 重大度 | 対象箇所 | 問題シナリオと必要な修正 | 状態 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自律サブエージェント実行中の質問呼び出しによる停止リスク。最上位ターンへの委譲が必要。 | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分インストール時の相対パス参照切れ。フォールバック規則の内蔵。 | `VALID_PUSHBACK` |
+
+*(判定ステータス: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+
+### 2. 古い学習データを超えるモダンWeb標準とブラウザ互換性の自動適用（`modern-web-guidance`）
+
+AIモデルは学習データの時期の制約により、最新のCSSやWeb標準APIでシンプルに解決できる処理でも古いJSのハックで書いてしまうことがよくあります。`arcus-stack` を使えば、HTML、CSS、クライアントサイドJS（React、Vue、Svelteなどのフレームワーク内を含む）の作業で専用スキルを手動で呼び出したり、毎回 `caniuse.com` でブラウザ対応状況を確認したりする必要はありません。設計（`arcus-plan`）、実装（`arcus-work-loop`）、レビュー（`arcus-review`）の各段階で、内部的に `modern-web-guidance` が自動実行されます：
+
+1. **最新Web標準ガイドのリアルタイム照会**: エージェントの古い学習知識に頼る代わりに、`npx -y modern-web-guidance@latest search "<機能>"` と `retrieve "<ID>"` を自動実行し、Google Chromeチームの最新ガイドラインを参照します。
+2. **Baselineとブラウザ対応状況の自動判定**: 取得したガイドには **Web Platform Baseline** のステータスと主要4ブラウザ（Chrome、Edge、Firefox、Safari）の対応バージョンが含まれています。
+3. **適切なフォールバックの自動実装**: 広く普及した機能（`Widely available`）は余計なポリフィルなしでシンプルに実装し、一部ブラウザで未対応の最新機能にはガイド推奨の `@supports` やプログレッシブエンハンスメント用フォールバックを自動的に適用します。
+
 ---
 
 ## 📦 コアスキル (`arcus-*`)
@@ -65,27 +90,6 @@
 2. **隔離された計画クリティカルレビュー (`$arcus-review`)**: 作成者のバイアスを持たない隔離サブエージェントで計画の前提や抜け漏れを事前監査します。
 3. **チェックリスト自律実行 (`$arcus-work-loop`)**: 承認されたチェックリストを1項目ずつ実装・検証し、すべて `- [x]` になるまで完遂します。
 4. **最終コードレビューと意思決定記録 (`$arcus-review` / `DECISIONS.md`)**: 指摘台帳（Review Ledger）に基づいて変更差分を隔離レビューします。重要な設計判断やルール昇格（`$arcus-correct`）があった場合は、ユーザーの明示的な認可を得て `DECISIONS.md` に記録するか、不要な場合はプロジェクト単位のオプトアウト設定（`.git/config`、`AGENTS.md`、`.agents/settings.json`）を記憶します。
-
-### 3. コンテキスト隔離レビューと指摘台帳（Review Ledger）
-
-設計や実装を行った同じセッションでレビューまで行うと、前提を選んだ経緯や捨てた代替案のバイアスをそのまま引き継いでしまいます。**文脈を共有するレビュアーは死角も共有します。** `arcus-review` はこれを防ぐため、**コンテキスト隔離** と **指摘台帳（Review Ledger）** を導入しています：
-
-- **実装コンテキストから隔離されたレビュー**: 対象コミットやスナップショットを固定し、作成者の対話履歴に汚染されていない新規サブエージェントが設計書とコードをゼロベースで検証します。リポジトリ内にとどまらず外部の公式リファレンスも参照し、前提知識のない読者が設計書だけで理解できるか（コールドリーダーテスト）を試験します。
-- **指摘台帳（Review Ledger — `F-01`, `F-02`, ...）**: レビューごとに指摘事項を台帳テーブルで管理し、指摘一覧と作成者の返信セクションを物理的に分離します。
-- **コード優先のブラインド判定（2回目以降）**: 2回目以降のレビューでは、新しいコードを見る前、かつ **作成者の返信や釈明を開く前に、まず最新のコード・文書スナップショットだけを見て** 台帳の各指摘が解決されたか（`RESOLVED`）、未解決か（`UNRESOLVED`）、反論が妥当か（`VALID_PUSHBACK`）、見解が分かれるか（`DISPUTED`）を先に判定します：
-
-| ID | 回次 | 固定スナップショット | 重大度 | 対象箇所 | 問題シナリオと必要な修正 | 状態 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自律サブエージェント実行中の質問呼び出しによる停止リスク。最上位ターンへの委譲が必要。 | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分インストール時の相対パス参照切れ。フォールバック規則の内蔵。 | `VALID_PUSHBACK` |
-
-### 4. モダンWeb標準とブラウザ互換性の自動適用（`modern-web-guidance`）
-
-HTML、CSS、クライアントサイドJS（React、Vue、Svelteなどのフレームワーク内を含む）の作業では、専用スキルを手動で呼び出したり、毎回 `caniuse.com` でブラウザ対応状況を確認したりする必要はありません。設計（`arcus-plan`）、実装（`arcus-work-loop`）、レビュー（`arcus-review`）の各段階で、内部的に `modern-web-guidance` が自動実行されます：
-
-1. **最新Web標準ガイドのリアルタイム照会**: エージェントの古い学習知識に頼る代わりに、`npx -y modern-web-guidance@latest search "<機能>"` と `retrieve "<ID>"` を自動実行し、Google Chromeチームの最新ガイドラインを参照します。
-2. **Baselineとブラウザ対応状況の自動判定**: 取得したガイドには **Web Platform Baseline** のステータスと主要4ブラウザ（Chrome、Edge、Firefox、Safari）の対応バージョンが含まれています。
-3. **適切なフォールバックの自動実装**: 広く普及した機能（`Widely available`）は余計なポリフィルなしでシンプルに実装し、一部ブラウザで未対応の最新機能にはガイド推奨の `@supports` やプログレッシブエンハンスメント用フォールバックを自動的に適用します。
 
 ---
 
@@ -158,4 +162,49 @@ npx skills update
 シンボリックリンクがローカルリポジトリを直接指しているため、`git pull` するだけで全エージェントに即時反映されます（新しいスキルフォルダが追加された場合のみスクリプトを再実行してください）：
 ```bash
 git pull && ./scripts/install-global.sh   # (Windowsは .\scripts\install-global.ps1)
+```
+
+---
+
+## 🗂️ ディレクトリ構造
+
+```text
+arcus-stack/
+├── README.md                    # 英語メインドキュメント (English)
+├── README.ko.md                 # 韓国語ドキュメント (Korean)
+├── README.ja.md                 # 日本語ドキュメント (Japanese)
+├── README.zh-CN.md              # 中国語（簡体字）ドキュメント (Simplified Chinese)
+├── README.es.md                 # スペイン語ドキュメント (Spanish)
+├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-007)
+├── plugin.json                  # Antigravity (agy) プラグインマニフェスト
+├── .claude-plugin/
+│   └── plugin.json              # Claude Code プラグインマニフェスト
+├── .agents/
+│   └── skills.json              # ワークスペーススキル検出マニフェスト
+├── AGENTS.md                    # ルートルールブリッジ
+├── CLAUDE.md                    # Claude Code ルールブリッジ
+├── rules/
+│   └── AGENTS.md                # 5大エージェント共通のコアエンジニアリング原則
+├── scripts/
+│   ├── install-global.ps1       # Windows用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
+│   └── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
+└── skills/                      # ⭐ ユーザー呼び出し用 12大コアスキル
+    ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール
+    │   ├── SKILL.md
+    │   ├── worker.md
+    │   ├── playbooks/           # [内部専用] 22のタスクプレイブック
+    │   ├── principles/          # [内部専用] 24の設計原則
+    │   ├── internal/            # [内部専用] 17の補助スキル (unslop, bro, modern-web-guidance など)
+    │   └── references/          # [内部専用] bugbot-triage.md
+    ├── arcus-plan/
+    ├── arcus-work-loop/
+    ├── arcus-review/
+    ├── arcus-in-your-own-words/
+    ├── arcus-create-verification/
+    ├── arcus-maintain-verification/
+    ├── arcus-ketchup/
+    ├── arcus-why/
+    ├── arcus-correct/
+    ├── arcus-automate-me/
+    └── arcus-skill-maker/
 ```

@@ -28,6 +28,31 @@
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 단계별 품질 가드레일과 실제 실행 증거 기반의 완료 검증
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: HTML, CSS, 클라이언트 JS 작업 시 최신 웹 표준 가이드를 실시간 조회(`npx -y modern-web-guidance@latest`)하는 모던 웹 베스트 프랙티스 (Apache-2.0)
 
+나아가 `arcus-stack`을 써야 하는 이유는 단순한 멀티 에이전트 호환성에 그치지 않습니다. 기존 AI 코딩의 고질적인 한계 두 가지를 구조적으로 해결합니다:
+
+### 1. 내 편향에 속지 않는 컨텍스트 격리 리뷰와 지적 장부 (`arcus-review`)
+
+설계나 구현을 진행한 바로 그 세션에서 검토까지 수행하면, 에이전트는 자신이 왜 그 전제를 택했는지 이미 알고 있어 전제 자체를 의심하지 않고 함께 버린 대안은 다시 꺼내지 않습니다. **맥락을 공유한 검토자는 사각지대도 공유합니다.** `arcus-review`는 이를 막기 위해 **컨텍스트 격리**와 **지적 장부(Review Ledger)** 로 동작합니다:
+
+- **구현 컨텍스트와 격리된 리뷰**: 검토할 커밋이나 스냅샷을 고정한 뒤, 작성자의 대화 맥락이나 변명에 오염되지 않은 새로운 격리 서브에이전트가 설계 문서와 코드를 처음 보는 눈으로 검토합니다. 레포 내부에만 머물지 않고 외부 공식 레퍼런스를 교차 확인하며, 배경지식이 없는 독자에게 설계 문서만 주었을 때 온전히 이해되는지 시험합니다.
+- **지적 장부 (Review Ledger — `F-01`, `F-02`, ...)**: 리뷰마다 발견된 문제들을 고유 번호가 붙은 장부 테이블로 관리하며, 지적 장부와 작성자의 답글 영역을 물리적으로 분리합니다.
+- **선(先) 코드 확인 · 후(後) 답글 대조**: 2회차 이후 리뷰에서는 새 코드를 보거나 **작성자의 답글(해명)을 열어보기 전에, 고정된 최신 코드·문서 스냅샷만 먼저 보고** 장부의 기존 지적 사항이 실제로 해결됐는지(`RESOLVED`), 미해결인지(`UNRESOLVED`), 반박이 타당한지(`VALID_PUSHBACK`), 이견이 갈리는지(`DISPUTED`)부터 먼저 판정합니다:
+
+| ID | 회차 | 고정 스냅샷 | 심각도 | 대상 위치 | 문제 시나리오 및 요구 조치 | 상태 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 자율 실행 서브에이전트 도중 질문 호출 시 작업이 멈춤. 최상위 턴으로 질문 위임 필요. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 부분 설치 시 상대 경로 참조 실패 가능성. 본문 내 폴백 규칙 내장. | `VALID_PUSHBACK` |
+
+*(판정 상태: `OPEN` 신규 · `RESOLVED` 해결됨 · `UNRESOLVED` 미해결 · `VALID_PUSHBACK` 반박 타당 · `DISPUTED` 이견/결정 필요)*
+
+### 2. 구식 학습 데이터를 넘어서는 모던 웹 표준 & 브라우저 호환성 자동 적용 (`modern-web-guidance`)
+
+AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 API로 깔끔하게 해결된 기능도 구식 JS 땜질 코드로 짜는 경우가 많습니다. `arcus-stack`을 쓰면 HTML, CSS, 클라이언트 JS(React, Vue, Svelte 등 프레임워크 내부 포함) 작업을 할 때 별도의 스킬을 직접 호출하거나 매번 `caniuse.com`에 들어가 브라우저 지원 여부를 확인할 필요가 없습니다. 설계(`arcus-plan`), 구현(`arcus-work-loop`), 리뷰(`arcus-review`) 단계에서 내부적으로 `modern-web-guidance`가 자동 실행됩니다:
+
+1. **최신 웹 표준 가이드 실시간 조회**: 에이전트가 자신의 오래된 학습 기억에 의존해 구식 JS 땜질 코드를 짜는 대신, 작업 시작 전에 `npx -y modern-web-guidance@latest search "<기능>"` 및 `retrieve "<가이드ID>"`를 자동 호출해 Google Chrome 팀의 최신 웹 표준 가이드를 먼저 읽습니다.
+2. **브라우저 지원 현황(Baseline) 자동 판별**: 조회된 가이드 문서에는 각 웹 API의 **Web Platform Baseline 등급**(`Widely available`, `Newly available`, `Limited availability`)과 4대 브라우저(Chrome, Edge, Firefox, Safari)별 지원 버전이 함께 포함되어 있습니다.
+3. **맞춤형 폴백(Fallback) 코드 자동 적용**: 모든 브라우저에 널리 보급된 기능(`Widely available`)은 군더더기 없이 바로 사용하고, 일부 브라우저에서 아직 지원하지 않는 최신 기능은 가이드에 명시된 `@supports`나 점진적 향상(Graceful Degradation) 폴백 코드를 자동으로 함께 작성합니다.
+
 ---
 
 ## 📦 코어 스킬 (`arcus-*`)
@@ -65,29 +90,6 @@
 2. **격리된 계획서 크리틱 (`$arcus-review`)**: 작성자의 편향이 섞이지 않은 격리된 서브에이전트를 띄워 계획서의 전제와 허점을 미리 점검받습니다.
 3. **체크리스트 자율 실행 (`$arcus-work-loop`)**: 확정된 체크리스트를 하나씩 구현·검증하여 모든 항목이 `- [x]`가 될 때까지 완주합니다.
 4. **최종 코드 리뷰 및 의사결정 기록 (`$arcus-review` / `DECISIONS.md`)**: 지적 장부(Review Ledger)를 기반으로 구현 코드를 격리 리뷰합니다. 중요한 아키텍처 결정이나 규칙 승격(`$arcus-correct`)이 있었다면 사용자의 명시적 인가를 받아 `DECISIONS.md`에 기록하거나, 원치 않을 경우 프로젝트별 거절 설정(`.git/config`, `AGENTS.md` 주석, `.agents/settings.json`)을 영구 기억합니다.
-
-### 3. 컨텍스트 격리 리뷰와 지적 장부 (`arcus-review`)
-
-설계나 구현을 진행한 바로 그 세션에서 검토까지 수행하면, 에이전트는 자신이 왜 그 전제를 택했는지 이미 알고 있어 전제 자체를 의심하지 않고 함께 버린 대안은 다시 꺼내지 않습니다. **맥락을 공유한 검토자는 사각지대도 공유합니다.** `arcus-review`는 이를 막기 위해 **컨텍스트 격리**와 **지적 장부(Review Ledger)** 로 동작합니다:
-
-- **구현 컨텍스트와 격리된 리뷰**: 검토할 커밋이나 스냅샷을 고정한 뒤, 작성자의 대화 맥락이나 변명에 오염되지 않은 새로운 격리 서브에이전트가 설계 문서와 코드를 처음 보는 눈으로 검토합니다. 레포 내부에만 머물지 않고 외부 공식 레퍼런스를 교차 확인하며, 배경지식이 없는 독자에게 설계 문서만 주었을 때 온전히 이해되는지 시험합니다.
-- **지적 장부 (Review Ledger — `F-01`, `F-02`, ...)**: 리뷰마다 발견된 문제들을 고유 번호가 붙은 장부 테이블로 관리하며, 지적 장부와 작성자의 답글 영역을 물리적으로 분리합니다.
-- **선(先) 코드 확인 · 후(後) 답글 대조**: 2회차 이후 리뷰에서는 새 코드를 보거나 **작성자의 답글(해명)을 열어보기 전에, 고정된 최신 코드·문서 스냅샷만 먼저 보고** 장부의 기존 지적 사항이 실제로 해결됐는지(`RESOLVED`), 미해결인지(`UNRESOLVED`), 반박이 타당한지(`VALID_PUSHBACK`), 이견이 갈리는지(`DISPUTED`)부터 먼저 판정합니다:
-
-| ID | 회차 | 고정 스냅샷 | 심각도 | 대상 위치 | 문제 시나리오 및 요구 조치 | 상태 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 자율 실행 서브에이전트 도중 질문 호출 시 작업이 멈춤. 최상위 턴으로 질문 위임 필요. | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 부분 설치 시 상대 경로 참조 실패 가능성. 본문 내 폴백 규칙 내장. | `VALID_PUSHBACK` |
-
-*(판정 상태: `OPEN` 신규 · `RESOLVED` 해결됨 · `UNRESOLVED` 미해결 · `VALID_PUSHBACK` 반박 타당 · `DISPUTED` 이견/결정 필요)*
-
-### 4. 모던 웹 표준 및 브라우저 호환성 자동 적용 (`modern-web-guidance`)
-
-HTML, CSS, 클라이언트 JS(React, Vue, Svelte 등 프레임워크 내부 포함) 작업을 할 때는 별도의 스킬을 직접 호출하거나 매번 `caniuse.com`에 들어가 브라우저 지원 여부를 확인할 필요가 없습니다. 설계(`arcus-plan`), 구현(`arcus-work-loop`), 리뷰(`arcus-review`) 단계에서 내부적으로 `modern-web-guidance`가 자동 실행됩니다:
-
-1. **최신 웹 표준 가이드 실시간 조회**: 에이전트가 자신의 오래된 학습 기억에 의존해 구식 JS 땜질 코드를 짜는 대신, 작업 시작 전에 `npx -y modern-web-guidance@latest search "<기능>"` 및 `retrieve "<가이드ID>"`를 자동 호출해 Google Chrome 팀의 최신 웹 표준 가이드를 먼저 읽습니다.
-2. **브라우저 지원 현황(Baseline) 자동 판별**: 조회된 가이드 문서에는 각 웹 API의 **Web Platform Baseline 등급**(`Widely available`, `Newly available`, `Limited availability`)과 4대 브라우저(Chrome, Edge, Firefox, Safari)별 지원 버전이 함께 포함되어 있습니다.
-3. **맞춤형 폴백(Fallback) 코드 자동 적용**: 모든 브라우저에 널리 보급된 기능(`Widely available`)은 군더더기 없이 바로 사용하고, 일부 브라우저에서 아직 지원하지 않는 최신 기능은 가이드에 명시된 `@supports`나 점진적 향상(Graceful Degradation) 폴백 코드를 자동으로 함께 작성합니다.
 
 ---
 

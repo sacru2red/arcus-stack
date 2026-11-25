@@ -28,6 +28,31 @@ Reúne e integra las mejores ideas de cinco proyectos de código abierto:
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: Barreras de calidad por etapas y exigencia de evidencia real de verificación
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: Consulta en tiempo real de estándares y buenas prácticas de la plataforma web moderna (`npx -y modern-web-guidance@latest`) para HTML, CSS y JS del lado del cliente (Apache-2.0)
 
+Más allá de la compatibilidad multiagente, `arcus-stack` resuelve dos limitaciones estructurales de la programación con IA en una sola sesión:
+
+### 1. Revisión con Contexto Aislado y Registro de Hallazgos (`arcus-review`)
+
+Cuando la misma sesión que diseñó un plan o escribió el código revisa su propio trabajo, hereda exactamente los mismos sesgos y alternativas descartadas: **un revisor que comparte el contexto también comparte los puntos ciegos.** `arcus-review` rompe este ciclo mediante **Aislamiento de Contexto** y un **Registro de Hallazgos (Review Ledger)**:
+
+- **Sandbox de Revisión Aislado**: Fija el commit o snapshot a revisar y lanza un nuevo subagente sin el historial del autor para evaluar el documento de diseño y el código desde cero. Consulta referencias externas más allá del repositorio y aplica una **Prueba de Lector en Frío (Cold-Reader Test)** para comprobar si el diseño se entiende solo con leer el documento.
+- **Registro de Hallazgos (`F-01`, `F-02`, ...)**: Cada revisión mantiene una tabla estructurada de hallazgos separada físicamente de las respuestas del autor.
+- **Veredicto a Ciegas Basado en Código (Ronda 2+)**: En rondas posteriores, antes de revisar código nuevo o **antes de abrir las respuestas/explicaciones del autor, el revisor inspecciona únicamente el snapshot de código** para decidir el estado de cada punto pendiente (`RESOLVED` resuelto, `UNRESOLVED` no resuelto, `VALID_PUSHBACK` contraargumento válido, o `DISPUTED` en disputa):
+
+| ID | Ronda | Snapshot Fijo | Severidad | Destino | Escenario de Fallo y Solución | Estado |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Preguntar a mitad de un bucle autónomo bloquea al subagente. Diferir al turno principal. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Ruta relativa falla en instalación parcial. Incluir reglas de respaldo en línea. | `VALID_PUSHBACK` |
+
+*(Estados: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+
+### 2. Estándares Web Modernos y Compatibilidad de Navegadores Automática (`modern-web-guidance`)
+
+Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suelen escribir parches antiguos en JavaScript para problemas que el CSS o las APIs web modernas ya resuelven de forma nativa. Con `arcus-stack`, al trabajar con HTML, CSS o JS del lado del cliente (incluso dentro de React, Vue o Svelte), no necesitas invocar una habilidad adicional ni consultar manualmente `caniuse.com`. `modern-web-guidance` se activa automáticamente en segundo plano durante la planificación (`arcus-plan`), implementación (`arcus-work-loop`) y revisión (`arcus-review`):
+
+1. **Consulta en Vivo de Guías Oficiales**: Antes de escribir código UI, el agente ejecuta `npx -y modern-web-guidance@latest search "<función>"` y `retrieve "<id>"` para consultar las prácticas más recientes del equipo de Google Chrome en lugar de usar patrones obsoletos.
+2. **Verificación Integrada de Baseline y Navegadores**: Cada guía incluye el estado actual de **Web Platform Baseline** (`Widely available`, `Newly available`, `Limited availability`) y las versiones exactas soportadas en Chrome, Edge, Firefox y Safari.
+3. **Fallbacks Automáticos**: Las funciones ampliamente soportadas se implementan de forma nativa y limpia, mientras que las APIs más recientes reciben automáticamente los bloques `@supports` o estrategias de degradación elegante recomendadas por la guía.
+
 ---
 
 ## 📦 Habilidades Principales (`arcus-*`)
@@ -65,27 +90,6 @@ Reúne e integra las mejores ideas de cinco proyectos de código abierto:
 2. **Crítica Aislada del Plan (`$arcus-review`)**: Lanza un subagente con contexto aislado para auditar los supuestos del plan antes de modificar código.
 3. **Bucle de Ejecución Autónoma (`$arcus-work-loop`)**: Ejecuta y verifica cada punto de la lista hasta que todos estén marcados como `- [x]`.
 4. **Revisión Final y Registro de Decisiones (`$arcus-review` / `DECISIONS.md`)**: Audita el código frente al Review Ledger. Si hubo decisiones arquitectónicas importantes o graduación de reglas (`$arcus-correct`), solicita tu autorización explícita para registrarlas en `DECISIONS.md` (o recuerda tu exclusión por proyecto en `.git/config`, `AGENTS.md` o `.agents/settings.json`).
-
-### 3. Revisión con Contexto Aislado y Registro de Hallazgos (Review Ledger)
-
-Cuando la misma sesión que diseñó un plan o escribió el código revisa su propio trabajo, hereda exactamente los mismos sesgos y alternativas descartadas: **un revisor que comparte el contexto también comparte los puntos ciegos.** `arcus-review` rompe este ciclo mediante **Aislamiento de Contexto** y un **Registro de Hallazgos (Review Ledger)**:
-
-- **Sandbox de Revisión Aislado**: Fija el commit o snapshot a revisar y lanza un nuevo subagente sin el historial del autor para evaluar el documento de diseño y el código desde cero. Consulta referencias externas más allá del repositorio y aplica una **Prueba de Lector en Frío (Cold-Reader Test)** para comprobar si el diseño se entiende solo con leer el documento.
-- **Registro de Hallazgos (`F-01`, `F-02`, ...)**: Cada revisión mantiene una tabla estructurada de hallazgos separada físicamente de las respuestas del autor.
-- **Veredicto a Ciegas Basado en Código (Ronda 2+)**: En rondas posteriores, antes de revisar código nuevo o **antes de abrir las respuestas/explicaciones del autor, el revisor inspecciona únicamente el snapshot de código** para decidir el estado de cada punto pendiente (`RESOLVED` resuelto, `UNRESOLVED` no resuelto, `VALID_PUSHBACK` contraargumento válido, o `DISPUTED` en disputa):
-
-| ID | Ronda | Snapshot Fijo | Severidad | Destino | Escenario de Fallo y Solución | Estado |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Preguntar a mitad de un bucle autónomo bloquea al subagente. Diferir al turno principal. | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Ruta relativa falla en instalación parcial. Incluir reglas de respaldo en línea. | `VALID_PUSHBACK` |
-
-### 4. Aplicación Automática de Estándares Web Modernos y Compatibilidad (`modern-web-guidance`)
-
-Al trabajar con HTML, CSS o JS del lado del cliente (incluso dentro de React, Vue o Svelte), no necesitas invocar una habilidad adicional ni consultar manualmente `caniuse.com`. `arcus-stack` activa internamente `modern-web-guidance` de forma automática durante la planificación (`arcus-plan`), implementación (`arcus-work-loop`) y revisión (`arcus-review`):
-
-1. **Consulta en Vivo de Guías Oficiales**: Antes de escribir código UI, el agente ejecuta `npx -y modern-web-guidance@latest search "<función>"` y `retrieve "<id>"` para consultar las prácticas más recientes del equipo de Google Chrome en lugar de usar patrones obsoletos.
-2. **Verificación Integrada de Baseline y Navegadores**: Cada guía incluye el estado actual de **Web Platform Baseline** (`Widely available`, `Newly available`, `Limited availability`) y las versiones exactas soportadas en Chrome, Edge, Firefox y Safari.
-3. **Fallbacks Automáticos**: Las funciones ampliamente soportadas se implementan de forma nativa y limpia, mientras que las APIs más recientes reciben automáticamente los bloques `@supports` o estrategias de degradación elegante recomendadas por la guía.
 
 ---
 
@@ -158,4 +162,49 @@ Si clonas este repositorio localmente y ejecutas el script, las habilidades se e
 Como los enlaces simbólicos apuntan directamente a tu carpeta local, basta con hacer `git pull` para que todos los agentes se actualicen al instante (ejecuta de nuevo el script solo si se añadieron nuevas carpetas de habilidades):
 ```bash
 git pull && ./scripts/install-global.sh   # (o .\scripts\install-global.ps1 en Windows)
+```
+
+---
+
+## 🗂️ Estructura de Directorios
+
+```text
+arcus-stack/
+├── README.md                    # Documentación principal en inglés (English)
+├── README.ko.md                 # Documentación en coreano (Korean)
+├── README.ja.md                 # Documentación en japonés (Japanese)
+├── README.zh-CN.md              # Documentación en chino simplificado (Simplified Chinese)
+├── README.es.md                 # Documentación en español (Spanish)
+├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-007)
+├── plugin.json                  # Manifiesto de plugin para Antigravity (agy)
+├── .claude-plugin/
+│   └── plugin.json              # Manifiesto de plugin para Claude Code
+├── .agents/
+│   └── skills.json              # Manifiesto de descubrimiento de habilidades del workspace
+├── AGENTS.md                    # Puente de reglas raíz
+├── CLAUDE.md                    # Puente de reglas para Claude Code
+├── rules/
+│   └── AGENTS.md                # Reglas centrales de ingeniería compartidas en los 5 agentes
+├── scripts/
+│   ├── install-global.ps1       # Instalador global de enlaces simbólicos en Windows (5 agentes + T3 Code)
+│   └── install-global.sh        # Instalador global de enlaces simbólicos en macOS/Linux (5 agentes + T3 Code)
+└── skills/                      # ⭐ 12 Habilidades Principales para el Usuario
+    ├── arcus-mode/              # Modo maestro + módulos internos encapsulados
+    │   ├── SKILL.md
+    │   ├── worker.md
+    │   ├── playbooks/           # [Interno] 22 playbooks de tareas
+    │   ├── principles/          # [Interno] 24 principios de ingeniería
+    │   ├── internal/            # [Interno] 17 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, etc.)
+    │   └── references/          # [Interno] bugbot-triage.md
+    ├── arcus-plan/
+    ├── arcus-work-loop/
+    ├── arcus-review/
+    ├── arcus-in-your-own-words/
+    ├── arcus-create-verification/
+    ├── arcus-maintain-verification/
+    ├── arcus-ketchup/
+    ├── arcus-why/
+    ├── arcus-correct/
+    ├── arcus-automate-me/
+    └── arcus-skill-maker/
 ```

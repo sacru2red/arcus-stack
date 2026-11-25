@@ -28,6 +28,31 @@ It distills and unifies the best ideas from five open-source projects:
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: Context-engineered guardrails and mandatory verification evidence
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: Live web platform best-practice lookup (`npx -y modern-web-guidance@latest`) for HTML, CSS, and client-side JS/DOM (Apache-2.0)
 
+Beyond cross-agent compatibility, `arcus-stack` solves two structural blind spots of single-session AI coding:
+
+### 1. Context-Isolated Review & The Review Ledger (`arcus-review`)
+
+When the same agent session that wrote a plan or code reviews its own work, it inherits its own confirmation bias and blind spots—**a reviewer that shares the author's context shares the author's blind spots.** `arcus-review` breaks this cycle through **Context Isolation** and a **Review Ledger**:
+
+- **Context-Isolated Sandbox**: Reviews run in a fresh subagent session on a pinned snapshot (`HEAD` SHA or diff hash) without the author's chat history or defensive framing. For design docs, it runs a **Cold-Reader Test** to verify an uninitiated reader can understand the design from the document alone, and checks external documentation beyond the repository.
+- **Persistent Review Ledger (`F-01`, `F-02`, ...)**: Every review tracks findings in a structured ledger table physically separated from the author's replies.
+- **Code-First Blind Verdict on Round 2+**: In multi-round reviews, the reviewer evaluates every open finding in the ledger (`OPEN`, `UNRESOLVED`, `DISPUTED`) by inspecting the **new code/doc snapshot first—before reading the author's replies or explanations**—to prevent being swayed by excuses before checking the facts:
+
+| ID | Round | Pinned Snapshot | Severity | Target | Failure Scenario & Fix | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Mid-loop question prompts block autonomous subagents. Defer prompt to top-level turn. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Relative path breaks on partial install. Inline fallback rules. | `VALID_PUSHBACK` |
+
+*(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+
+### 2. Automatic Modern Web Standards & Browser Compatibility (`modern-web-guidance`)
+
+AI models frequently write outdated JavaScript workarounds or CSS hacks because their training data lags behind the modern web platform. With `arcus-stack`, when you work on HTML, CSS, or client-side JS/DOM (including inside React, Vue, or Svelte), you don't need to invoke a separate web skill or manually check `caniuse.com` for browser support. `modern-web-guidance` runs automatically under the hood during planning (`arcus-plan`), implementation (`arcus-work-loop`), and review (`arcus-review`):
+
+1. **Live Official Guide Lookup**: Before writing UI code, the agent queries Google Chrome's latest web guidance catalog via `npx -y modern-web-guidance@latest search "<capability>"` and `retrieve "<id>"` rather than relying on outdated training weights.
+2. **Built-in Baseline & Browser Support Check**: Every retrieved guide includes current **Web Platform Baseline** status (`Widely available`, `Newly available`, or `Limited availability`) and exact browser version support (Chrome, Edge, Firefox, Safari).
+3. **Automatic Fallback Code**: Features that are `Baseline Widely available` are used cleanly without unnecessary polyfills, while newer features (`interpolate-size`, Anchor Positioning, View Transitions, etc.) automatically receive the guide's recommended `@supports` or graceful-degradation fallbacks.
+
 ---
 
 ## 📦 Core Skills (`arcus-*`)
@@ -66,29 +91,6 @@ It distills and unifies the best ideas from five open-source projects:
 3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`).
 4. **Final Code Review & Decision Log (`$arcus-review` / `DECISIONS.md`)**: Run an isolated diff review against the Review Ledger. When major architectural trade-offs or rule graduations (`$arcus-correct`) occur, agents ask for your explicit authorization to record them in `DECISIONS.md` (or remember your project opt-out via `.git/config`, `AGENTS.md`, or `.agents/settings.json`).
 
-### 3. Context-Isolated Review & The Review Ledger (`arcus-review`)
-
-When the same agent session that wrote a plan or code reviews its own work, it inherits its own confirmation bias and blind spots. `arcus-review` breaks this cycle through **Context Isolation** and a **Review Ledger**:
-
-- **Context-Isolated Sandbox**: Reviews run in a fresh subagent session on a pinned snapshot (`HEAD` SHA or diff hash) without the author's chat history or defensive framing. For design docs, it runs a **Cold-Reader Test** to verify an uninitiated reader can understand the design from the document alone, and checks external documentation beyond the repository.
-- **Persistent Review Ledger (`F-01`, `F-02`, ...)**: Every review tracks findings in a structured ledger table physically separated from the author's replies.
-- **Code-First Blind Verdict on Round 2+**: In multi-round reviews, the reviewer evaluates every open finding in the ledger (`OPEN`, `UNRESOLVED`, `DISPUTED`) by inspecting the **new code/doc snapshot first—before reading the author's replies or explanations**—to prevent being swayed by excuses before checking the facts:
-
-| ID | Round | Pinned Snapshot | Severity | Target | Failure Scenario & Fix | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Mid-loop question prompts block autonomous subagents. Defer prompt to top-level turn. | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Relative path breaks on partial install. Inline fallback rules. | `VALID_PUSHBACK` |
-
-*(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
-
-### 4. Automatic Modern Web Standards & Browser Compatibility (`modern-web-guidance`)
-
-When you work on HTML, CSS, or client-side JS/DOM (including inside React, Vue, or Svelte), you don't need to invoke a separate web skill or manually check `caniuse.com` for browser support. `arcus-stack` triggers `modern-web-guidance` automatically under the hood during planning (`arcus-plan`), implementation (`arcus-work-loop`), and review (`arcus-review`):
-
-1. **Live Official Guide Lookup**: Before writing UI code, the agent queries Google Chrome's latest web guidance catalog via `npx -y modern-web-guidance@latest search "<capability>"` and `retrieve "<id>"` rather than relying on outdated training weights.
-2. **Built-in Baseline & Browser Support Check**: Every retrieved guide includes current **Web Platform Baseline** status (`Widely available`, `Newly available`, or `Limited availability`) and exact browser version support (Chrome, Edge, Firefox, Safari).
-3. **Automatic Fallback Code**: Features that are `Baseline Widely available` are used cleanly without unnecessary polyfills, while newer features (`interpolate-size`, Anchor Positioning, View Transitions, etc.) automatically receive the guide's recommended `@supports` or graceful-degradation fallbacks.
-
 ---
 
 ## 🏗️ Architecture: Two-Tier Skill Encapsulation
@@ -96,7 +98,7 @@ When you work on HTML, CSS, or client-side JS/DOM (including inside React, Vue, 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (12 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 12 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `modern-web-guidance`, 24 principles, 22 playbooks, and 17 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, 24 principles, 22 playbooks, and 17 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 

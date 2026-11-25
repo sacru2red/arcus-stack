@@ -28,6 +28,31 @@
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**：分阶段质量护栏与基于真实运行证据的完成校验
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**：在编写 HTML、CSS 与客户端 JS 时实时检索最新现代 Web 标准指南（`npx -y modern-web-guidance@latest`，Apache-2.0）
 
+除了跨工具兼容之外，使用 `arcus-stack` 的核心理由在于它从架构上解决了传统单会话 AI 编程的两大痛点：
+
+### 1. 摆脱自身偏见的上下文隔离审查与问题台账（`arcus-review`）
+
+如果在完成设计或编写代码的同一个会话中进行审查，审查者会完全继承原有的决策路径与思维盲区——**共享上下文的审查者也会共享盲区。** `arcus-review` 通过 **上下文隔离** 与 **问题台账（Review Ledger）** 解决这一问题：
+
+- **脱离实现上下文的隔离沙箱**：锁定待审查的提交或快照后，由不携带作者聊天记录的新子智能体从零审视设计文档与代码。不仅局限于仓库内部，还会主动查阅外部参考资料，并通过“冷读者测试”检验不了解背景的读者能否仅凭文档看懂设计。
+- **持久化问题台账（Review Ledger — `F-01`, `F-02`, ...）**：每次审查都会维护结构化的问题台账表格，并将问题列表与作者的回复说明在结构上物理分离。
+- **“先看代码、后看回复”的盲评机制（第 2 轮起）**：在后续轮次的审查中，审查者在浏览新改动或 **打开作者的回复解释之前，必须先仅凭最新代码/文档快照** 对台账中的遗留问题逐一作出裁定（已解决 `RESOLVED`、未解决 `UNRESOLVED`、反驳合理 `VALID_PUSHBACK` 或存在分歧 `DISPUTED`）：
+
+| ID | 轮次 | 锁定快照 | 严重度 | 目标位置 | 故障场景与修复要求 | 状态 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自主子智能体运行中途弹窗提问会导致流程挂起，需移交顶层交互回合。 | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分安装时跨目录相对路径可能失效，需内联兜底规则。 | `VALID_PUSHBACK` |
+
+*(裁定状态: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+
+### 2. 突破过时训练数据的现代 Web 标准与浏览器兼容性自动应用（`modern-web-guidance`）
+
+受限于训练数据截止时间，AI 模型经常会用过时的 JS 补丁去实现早已被现代 CSS 或 Web 标准原生支持的功能。使用 `arcus-stack` 开发 HTML、CSS 或客户端 JS（包括 React、Vue、Svelte 等框架内部）时，你无需手动调用额外技能，也不必每次去 `caniuse.com` 查阅浏览器支持率。在规划（`arcus-plan`）、实现（`arcus-work-loop`）和审查（`arcus-review`）阶段，系统会在底层自动触发 `modern-web-guidance`：
+
+1. **实时检索官方最新指南**：助手不会依赖模型训练权重中过时的旧写法，而是在动手前自动调用 `npx -y modern-web-guidance@latest search "<功能>"` 与 `retrieve "<ID>"`，获取 Google Chrome 团队维护的最新 Web 最佳实践。
+2. **内置 Baseline 与浏览器兼容性判定**：检索出的每篇指南均附带 **Web Platform Baseline** 等级以及四大主流浏览器（Chrome、Edge、Firefox、Safari）的具体支持版本。
+3. **自动编写降级与兜底代码（Fallback）**：对已广泛支持（`Widely available`）的特性直接采用原生简洁写法；对部分浏览器尚未支持的新特性，则严格按照指南自动补齐 `@supports` 或渐进增强兜底代码。
+
 ---
 
 ## 📦 核心技能 (`arcus-*`)
@@ -65,27 +90,6 @@
 2. **上下文隔离的方案评审 (`$arcus-review`)**：启动无历史偏见的隔离子智能体对方案进行冷读者测试与前提批判。
 3. **检查清单自主执行循环 (`$arcus-work-loop`)**：按确认后的清单逐项实现与实测，直到所有条目均被验证勾选为 `- [x]`。
 4. **最终代码审查与架构决策记录 (`$arcus-review` / `DECISIONS.md`)**：基于问题台账（Review Ledger）对代码变更进行隔离审查。当产生重要架构取舍或规则升级（`$arcus-correct`）时，会在获得用户明确授权后记录至 `DECISIONS.md`（若用户拒绝，则通过 `.git/config`、`AGENTS.md` 或 `.agents/settings.json` 持久记住不再打扰）。
-
-### 3. 上下文隔离审查与问题台账（Review Ledger）
-
-如果在完成设计或编写代码的同一个会话中进行审查，审查者会完全继承原有的决策路径与思维盲区——**共享上下文的审查者也会共享盲区。** `arcus-review` 通过 **上下文隔离** 与 **问题台账（Review Ledger）** 解决这一问题：
-
-- **脱离实现上下文的隔离沙箱**：锁定待审查的提交或快照后，由不携带作者聊天记录的新子智能体从零审视设计文档与代码。不仅局限于仓库内部，还会主动查阅外部参考资料，并通过“冷读者测试”检验不了解背景的读者能否仅凭文档看懂设计。
-- **持久化问题台账（Review Ledger — `F-01`, `F-02`, ...）**：每次审查都会维护结构化的问题台账表格，并将问题列表与作者的回复说明在结构上物理分离。
-- **“先看代码、后看回复”的盲评机制（第 2 轮起）**：在后续轮次的审查中，审查者在浏览新改动或 **打开作者的回复解释之前，必须先仅凭最新代码/文档快照** 对台账中的遗留问题逐一作出裁定（已解决 `RESOLVED`、未解决 `UNRESOLVED`、反驳合理 `VALID_PUSHBACK` 或存在分歧 `DISPUTED`）：
-
-| ID | 轮次 | 锁定快照 | 严重度 | 目标位置 | 故障场景与修复要求 | 状态 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自主子智能体运行中途弹窗提问会导致流程挂起，需移交顶层交互回合。 | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分安装时跨目录相对路径可能失效，需内联兜底规则。 | `VALID_PUSHBACK` |
-
-### 4. 自动应用现代 Web 标准与浏览器兼容性（`modern-web-guidance`）
-
-在开发 HTML、CSS 或客户端 JS（包括 React、Vue、Svelte 等框架内部）时，你无需手动调用额外技能，也不必每次去 `caniuse.com` 查阅浏览器支持率。在规划（`arcus-plan`）、实现（`arcus-work-loop`）和审查（`arcus-review`）阶段，系统会在底层自动触发 `modern-web-guidance`：
-
-1. **实时检索官方最新指南**：助手不会依赖模型训练权重中过时的旧写法，而是在动手前自动调用 `npx -y modern-web-guidance@latest search "<功能>"` 与 `retrieve "<ID>"`，获取 Google Chrome 团队维护的最新 Web 最佳实践。
-2. **内置 Baseline 与浏览器兼容性判定**：检索出的每篇指南均附带 **Web Platform Baseline** 等级以及四大主流浏览器（Chrome、Edge、Firefox、Safari）的具体支持版本。
-3. **自动编写降级与兜底代码（Fallback）**：对已广泛支持（`Widely available`）的特性直接采用原生简洁写法；对部分浏览器尚未支持的新特性，则严格按照指南自动补齐 `@supports` 或渐进增强兜底代码。
 
 ---
 
@@ -158,4 +162,49 @@ npx skills update
 由于符号链接直接指向本地仓库目录，执行 `git pull` 即可在所有助手中实时生效（仅在新增了顶层技能文件夹时需重新运行一次脚本）：
 ```bash
 git pull && ./scripts/install-global.sh   # (Windows 请运行 .\scripts\install-global.ps1)
+```
+
+---
+
+## 🗂️ 目录结构
+
+```text
+arcus-stack/
+├── README.md                    # 英文主文档 (English)
+├── README.ko.md                 # 韩文文档 (Korean)
+├── README.ja.md                 # 日文文档 (Japanese)
+├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
+├── README.es.md                 # 西班牙文文档 (Spanish)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-007)
+├── plugin.json                  # Antigravity (agy) 插件清单
+├── .claude-plugin/
+│   └── plugin.json              # Claude Code 插件清单
+├── .agents/
+│   └── skills.json              # 本地工作区技能发现清单
+├── AGENTS.md                    # 根目录规则桥接文件
+├── CLAUDE.md                    # Claude Code 规则桥接文件
+├── rules/
+│   └── AGENTS.md                # 五大助手共享的核心工程准则
+├── scripts/
+│   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 大助手 + T3 Code)
+│   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 大助手 + T3 Code)
+└── skills/                      # ⭐ 面向用户的 12 个核心技能
+    ├── arcus-mode/              # 主控模式 + 内部封装模块
+    │   ├── SKILL.md
+    │   ├── worker.md
+    │   ├── playbooks/           # [内部专用] 22 个任务剧本
+    │   ├── principles/          # [内部专用] 24 条工程原则
+    │   ├── internal/            # [内部专用] 17 个辅助子技能 (unslop, bro, modern-web-guidance 等)
+    │   └── references/          # [内部专用] bugbot-triage.md
+    ├── arcus-plan/
+    ├── arcus-work-loop/
+    ├── arcus-review/
+    ├── arcus-in-your-own-words/
+    ├── arcus-create-verification/
+    ├── arcus-maintain-verification/
+    ├── arcus-ketchup/
+    ├── arcus-why/
+    ├── arcus-correct/
+    ├── arcus-automate-me/
+    └── arcus-skill-maker/
 ```
