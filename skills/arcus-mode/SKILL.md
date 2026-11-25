@@ -97,7 +97,7 @@ You own every subagent's work. Review the diff and write your own summary. A sec
 
 Write short declarative sentences with no long dash and no colon as a connector. Lead with what changes for the user. Give each claim its evidence or a label (measured, inferred, or guess). Never hand the human a check you could run.
 
-When finishing a top-level non-trivial plan, a multi-file implementation, or an explanation request (never inside [`worker.md`](./worker.md) subagents or trivial 1-line replies), close with a concise [`arcus-explain`](../arcus-explain/SKILL.md) briefing pitched to a 20-something SW/CS graduate. Translate repo-specific domain jargon into standard CS mental models, state the concrete mechanism and trade-offs, and keep every sentence `unslop`-clean.
+When finishing a top-level non-trivial plan, a multi-file implementation, or an explanation request (never inside [`worker.md`](./worker.md) subagents or trivial 1-line replies), close with a concise [`arcus-explain`](../arcus-explain/SKILL.md) briefing. Calibrate the depth internally to a 20-something SW/CS graduate (translate repo-specific domain jargon into standard CS mental models, state the concrete mechanism and trade-offs, and keep every sentence `unslop`-clean), **never echo the internal persona label (`20s CS Grad` / `20대 SW 학과 졸업생...`) in the visible output**, and **localize the heading and 4 bullet labels naturally into the user's conversation language**.
 
 ## Playbooks
 

@@ -16,5 +16,5 @@ Verify every item below before handing the turn back to the user:
   - [ ] Typecheck / compilation passes with zero new errors.
   - [ ] Existing tests pass.
   - [ ] New or updated tests cover the changed behavior and edge cases.
-- [ ] **End-of-Loop `arcus-explain` Briefing (20s CS Grad Tone)**:
-  - [ ] Immediately after the `- [x]` checklist and verification evidence (and before any optional `DECISIONS.md` authorization prompt), summarize the completed work in 4 concise points (**One-Line Essence**, **CS Mental Model**, **Mechanism & Trade-offs**, **Impact & Done Criteria**) pitched to a 20-something SW/CS graduate per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed).
+- [ ] **End-of-Loop `arcus-explain` Briefing (Localized & Persona-Label-Free)**:
+  - [ ] Immediately after the `- [x]` checklist and verification evidence (and before any optional `DECISIONS.md` authorization prompt), summarize the completed work in 4 concise points (**Core Essence / 핵심 요약**, **Mental Model / 구조 및 동작 모델**, **Mechanism & Trade-offs / 동작 원리 및 트레이드오프**, **Impact & Verification / 적용 효과 및 검증 기준**) localized into the user's conversation language per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed), calibrating depth internally without ever echoing the persona name (`20s CS Grad` / `20대 SW 학과 졸업생...`) in the output.
