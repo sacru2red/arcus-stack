@@ -13,6 +13,15 @@ TARGET_BASES=(
   "$HOME/.cursor/skills"
 )
 
+# Auto-detect T3 Code isolated Antigravity provider config directories
+if [ -d "$HOME/.t3/userdata/providers/antigravity" ]; then
+  for instance_dir in "$HOME/.t3/userdata/providers/antigravity"/*/; do
+    if [ -d "$instance_dir" ]; then
+      TARGET_BASES+=("${instance_dir%/}/config/skills")
+    fi
+  done
+fi
+
 for target_base in "${TARGET_BASES[@]}"; do
   mkdir -p "$target_base"
   for skill_dir in "$SKILLS_SOURCE"/*/; do
@@ -25,4 +34,4 @@ for target_base in "${TARGET_BASES[@]}"; do
 done
 
 echo ""
-echo "ARCUS-STACK skills are now linked globally for agy, Claude Code, Codex, Cursor, and OpenCode!"
+echo "ARCUS-STACK skills are now linked globally for agy (CLI + T3 Code), Claude Code, Codex, Cursor, and OpenCode!"
