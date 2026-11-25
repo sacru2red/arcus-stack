@@ -21,12 +21,13 @@
 
 **`arcus-stack` はこの分断を解消するために作られました。** 重いMCPサーバーへの依存を持たず、5つのツールすべてが共通して認識できる標準の `SKILL.md` と `AGENTS.md` 仕様のみで構成されているため、どの環境からどのエージェントを呼び出しても全く同じスキルと原則で作業できます。
 
-以下の5つのオープンソースプロジェクトのコア思想を1つに統合しています：
+以下の6つのオープンソースプロジェクトのコア思想を1つに統合しています：
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *「速く進みたいなら、まず深く潜れ」*（根本原因の特定、変更範囲の最小化、検証可能なコード）
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: 完了まで自律的に走り切る `ultrawork` ループと戦略・実行の分離
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: 設計・実装・検証の役割分担とオートパイロット実行
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 段階的な品質ガードレールと実際の実行結果（証拠）に基づく完了検証
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: HTML、CSS、クライアントJS作業時に最新のWeb標準ベストプラクティスを動的に照会（`npx -y modern-web-guidance@latest`）する仕組み（Apache-2.0）
+- **[`tt-a1i/archify`](https://github.com/tt-a1i/archify)**: アーキテクチャ、ワークフロー、シーケンス、ERDなど10種類のインタラクティブHTML/SVGダイアグラムと1ページExplainer生成エンジン（可視化リクエスト時に最優先で検討、Apache-2.0）
 
 さらに、`arcus-stack` を使うべき理由はエージェント間の互換性だけではありません。従来のAIコーディングが抱える2つの構造的な死角を解決します：
 
@@ -100,7 +101,7 @@ AIモデルは学習データの時期の制約により、最新のCSSやWeb標
 数十個の細かいスキルを最上位の `skills/` フォルダにそのまま並べると、スラッシュコマンド（`/`）の候補が溢れかえり、コンテキストも圧迫します。`arcus-stack` はこれを **2階層カプセル化構造** で解決しています。
 
 1. **ユーザー呼び出し用コアスキル（14種）**: `skills/arcus-*/SKILL.md` に配置。メニューにはこの14個の主要スキルだけがすっきり表示されます。
-2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、22のプレイブック、17の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
+2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、22のプレイブック、18の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
 
 ---
 
@@ -177,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # 日本語ドキュメント (Japanese)
 ├── README.zh-CN.md              # 中国語（簡体字）ドキュメント (Simplified Chinese)
 ├── README.es.md                 # スペイン語ドキュメント (Spanish)
-├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-009)
+├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-010)
 ├── plugin.json                  # Antigravity (agy) プラグインマニフェスト
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code プラグインマニフェスト
@@ -196,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [内部専用] 22のタスクプレイブック
     │   ├── principles/          # [内部専用] 24の設計原則
-    │   ├── internal/            # [内部専用] 17の補助スキル (unslop, bro, modern-web-guidance など)
+    │   ├── internal/            # [内部専用] 18の補助スキル (unslop, bro, modern-web-guidance, archify-visualization など)
     │   └── references/          # [内部専用] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

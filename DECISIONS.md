@@ -118,3 +118,18 @@ This document records the core architectural and directional decisions of **`arc
     2. For each of **3 genuinely distinct variants (`Option A`, `Option B`, `Option C`)**: apply the edit directly on the working branch ➔ wait for hot-reload/render ➔ capture `0N-option-X.png` ➔ export `option-X.patch` to `.audit/ui-propose/<task-slug>/` ➔ revert via `git checkout HEAD -- <files>` (plus re-applying `00-base-dirty.patch` if initially dirty).
     3. Present all 4 screenshots side-by-side with a trade-off matrix while leaving the working tree clean, then instantaneously apply (`git apply`) whichever option (or hybrid graft) the user selects.
 - **Enforced By**: [`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md), [`skills/arcus-ui-propose/references/ui-proposal-protocol.md`](./skills/arcus-ui-propose/references/ui-proposal-protocol.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
+## `D-010`: Archify-First Visualization Routing (`archify-visualization`) with OS Temp Output Isolation & Non-Blocking 3-Tier Fallback
+- **Date / Pin**: `2026-11-25` (Current)
+- **Status**: `ACTIVE`
+- **Context**: When users request system architecture, workflow, sequence, data-flow, state lifecycle, ERD, class, tree, timeline, or waterfall visualizations (or 1-page visual explainers), agents default to static text or basic Mermaid blocks. [`tt-a1i/archify`](https://github.com/tt-a1i/archify) (Apache-2.0) generates validated, theme-aware interactive standalone HTML/SVG diagrams and 1-page explainers, but bundling its ~5.4 MB skill runtime inside `arcus-stack` would bloat the repository and lag upstream updates, while its default `./.archify/` output folder and `proactive` mode would dirty git working trees during read-only planning (`arcus-plan`) or catch-ups (`arcus-ketchup`).
+- **Decision & Tradeoff**:
+  - Encapsulate `archify` routing as an internal sub-skill at [`skills/arcus-mode/internal/archify-visualization.md`](./skills/arcus-mode/internal/archify-visualization.md) (with Apache-2.0 Section 4(b) modification notice) and wire on-demand triggers across `rules/AGENTS.md`, `arcus-mode`, `arcus-plan`, `arcus-explain`, and `arcus-ketchup` (with `*(when co-installed)*` guards and self-contained inline fallbacks per `D-002`).
+  - **Working-Tree Clean Output Isolation**: Unless the user explicitly requests saving diagram artifacts inside the repository, write all candidate and finalized `.html` / `.receipt.json` files to `<os.tmpdir()>/archify/<type>-<slug>-<ts>/` so `git status` stays untouched.
+  - **3-Tier Non-Blocking Resolution Chain**:
+    1. **Tier 1 (Cross-Platform 5-Agent + T3 Code Locator)**: Search workspace `.agents/skills` and global agent skill directories (`~/.agents/skills`, `~/.gemini/config/skills`, `~/.t3/userdata/providers/antigravity/*/config/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.cursor/skills`, `~/.config/opencode/skills`) via `os.homedir()` for `archify/bin/archify.mjs` and run `finalize`.
+    2. **Tier 2 (Auto-Bootstrap)**: If not installed and online, run `npx -y skills@latest add https://archify.si --skill archify -g --copy --yes` non-blockingly and re-run Tier 1.
+    3. **Tier 3 (Offline / Sandbox Fallback)**: If offline or restricted, fall back immediately to inline Mermaid (or declared host `html_render`) with a 1-line note without blocking the session.
+- **Enforced By**: [`skills/arcus-mode/internal/archify-visualization.md`](./skills/arcus-mode/internal/archify-visualization.md) and [`rules/AGENTS.md`](./rules/AGENTS.md).

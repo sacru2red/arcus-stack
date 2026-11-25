@@ -21,12 +21,13 @@
 
 **`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用 5 个工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
 
-本项目融合了以下五个开源项目的核心优势：
+本项目融合了以下六个开源项目的核心优势：
 - **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**：*“欲速则先深潜”*（深挖根本原因、最小化改动范围、编写可验证的代码）
 - **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**：自主循环直至任务彻底完成的 `ultrawork` 模式与策略/执行分离
 - **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**：规划、实现、审查角色分工与自动化工作流
 - **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**：分阶段质量护栏与基于真实运行证据的完成校验
 - **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**：在编写 HTML、CSS 与客户端 JS 时实时检索最新现代 Web 标准指南（`npx -y modern-web-guidance@latest`，Apache-2.0）
+- **[`tt-a1i/archify`](https://github.com/tt-a1i/archify)**：涵盖架构、工作流、时序、ERD 等 10 类交互式 HTML/SVG 图表与单页可视化解说器（收到可视化请求时优先调度，Apache-2.0）
 
 除了跨工具兼容之外，使用 `arcus-stack` 的核心理由在于它从架构上解决了传统单会话 AI 编程的两大痛点：
 
@@ -100,7 +101,7 @@
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
 1. **面向用户的核心技能（14 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 14 个高频入口。
-2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 17 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
+2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 18 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
 
@@ -177,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # 日文文档 (Japanese)
 ├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
 ├── README.es.md                 # 西班牙文文档 (Spanish)
-├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-009)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-010)
 ├── plugin.json                  # Antigravity (agy) 插件清单
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 插件清单
@@ -196,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [内部专用] 22 个任务剧本
     │   ├── principles/          # [内部专用] 24 条工程原则
-    │   ├── internal/            # [内部专用] 17 个辅助子技能 (unslop, bro, modern-web-guidance 等)
+    │   ├── internal/            # [内部专用] 18 个辅助子技能 (unslop, bro, modern-web-guidance, archify-visualization 等)
     │   └── references/          # [内部专用] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

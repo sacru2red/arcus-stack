@@ -33,9 +33,10 @@ Switch away from the default 20s CS grad persona **only** when the user explicit
 ## 2. Two Operating Modes
 
 ### Mode 1: Pre-Work Goal Alignment & Concept / Code Explainer
-Triggered when the user invokes `arcus-explain` (or `/in-your-own-words`), asks *"explain how/what X does"*, or when an adversarial review ([`interrogate.md`](../arcus-mode/internal/interrogate.md) when co-installed) needs a crisp restatement of intent before testing:
+Triggered when the user invokes `arcus-explain` (or `/in-your-own-words`), asks *"explain how/what X does"*, asks for a visual architecture/flow diagram or 1-page visual explainer, or when an adversarial review ([`interrogate.md`](../arcus-mode/internal/interrogate.md) when co-installed) needs a crisp restatement of intent before testing:
 1. Read the relevant source files, diff, or error trace first so you explain from facts rather than surface text.
 2. Restate the user's goal and the core problem in your own words using the 4-Part Explanation Structure below so misalignments surface before code is written.
+3. **Visual Diagram / One-Page Explainer Requests (`archify` Priority)**: When the user asks to visualize a system, data flow, sequence, state lifecycle, ERD, or timeline—or asks for a visual 1-page explainer—prioritize [`tt-a1i/archify`](https://github.com/tt-a1i/archify) per [`archify-visualization.md`](../arcus-mode/internal/archify-visualization.md) *(when co-installed)*. *Inline fallback*: Locate `archify/bin/archify.mjs` across workspace/global agent skill folders (`~/.agents/skills`, `~/.gemini/config/skills`, `~/.t3/userdata/providers/antigravity/*/config/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.cursor/skills`, `~/.config/opencode/skills`), bootstrap non-blockingly via `npx -y skills@latest add https://archify.si --skill archify -g --copy --yes` if missing, and write temporary artifacts to `<os.tmpdir()>/archify/<slug>/` so the git working tree stays clean (falling back to inline Mermaid or declared `html_render` with a 1-line note only if offline/unavailable).
 
 ### Mode 2: Automatic End-of-Run Briefing (`arcus-plan`, `arcus-work-loop`, `arcus-mode`)
 Triggered automatically at the conclusion of:
