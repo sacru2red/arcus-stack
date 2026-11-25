@@ -11,7 +11,7 @@ Use this structure when presenting an `arcus-plan` output:
 - **Invariants to Preserve**: Contracts, types, backwards compatibility, or performance constraints that must not break.
 
 ## 3. Actionable Execution & Verification Checklist
-Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action** with its **observable verification proof**. During execution (`arcus-work`), items are marked `- [x]` only after their verification condition passes.
+Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action** with its **observable verification proof**. During execution (`arcus-work-loop`), items are marked `- [x]` only after their verification condition passes.
 
 - [ ] **Step 1 — [Target File / Module]**: Concrete change description.
   - ➔ **Verify**: Exact check or command (e.g., `npm test -- path/to/test`, typecheck passes, or specific boundary behavior confirmed).

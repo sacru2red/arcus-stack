@@ -1,18 +1,18 @@
-# ARCUS Code Review Rubric
+# ARCUS Plan & Code Review Rubric
 
-Evaluate changes strictly against these four dimensions:
+Evaluate plans (`arcus-plan`) and code changes (`arcus-work-loop`) strictly against these four dimensions:
 
-## 1. Symptom Patching vs. Root Cause
-- **Red Flag**: Adding `try/catch` that swallows errors, optional chaining (`?.`) without understanding why a value is `undefined`, or arbitrary retries/sleeps.
-- **Requirement**: The change must enforce the data or state invariant at the boundary where it originates.
+## 1. Premise & Root-Cause Validity (vs. Symptom Patching)
+- **In a Plan**: Does the plan assume a file, tool, path, or invariant exists without verifying it? Does it address a surface symptom instead of the architectural seam?
+- **In Code**: Red flags include adding `try/catch` that swallows errors, optional chaining (`?.`) without knowing why a value is `undefined`, or arbitrary retries/sleeps.
 
-## 2. Failure Modes & Edge Cases
-- Empty/null/boundary inputs, partial failures, race conditions, resource leaks, and rollback behavior.
-- Security boundaries: untrusted input validation, auth checks, and secret exposure.
+## 2. Failure Modes, Dependencies & Edge Cases
+- **In a Plan**: Broken cross-references, missing migration/cleanup steps, partial-install failures, or state conflicts between planning and execution.
+- **In Code**: Empty/null/boundary inputs, partial failures, race conditions, resource leaks, rollback behavior, and security boundaries (untrusted input, auth, secrets).
 
-## 3. Architectural Hygiene
-- Minimal surface area: no dead code, no speculative abstractions, no leaking internal details across module boundaries.
+## 3. Architectural Hygiene & Blast Radius
+- Minimal surface area: no dead code, no duplicated instructions, no speculative abstractions, and no leaking internal details across module boundaries.
 
-## 4. Verification Evidence
-- Are there automated tests covering both the happy path and the failure/edge case?
-- Were the tests and typecheckers actually executed?
+## 4. Verification Evidence Quality
+- **In a Plan**: Every checklist item (`- [ ]`) must have a concrete `➔ Verify:` command or observable proof, not vague "test it" placeholders.
+- **In Code**: Automated tests and typecheckers must cover both the happy path and the failure/edge case, and must have been actually executed.

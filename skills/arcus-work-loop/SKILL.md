@@ -1,14 +1,15 @@
 ---
-name: arcus-work
+name: arcus-work-loop
 description: >-
-  Autonomous end-to-end execution loop (Ultrawork / Autopilot). Use when the
-  user invokes "arcus-work", "ulw", "ultrawork", or asks to autonomously
-  implement, fix, and verify a feature or bug end-to-end until completion.
+  Autonomous checklist-driven execution and verification loop. Use when the user
+  invokes "arcus-work-loop", "/arcus-work-loop", "work-loop", or asks to
+  autonomously implement, fix, and verify a feature or bug item-by-item until
+  every verification condition passes.
 ---
 
-# ARCUS Ultrawork Execution (`arcus-work`)
+# ARCUS Work Loop (`arcus-work-loop`)
 
-Execute the task autonomously from deep discovery through verified completion without stopping prematurely or leaving half-finished stubs.
+Execute the task autonomously in an iterative implementation-and-verification loop from discovery through verified completion without stopping prematurely or leaving half-finished stubs.
 
 ## Execution Loop
 
@@ -23,5 +24,5 @@ Execute the task autonomously from deep discovery through verified completion wi
    - Immediately run each item's verification check (typecheck, linter, unit/integration tests, build) after editing.
    - Mark an item `- [x]` **only** after its verification check passes with real evidence. If a check fails, diagnose the root cause and fix all reported issues before re-running.
 4. **Evidence-Gated Completion**:
-   - Audit your final state against [ultrawork-checklist.md](./references/ultrawork-checklist.md).
+   - Audit your final state against [work-loop-checklist.md](./references/work-loop-checklist.md).
    - Present the completed checklist (`- [x]`) alongside the concrete verification evidence (commands run and their outputs).

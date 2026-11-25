@@ -27,7 +27,7 @@ The remaining triggers live only here:
 - A number you measured → [./internal/benchmark-checklist.md](./internal/benchmark-checklist.md).
 - PR status → the [./playbooks/babysit.md](./playbooks/babysit.md) playbook (and [./references/bugbot-triage.md](./references/bugbot-triage.md)). Landing a green stack → the [./playbooks/shipping.md](./playbooks/shipping.md) playbook.
 - Bot review comments → judge each on its merits per [./references/bugbot-triage.md](./references/bugbot-triage.md).
-- Long or unattended work → [./internal/show-me-your-work.md](./internal/show-me-your-work.md) and [`arcus-work`](../arcus-work/SKILL.md).
+- Long or unattended work → [./internal/show-me-your-work.md](./internal/show-me-your-work.md) and [`arcus-work-loop`](../arcus-work-loop/SKILL.md).
 
 ## Principles
 

@@ -5,7 +5,7 @@ description: "Internal sub-skill for building and maintaining a goal-aligned exe
 
 # Goal-Aligned Execution & Verification Checklist
 
-Use this internal protocol whenever planning (`arcus-plan`) or driving multi-step work (`arcus-mode` / `arcus-work`) so no requirement, edge case, or verification step slips through the cracks.
+Use this internal protocol whenever planning (`arcus-plan`) or driving multi-step work (`arcus-mode` / `arcus-work-loop`) so no requirement, edge case, or verification step slips through the cracks.
 
 ## 1. Shape of a Valid Checklist Item
 

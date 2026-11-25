@@ -1,4 +1,4 @@
-# ARCUS Ultrawork Completion & Live Checklist Protocol
+# ARCUS Work Loop Completion & Live Checklist Protocol
 
 ## 1. Live Task Checklist Rules (During Execution)
 - **Action + Proof Pairing**: Every task item must follow `- [ ] [Target] Change ➔ Verify: [Command / Expected Output]`.

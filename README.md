@@ -35,8 +35,8 @@ It distills and unifies the best ideas from four open-source projects:
 | :--- | :--- | :--- |
 | **`arcus-mode`** | Master Mode | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 22 task playbooks, and disciplined subagent delegation. |
 | **`arcus-plan`** | Planning & Checklist | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
-| **`arcus-work`** | Autonomous Execution | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
-| **`arcus-review`** | Code Review | Catches superficial symptom patches and hidden regressions before they ship. Audits diffs for root-cause validity, boundary safety, edge cases, and missing test evidence. |
+| **`arcus-work-loop`** | Autonomous Execution | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
+| **`arcus-review`** | Plan & Code Review | Catches flawed design assumptions and superficial symptom patches before they cause rework or regressions. Performs adversarial critique on `arcus-plan` designs as well as rigorous audits on code diffs, edge cases, and test evidence. |
 | **`arcus-in-your-own-words`** | Goal Alignment | Eliminates misunderstandings before a single line of code is touched. Restates your goal and core problem in the agent's own words to confirm alignment. |
 | **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |
 | **`arcus-maintain-verification`** | Verification Upkeep | Keeps your project's automated verification skill from rotting as features evolve. Compares source code against live app behavior to fix outdated verification recipes. |
@@ -66,7 +66,7 @@ Importing dozens of granular skills directly into the top-level `skills/` direct
 npx skills add sacru2red/arcus-stack -g -y
 
 # Install specific skills into the current project only
-npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work
+npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
 ```
 
 #### 🔄 Updating via `npx skills`
@@ -149,7 +149,7 @@ arcus-stack/
     │   ├── internal/            # [Internal] 14 helper sub-skills (unslop, bro, architect, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
     ├── arcus-plan/
-    ├── arcus-work/
+    ├── arcus-work-loop/
     ├── arcus-review/
     ├── arcus-in-your-own-words/
     ├── arcus-create-verification/

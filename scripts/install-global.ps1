@@ -23,11 +23,21 @@ if (Test-Path $T3AgyBase) {
 }
 
 $SkillFolders = Get-ChildItem -Path $SkillsSource -Directory
+$ActiveSkillNames = $SkillFolders | ForEach-Object { $_.Name }
 
 foreach ($TargetBase in $AgentSkillDirs) {
     if (-not (Test-Path $TargetBase)) {
         New-Item -ItemType Directory -Path $TargetBase -Force | Out-Null
     }
+
+    # Prune stale arcus-* skill links that were renamed or removed from skills/
+    Get-ChildItem -Path $TargetBase -Filter "arcus-*" -Force -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($ActiveSkillNames -notcontains $_.Name) {
+            Remove-Item -Path $_.FullName -Recurse -Force
+            Write-Host "[PRUNED] Removed stale skill link $($_.FullName)"
+        }
+    }
+
     foreach ($Skill in $SkillFolders) {
         $Dest = Join-Path $TargetBase $Skill.Name
         if (Test-Path $Dest) {

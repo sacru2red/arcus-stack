@@ -35,8 +35,8 @@ Reúne e integra las mejores ideas de cuatro proyectos de código abierto:
 | :--- | :--- | :--- |
 | **`arcus-mode`** | Modo Maestro | Eleva la calidad base de cada respuesta y cambio de código sin texto de relleno. Aplica automáticamente 24 principios de ingeniería, 22 playbooks de tareas y delegación disciplinada en subagentes. |
 | **`arcus-plan`** | Planificación y Checklist | Evita perder tiempo reescribiendo código o pasando por alto requisitos. Investiga primero la causa raíz y el alcance del cambio para generar una lista de verificación (`- [ ]`) de ejecución y pruebas adaptada al objetivo de tu tarea. |
-| **`arcus-work`** | Ejecución Autónoma | Completa tareas complejas de principio a fin sin detenerse a mitad de camino ni dejar código incompleto. Avanza ítem por ítem sobre la lista de verificación, marcando cada paso como completado (`- [x]`) solo tras superar pruebas y compilación reales. |
-| **`arcus-review`** | Revisión de Código | Detecta parches superficiales que solo ocultan errores antes de que lleguen a producción. Audita si se resolvió la causa raíz, si se respetan los límites de arquitectura, casos extremos y evidencia de tests. |
+| **`arcus-work-loop`** | Bucle de Ejecución Autónoma | Completa tareas complejas de principio a fin sin detenerse a mitad de camino ni dejar código incompleto. Avanza ítem por ítem sobre la lista de verificación, marcando cada paso como completado (`- [x]`) solo tras superar pruebas y compilación reales. |
+| **`arcus-review`** | Revisión de Planes y Código | Detecta puntos ciegos en tus planes de diseño y parches superficiales en el código antes de que causen retrabajo o fallos en producción. Sirve tanto para hacer una revisión crítica de un plan (`arcus-plan`) como para auditar código, casos extremos y evidencia de tests. |
 | **`arcus-in-your-own-words`** | Alineación de Objetivos | Ahorra tiempo evitando que el agente programe algo distinto a lo que pediste. Hace que el agente resuma con sus propias palabras tu objetivo y el problema principal antes de actuar. |
 | **`arcus-create-verification`** | Verificación de App | Te ahorra tener que abrir y probar manualmente la aplicación tras cada cambio. Crea y comprueba una habilidad local del proyecto (`verify-<app>`) que ejecuta y opera tu app como un usuario real. |
 | **`arcus-maintain-verification`** | Mantenimiento de Verificación | Evita que las recetas de verificación de tu proyecto queden obsoletas cuando cambia el código. Compara el código fuente con la ejecución en vivo de la app para mantener actualizada la guía de verificación. |
@@ -66,7 +66,7 @@ Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` s
 npx skills add sacru2red/arcus-stack -g -y
 
 # Instalar habilidades específicas solo en el proyecto actual
-npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work
+npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
 ```
 
 #### 🔄 Cómo actualizar con `npx skills`
