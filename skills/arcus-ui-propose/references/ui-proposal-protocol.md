@@ -39,17 +39,25 @@ git diff HEAD -- <target-files> > .audit/ui-propose/<task-slug>/00-base-dirty.pa
 <capture screenshot -> .audit/ui-propose/<task-slug>/00-before.png>
 
 # 3. Variant Loop (for X in a, b, c; N in 1, 2, 3):
-#    a) Edit <target-files> to implement Option X
+#    a) Edit <target-files> (and create any new variant files) to implement Option X
 #    b) Wait for compile/HMR & verify no error overlay
 #    c) Capture screenshot -> .audit/ui-propose/<task-slug>/0N-option-X.png
-#    d) Save full patch from HEAD -> .audit/ui-propose/<task-slug>/option-X.patch
+#    d) Save full tracked patch from HEAD -> .audit/ui-propose/<task-slug>/option-X.patch
 #       (git diff HEAD -- <target-files> > .audit/ui-propose/<task-slug>/option-X.patch)
+#       and copy any new untracked files created by Option X (preserving relative paths) into:
+#       .audit/ui-propose/<task-slug>/files-X/
 #    e) Revert <target-files> back to pre-proposal baseline:
 #       git checkout HEAD -- <target-files>
+#       remove any untracked files created by Option X
 #       (if 00-base-dirty.patch is non-empty: git apply .audit/ui-propose/<task-slug>/00-base-dirty.patch)
 
 # 4. After Option C revert, confirm working tree matches Step 1 baseline
 git status --short
+
+# 5. Once user picks Option <chosen> (a, b, or c):
+#    git checkout HEAD -- <target-files>
+#    git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch
+#    copy .audit/ui-propose/<task-slug>/files-<chosen>/* back to their relative workspace paths (if any)
 ```
 
 ---

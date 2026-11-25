@@ -26,13 +26,13 @@ When performing visual UI work (creating or modifying layouts, components, styli
 Follow the full protocol and presentation layout in [ui-proposal-protocol.md](./references/ui-proposal-protocol.md).
 
 ### Step 1 — Pre-Flight Working Tree Guard & Web Standards Lookup
-1. **Protect Existing Uncommitted Edits**: Run `git status --porcelain`. If the user already has uncommitted changes in the working tree, record a non-destructive baseline snapshot (`$BASE_PATCH = ".audit/ui-propose/<task-slug>/base-working-tree.patch"` via `git diff HEAD > $BASE_PATCH`, or `git stash create`) so restoring after Option C never wipes the user's pre-existing dirty edits.
+1. **Protect Existing Uncommitted Edits**: Run `git status --porcelain`. If the user already has uncommitted changes in the working tree, record a non-destructive baseline snapshot (`$BASE_PATCH = ".audit/ui-propose/<task-slug>/00-base-dirty.patch"` via `git diff HEAD > $BASE_PATCH`, plus copying any pre-existing untracked files in target directories) so restoring after Option C never wipes the user's pre-existing dirty edits.
 2. **Modern Web Standards First**: For HTML, CSS, or client-side JS/DOM UI, query live web platform guidance via `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `retrieve "<id>"` (falling back to `npx --offline -y` or skipping non-blockingly if offline) so all 3 variants use modern Baseline features and clean `@supports` fallbacks.
-3. **Prepare Artifact Directory**: Create `.audit/ui-propose/<task-slug>/` (keep out of git commits) to store the 4 screenshots (`00-before.png`, `01-option-a.png`, `02-option-b.png`, `03-option-c.png`) and the 3 reusable patch files (`option-a.patch`, `option-b.patch`, `option-c.patch`).
+3. **Prepare Artifact Directory**: Create `.audit/ui-propose/<task-slug>/` (keep out of git commits) to store the 4 screenshots (`00-before.png`, `01-option-a.png`, `02-option-b.png`, `03-option-c.png`), the 3 reusable patch files (`option-a.patch`, `option-b.patch`, `option-c.patch`), and any untracked variant file folders (`files-a/`, `files-b/`, `files-c/`).
 
 ### Step 2 — Capture 1 Baseline ("Before") Screenshot (`00-before.png`)
 1. Ensure the target UI surface is running (reuse an active dev server / preview tab, or start the project's dev command / verification harness from `.agents/skills/verify-<app>/` if present).
-2. Navigate to the exact route, viewport size, and UI state being modified.Lock the viewport dimensions and theme (`light`/`dark`) so all 4 screenshots share an identical frame.
+2. Navigate to the exact route, viewport size, and UI state being modified. Lock the viewport dimensions and theme (`light`/`dark`) so all 4 screenshots share an identical frame.
 3. Capture the current state to `.audit/ui-propose/<task-slug>/00-before.png` using the available capture surface (see [ui-proposal-protocol.md](./references/ui-proposal-protocol.md#capture-surface-fallback-chain): T3 Code `preview_snapshot(save=true)` / `device_screenshot`, project Playwright/browser harness, or standalone component preview).
    - *Brand-New Screen / Component*: If the route or component does not exist yet, capture the parent container or mount point before insertion as `00-before.png`.
 
@@ -45,8 +45,8 @@ Design 3 genuinely distinct visual/UX directions—never 3 trivial color tweaks:
 For each variant `X` in `a`, `b`, `c`:
 1. **Apply Variant `X`** directly in the working branch source files.
 2. **Wait for Hot-Reload / Render & Capture**: Verify the render has settled (no build error overlay or loading skeleton) at the locked viewport and save `.audit/ui-propose/<task-slug>/0N-option-X.png`.
-3. **Save Exact Patch for Instant Re-Application**: Export the diff relative to the pre-proposal state (`git diff HEAD > .audit/ui-propose/<task-slug>/option-X.patch`, plus any untracked variant files into `.audit/ui-propose/<task-slug>/files-X/`).
-4. **Revert Working Tree to Pre-Proposal Baseline**: Restore modified tracked files (`git checkout -- <touched-files>` and re-apply `$BASE_PATCH` if the tree was initially dirty; remove untracked variant files) before starting the next variant.
+3. **Save Exact Patch & Untracked Files for Instant Re-Application**: Export the tracked diff relative to `HEAD` (`git diff HEAD -- <touched-files> > .audit/ui-propose/<task-slug>/option-X.patch`) and copy any newly created untracked variant files (preserving relative paths) into `.audit/ui-propose/<task-slug>/files-X/`.
+4. **Revert Working Tree to Pre-Proposal Baseline**: Restore modified tracked files against `HEAD` (`git checkout HEAD -- <touched-files>` and re-apply `$BASE_PATCH` via `git apply .audit/ui-propose/<task-slug>/00-base-dirty.patch` if the tree was initially dirty) and remove any untracked files created by Variant `X` before starting the next variant.
 
 ### Step 4 — Verify Clean Working Tree & Present the 4-Screenshot Proposal
 1. After Option C is captured and reverted, verify `git status --porcelain` matches the exact pre-proposal state from Step 1.
@@ -54,5 +54,5 @@ For each variant `X` in `a`, `b`, `c`:
 3. Ask the user which option to apply (`Option A`, `Option B`, `Option C`, or a hybrid graft such as *"Option B layout with Option A density"*).
 
 ### Step 5 — Apply Chosen Variant & Verify
-1. Once the user selects an option (or hybrid), re-apply the saved patch (`git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch` or graft the selected parts cleanly).
+1. Once the user selects an option (or hybrid), restore the clean `HEAD` baseline on `<touched-files>` (`git checkout HEAD -- <touched-files>`), apply the saved patch (`git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch`), and copy back any untracked variant files from `.audit/ui-propose/<task-slug>/files-<chosen>/` into the workspace (or graft the selected parts cleanly).
 2. Run full verification (typecheck, linter, tests, and final screenshot proof) or hand off to [`arcus-work-loop`](../arcus-work-loop/SKILL.md) for the remaining implementation checklist.
