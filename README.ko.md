@@ -64,6 +64,7 @@ AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 A
 | ⭐ **`arcus-work-loop`** | **핵심 · 자율 실행 루프** | 중간에 멈추거나 덜 끝난 코드를 남기지 않고 작업을 끝까지 완수합니다. 작업 체크리스트를 하나씩 수행하고 실제 테스트와 빌드 검증을 통과한 항목만 완료(`- [x]`)로 채워 나가며 끝까지 반복 진행합니다. |
 | ⭐ **`arcus-review`** | **핵심 · 격리된 계획·코드 리뷰** | 작성자의 맥락과 편향을 물려받지 않도록 격리된 서브에이전트에서 고정된 스냅샷을 기준으로 설계와 코드를 검토합니다. 배경지식 없는 독자 관점의 문서 이해도 시험, 외부 레퍼런스 대조, 지적 장부 기반의 선(先) 코드 확인 리뷰를 수행합니다. |
 | ⭐ **`arcus-explain`** | **핵심 · 목표 정렬 및 CS 눈높이 설명** | 요구사항, 설계 계획, 완료된 코드 변경이나 복잡한 개념을 **20대 SW/컴퓨터공학과 졸업생(주니어 개발자)에게 설명하는 명쾌한 톤**으로 풀어줍니다(유치한 비유나 현학적 미사여구 없이 CS 멘탈 모델·동작 원리·트레이드오프 중심으로 번역). `arcus-plan`, `arcus-work-loop`, `arcus-mode`가 끝날 때마다 자동으로 핵심 브리핑을 제공합니다. |
+| **`arcus-ui-propose`** | UI 4장 스크린샷 비교 제안 | UI 작업 시 에이전트가 임의로 디자인 하나를 정해 덮어쓰는 문제를 막아줍니다. 현재 작업 브랜치에서 **작업 전(Before) 스크린샷 1장**과 **서로 다른 작업 제안 3가지(Option A, B, C) 스크린샷**을 순차 적용 ➔ 캡처 ➔ 패치(`.patch`) 저장 ➔ `git checkout` 원복 방식으로 안전하게 가져와 비교 제안한 뒤, 사용자가 선택한 안만 즉시 재적용합니다. |
 | **`arcus-create-verification`** | 앱 검증 스킬 생성 | 기능이 바뀔 때마다 사람이 일일이 앱을 켜서 수동으로 확인하는 수고를 덜어줍니다. 실제 사용자처럼 앱을 실행하고 주요 기능을 조작해 정상 동작 증거를 남기는 프로젝트 전용 검증 스킬(`verify-<앱이름>`)을 만들어 줍니다. |
 | **`arcus-maintain-verification`** | 앱 검증 스킬 갱신 | 앱 코드가 바뀔 때 기존 검증 절차가 낡아서 깨지는 문제를 막아줍니다. 변경된 소스 코드와 실제 앱 실행 결과를 대조해 프로젝트의 검증 스킬과 기능 목록을 최신 상태로 유지합니다. |
 | **`arcus-ketchup`** | 진행 상황 요약 | 긴 대화 기록을 처음부터 다시 읽지 않아도 지금 내가 무엇을 결정해야 하는지 한눈에 파악할 수 있습니다. 마지막 메시지 이후 바뀐 내용과 사용자의 결정이 필요한 항목을 쉬운 말과 다이어그램으로 요약해 줍니다. |
@@ -98,7 +99,7 @@ AI 모델은 학습 시점의 한계 때문에 이미 최신 CSS나 웹 표준 A
 
 수십 개의 세부 스킬을 최상위 `skills/` 폴더에 그대로 풀어놓으면 슬래시 명령어(`/`) 목록이 너무 길어지고 에이전트의 컨텍스트를 불필요하게 차지합니다. `arcus-stack` 은 이를 **2계층 캡슐화 구조**로 해결했습니다.
 
-1. **사용자 호출용 코어 스킬 (13종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 13개의 핵심 스킬만 깔끔하게 표시됩니다.
+1. **사용자 호출용 코어 스킬 (14종)**: 최상위 `skills/arcus-*/SKILL.md`에 위치합니다. 사용자의 스킬 목록에는 꼭 필요한 이 14개의 핵심 스킬만 깔끔하게 표시됩니다.
 2. **내부 캡슐화 모듈 (60여 종)**: `skills/arcus-mode/` 하위 폴더(`principles/`, `playbooks/`, `internal/`, `references/`) 안에 들어 있습니다. 모든 에이전트의 스킬 스캐너는 `skills/` 바로 아래 1단계 폴더만 목록에 등록하기 때문에, 24개 엔지니어링 원칙, 22개 플레이북, 17개 내부 보조 스킬(`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance` 등)은 사용자 메뉴를 어지럽히지 않고 에이전트가 작업 중 필요할 때만 내부 링크를 따라 읽어들입니다.
 
 ---
@@ -176,7 +177,7 @@ arcus-stack/
 ├── README.ja.md                 # 일본어 문서 (Japanese)
 ├── README.zh-CN.md              # 중국어 간체 문서 (Simplified Chinese)
 ├── README.es.md                 # 스페인어 문서 (Spanish)
-├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-008)
+├── DECISIONS.md                 # 아키텍처 의사결정 장부 (D-001..D-009)
 ├── plugin.json                  # Antigravity (agy) 플러그인 매니페스트
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 플러그인 매니페스트
@@ -189,7 +190,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows용 5개 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
 │   └── install-global.sh        # macOS/Linux용 5개 에이전트(+T3 Code) 전역 심볼릭 링크 설치기
-└── skills/                      # ⭐ 사용자 노출 13개 코어 스킬
+└── skills/                      # ⭐ 사용자 노출 14개 코어 스킬
     ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈
     │   ├── SKILL.md
     │   ├── worker.md
@@ -201,6 +202,7 @@ arcus-stack/
     ├── arcus-work-loop/
     ├── arcus-review/
     ├── arcus-explain/
+    ├── arcus-ui-propose/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/
     ├── arcus-ketchup/

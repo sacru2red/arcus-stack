@@ -64,6 +64,7 @@
 | ⭐ **`arcus-work-loop`** | **核心 · 自主执行循环** | 杜绝半途而废或留下未完成的占位代码，将任务一气呵成执行到底。按任务检查清单逐项推进，仅在真实测试与构建验证通过后才将条目勾选为完成（`- [x]`）。 |
 | ⭐ **`arcus-review`** | **核心 · 上下文隔离的计划与代码审查** | 在不继承作者上下文与盲区的隔离子智能体中，基于固定快照审查设计方案与代码。涵盖无背景读者的文档可理解性测试、外部参考资料核对，以及基于问题台账的“先看代码、后看回复”多轮评审机制。 |
 | ⭐ **`arcus-explain`** | **核心 · 目标对齐与 CS 科班视角深度解说** | 以**向 20 多岁软件工程/计算机专业本科毕业生（初级工程师）讲解的清晰语调**，解说需求目标、架构方案、已完成的代码改动或复杂概念（拒绝幼稚比喻与空洞套话，用标准 CS 心智模型、运行机制与权衡取舍进行拆解）。在 `arcus-plan`、`arcus-work-loop` 和 `arcus-mode` 结束时自动提供核心简报。 |
+| **`arcus-ui-propose`** | UI 4 张截图可视化方案对比 | 防止助手在 UI 任务中自作主张锁定单一设计。在当前工作分支上按“依次应用 ➔ 截图 ➔ 保存 `.patch` 补丁 ➔ `git checkout` 还原”的安全流程，采集 **1 张修改前（Before）基准截图** 和 **3 张不同设计提案（Option A、B、C）截图** 并排对比，待你选定后再即时应用所选方案。 |
 | **`arcus-create-verification`** | 生成应用验证技能 | 免去每次改动后人工启动应用逐一点选测试的繁琐工作。自动生成并实测一个像真实用户一样启动并操作应用的项目专属验证技能（`verify-<app>`）。 |
 | **`arcus-maintain-verification`** | 维护应用验证技能 | 防止业务代码更新后原有的验证流程过期失效。对比最新源码与真实运行表现，自动校准并更新项目的验证技能与功能清单。 |
 | **`arcus-ketchup`** | 进度简报 | 无需从头翻阅冗长的聊天记录，一眼看清当前进展以及需要你拍板的事项。用大白话、流程图和带推荐理由的待决策清单总结你上一条消息以来的所有变化。 |
@@ -98,7 +99,7 @@
 
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
-1. **面向用户的核心技能（13 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 13 个高频入口。
+1. **面向用户的核心技能（14 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 14 个高频入口。
 2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 17 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
@@ -176,7 +177,7 @@ arcus-stack/
 ├── README.ja.md                 # 日文文档 (Japanese)
 ├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
 ├── README.es.md                 # 西班牙文文档 (Spanish)
-├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-008)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-009)
 ├── plugin.json                  # Antigravity (agy) 插件清单
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 插件清单
@@ -189,7 +190,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 个助手 + T3 Code)
 │   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
-└── skills/                      # ⭐ 面向用户的 13 个核心技能
+└── skills/                      # ⭐ 面向用户的 14 个核心技能
     ├── arcus-mode/              # 主控模式 + 内部封装模块
     │   ├── SKILL.md
     │   ├── worker.md
@@ -201,6 +202,7 @@ arcus-stack/
     ├── arcus-work-loop/
     ├── arcus-review/
     ├── arcus-explain/
+    ├── arcus-ui-propose/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/
     ├── arcus-ketchup/

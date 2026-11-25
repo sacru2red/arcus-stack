@@ -23,9 +23,10 @@ Do not write or modify production code during the planning phase. Your goal is t
 2. **Map the Blast Radius & Boundaries**:
    - Identify every module, interface, test, and consumer affected by the proposed change.
    - Prefer the smallest structural change that preserves clean boundaries over sprawling edits.
-3. **Evaluate Trade-offs**:
+3. **Evaluate Trade-offs & Visual UI Proposals (`arcus-ui-propose`)**:
    - If there are multiple viable designs, compare at most 2 options with explicit pros/cons and recommend the cleanest path.
-   - Ask the user a concise question **only** if a missing product/design decision would materially alter the plan.
+   - **Visual UI Tasks (`arcus-ui-propose` Trigger)**: For visual UI creation, layout changes, styling updates, or component redesigns (unless the user explicitly asks to skip options), invoke [`arcus-ui-propose`](../arcus-ui-propose/SKILL.md) (when co-installed) or include a dedicated Step 1 in the checklist to capture **1 Baseline ("Before") screenshot** (`00-before.png`) and **3 distinct proposed variant screenshots** (`01-option-a.png`, `02-option-b.png`, `03-option-c.png`) by sequentially applying, capturing, saving patch diffs (`.audit/ui-propose/<task-slug>/option-{a,b,c}.patch`), and reverting the working branch (`git checkout -- <files>`) before locking in the final UI implementation.
+   - Ask the user a concise question **only** if a missing product/design decision (or choosing among the 3 visual UI proposal screenshots) would materially alter the plan.
 4. **Produce the Plan & Actionable Verification Checklist**:
    - Follow the exact structure in [plan-template.md](./references/plan-template.md).
    - Never write vague checklist items like `- [ ] Fix bug` or `- [ ] Update tests`. Every checklist item (`- [ ]`) must pair a **concrete file/module change** with its **exact verification condition** (`➔ Verify: <command or observable proof>`).

@@ -21,14 +21,14 @@ This document records the core architectural and directional decisions of **`arc
 
 ---
 
-## `D-002`: Two-Tier Skill Encapsulation (13 Public Core Skills + Private Internal Modules)
-- **Date / Pin**: `2026-11-25` (`5f2bb3c`, updated by `D-008`)
+## `D-002`: Two-Tier Skill Encapsulation (14 Public Core Skills + Private Internal Modules)
+- **Date / Pin**: `2026-11-25` (`5f2bb3c`, updated by `D-008`, `D-009`)
 - **Status**: `ACTIVE`
 - **Context**: Flattening 70+ granular skills (24 principles, 22 playbooks, 17 helper sub-skills) directly under `skills/` pollutes user slash-command menus (`/`) and wastes always-on skill description tokens.
 - **Decision & Tradeoff**:
-  - Expose only **13 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
+  - Expose only **14 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
   - Encapsulate all 60+ internal modules (`principles/`, `playbooks/`, `internal/`, `references/`) inside `skills/arcus-mode/` (and self-contained skill `references/`), loaded on-demand via relative Markdown links.
-  - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
+  - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-ui-propose`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
   - *Rejected Alternative*: Flat top-level `skills/principle-*` folders or cross-skill hard dependencies that break on partial installation.
 - **Enforced By**: One-level directory layout under `skills/` and [`scripts/validate.ps1`](./scripts/validate.ps1).
 
@@ -104,3 +104,17 @@ This document records the core architectural and directional decisions of **`arc
   - Focus the 7 pillars strictly on software engineering & domain architecture (System Boundaries, Ubiquitous Language ↔ Code Mapping, Core Business Formulas & Invariants, Authz Roles & Plan/Tier Gating, Legacy Minefields & Red Lines, Systems of Record, and Error/UX/PR Conventions) per [`domain-brain-template.md`](./skills/arcus-onboard/references/domain-brain-template.md).
   - **Code-vs-Domain Reconciliation (`D-005` harmony)**: Stamp every entry with `[as of YYYY-MM-DD | Source: <File/Schema/System/Owner>]`. When consumer skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-mode`) read `ONBOARDING.md`, they must cross-check cited code paths against live code—trusting live code if refactored and proposing a Mode 2 update for stale onboarding entries.
 - **Enforced By**: [`skills/arcus-onboard/SKILL.md`](./skills/arcus-onboard/SKILL.md), [`skills/arcus-onboard/references/domain-brain-template.md`](./skills/arcus-onboard/references/domain-brain-template.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
+## `D-009`: Visual UI 4-Screenshot Proposal (`arcus-ui-propose`) via Sequential Working-Branch Apply, Capture & Revert
+- **Date / Pin**: `2026-11-25` (Current)
+- **Status**: `ACTIVE`
+- **Context**: In visual UI tasks, agents typically commit to the first design they think of without showing the current baseline or alternative layouts. Conversely, spawning 3 full git worktrees and 3 separate dev servers just to preview UI variants is slow, consumes ports/RAM, and breaks when local dev environments only support a single active instance.
+- **Decision & Tradeoff**:
+  - Add `arcus-ui-propose` as the 14th public core skill ([`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md)) and auto-wire it into `arcus-plan` and `arcus-mode` for visual UI tasks.
+  - **Sequential Working-Branch Cycle with Dirty-Tree Protection**:
+    1. Snapshot any pre-existing uncommitted diff (`00-base-dirty.patch`) and capture **1 Baseline ("Before") screenshot** (`00-before.png`) at a locked viewport/theme.
+    2. For each of **3 genuinely distinct variants (`Option A`, `Option B`, `Option C`)**: apply the edit directly on the working branch ➔ wait for hot-reload/render ➔ capture `0N-option-X.png` ➔ export `option-X.patch` to `.audit/ui-propose/<task-slug>/` ➔ revert via `git checkout HEAD -- <files>` (plus re-applying `00-base-dirty.patch` if initially dirty).
+    3. Present all 4 screenshots side-by-side with a trade-off matrix while leaving the working tree clean, then instantaneously apply (`git apply`) whichever option (or hybrid graft) the user selects.
+- **Enforced By**: [`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md), [`skills/arcus-ui-propose/references/ui-proposal-protocol.md`](./skills/arcus-ui-propose/references/ui-proposal-protocol.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).

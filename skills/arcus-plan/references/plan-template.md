@@ -12,6 +12,7 @@ Use this structure when presenting an `arcus-plan` output:
 
 ## 3. Actionable Execution & Verification Checklist
 Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action** with its **observable verification proof**. During execution (`arcus-work-loop`), items are marked `- [x]` only after their verification condition passes.
+*(For visual UI tasks, either run [`arcus-ui-propose`](../../arcus-ui-propose/SKILL.md) upfront to present the `00-before.png` + `01-option-a..c.png` comparison, or make it Step 1 of this checklist before full implementation.)*
 
 - [ ] **Step 1 — [Target File / Module]**: Concrete change description.
   - ➔ **Verify**: Exact check or command (e.g., `npm test -- path/to/test`, typecheck passes, or specific boundary behavior confirmed).
