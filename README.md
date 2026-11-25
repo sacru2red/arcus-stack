@@ -34,8 +34,8 @@ It distills and unifies the best ideas from four open-source projects:
 | Skill | Category | Benefit & Description |
 | :--- | :--- | :--- |
 | **`arcus-mode`** | Master Mode | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 22 task playbooks, and disciplined subagent delegation. |
-| **`arcus-plan`** | Planning | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause and maps affected files to produce a step-by-step execution and verification plan. |
-| **`arcus-work`** | Autonomous Execution | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Loops through discovery, minimal implementation, and real test/build verification until done. |
+| **`arcus-plan`** | Planning & Checklist | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
+| **`arcus-work`** | Autonomous Execution | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
 | **`arcus-review`** | Code Review | Catches superficial symptom patches and hidden regressions before they ship. Audits diffs for root-cause validity, boundary safety, edge cases, and missing test evidence. |
 | **`arcus-in-your-own-words`** | Goal Alignment | Eliminates misunderstandings before a single line of code is touched. Restates your goal and core problem in the agent's own words to confirm alignment. |
 | **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |

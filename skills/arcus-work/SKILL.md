@@ -12,16 +12,16 @@ Execute the task autonomously from deep discovery through verified completion wi
 
 ## Execution Loop
 
-1. **Deep Discovery & Micro-Plan**:
-   - Locate all relevant files, existing patterns, and test suites in parallel.
-   - Establish the root cause or cleanest integration point before making edits.
+1. **Adopt or Build the Task Checklist**:
+   - If an `arcus-plan` checklist already exists in the conversation, adopt its `- [ ]` items as your live execution tracker.
+   - Otherwise, perform a fast parallel discovery of the relevant files/tests and construct a goal-aligned checklist where every item pairs a concrete edit with a verification check.
 2. **Minimal, High-Precision Implementation**:
-   - Follow existing codebase conventions, types, and module boundaries.
+   - Work through the checklist systematically, following existing codebase conventions, types, and module boundaries.
    - Never apply symptom patches (e.g., swallowing errors, arbitrary timeouts, blind null checks). Fix the underlying logic.
-   - Delegate independent research or isolated workstreams to subagents when available and beneficial.
+   - If new requirements or edge cases surface mid-task, update the checklist dynamically so nothing is forgotten.
 3. **Self-Diagnostics & Guarded Repair**:
-   - Immediately run diagnostics (typecheck, linter, unit/integration tests, build) after editing.
-   - If a check fails, diagnose the root cause of the failure and fix all reported issues before re-running.
+   - Immediately run each item's verification check (typecheck, linter, unit/integration tests, build) after editing.
+   - Mark an item `- [x]` **only** after its verification check passes with real evidence. If a check fails, diagnose the root cause and fix all reported issues before re-running.
 4. **Evidence-Gated Completion**:
-   - Review your work against [ultrawork-checklist.md](./references/ultrawork-checklist.md).
-   - Report the final summary with concrete verification evidence (commands run and their results).
+   - Audit your final state against [ultrawork-checklist.md](./references/ultrawork-checklist.md).
+   - Present the completed checklist (`- [x]`) alongside the concrete verification evidence (commands run and their outputs).

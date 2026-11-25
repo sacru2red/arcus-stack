@@ -1,4 +1,4 @@
-# ARCUS Plan Template
+# ARCUS Plan & Verification Checklist Template
 
 Use this structure when presenting an `arcus-plan` output:
 
@@ -10,11 +10,12 @@ Use this structure when presenting an `arcus-plan` output:
 - **Files to Modify**: List of target files and the exact responsibility of each edit.
 - **Invariants to Preserve**: Contracts, types, backwards compatibility, or performance constraints that must not break.
 
-## 3. Step-by-Step Execution Plan
-1. **[Step 1 Title]**: Concrete change description.
-2. **[Step 2 Title]**: Concrete change description.
-3. **[Step 3 Title]**: Concrete test additions or updates.
+## 3. Actionable Execution & Verification Checklist
+Write each step as an unchecked box (`- [ ]`) that pairs the **concrete action** with its **observable verification proof**. During execution (`arcus-work`), items are marked `- [x]` only after their verification condition passes.
 
-## 4. Verification Evidence Plan
-- **Automated Checks**: Exact commands to execute (e.g., `npm test`, `pytest`, `cargo check`).
-- **Edge Cases Covered**: Specific failure modes or boundary inputs that will be verified.
+- [ ] **Step 1 — [Target File / Module]**: Concrete change description.
+  - ➔ **Verify**: Exact check or command (e.g., `npm test -- path/to/test`, typecheck passes, or specific boundary behavior confirmed).
+- [ ] **Step 2 — [Target File / Module]**: Concrete change description.
+  - ➔ **Verify**: Exact check or command.
+- [ ] **Step 3 — [Edge Cases & Regression Tests]**: Specific failure modes, empty/boundary inputs, or regression tests added/updated.
+  - ➔ **Verify**: Test suite execution command and expected passing output.

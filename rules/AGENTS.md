@@ -14,8 +14,8 @@
 
 ## 3. Available Core Skills (`arcus-*`)
 - `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.
-- `arcus-plan`: Deep-first root-cause analysis, blast-radius mapping, and step-by-step execution planning.
-- `arcus-work`: Autonomous end-to-end execution loop (`ultrawork` / `autopilot`) from research to verified implementation.
+- `arcus-plan`: Deep-first root-cause analysis, blast-radius mapping, and an actionable execution and verification checklist tailored to the task goal.
+- `arcus-work`: Autonomous end-to-end execution loop (`ultrawork` / `autopilot`) that drives and checks off the task checklist with real verification evidence.
 - `arcus-review`: Strict adversarial code review checking root-cause validity, architectural boundaries, edge cases, and test evidence.
 - `arcus-in-your-own-words`: Restate the user's goal and core problem in your own words to verify alignment before acting.
 - `arcus-create-verification`: Generate and prove a project-local verification skill (`verify-<app>`) and user-POV feature map.
