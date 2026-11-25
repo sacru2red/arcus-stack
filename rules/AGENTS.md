@@ -17,7 +17,7 @@
 
 | Rule / Invariant | Enforced By |
 | :--- | :--- |
-| Universal 5-agent `SKILL.md` frontmatter (`name` + `description` only, no broken relative links) | Automated PowerShell validation check & [`universal-skill-spec.md`](../skills/arcus-skill-maker/references/universal-skill-spec.md) |
+| Universal 5-agent `SKILL.md` frontmatter (`name` + `description` only, no broken relative links) | [`scripts/validate.ps1`](../scripts/validate.ps1) & [`universal-skill-spec.md`](../skills/arcus-skill-maker/references/universal-skill-spec.md) |
 | Two-tier encapsulation (only 13 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`, `D-008`)](../DECISIONS.md) |
 | Stale `arcus-*` junctions and `.skill-lock.json` entries pruned on rename/update | [`scripts/install-global.ps1`](../scripts/install-global.ps1) & [`scripts/install-global.sh`](../scripts/install-global.sh) |
 | Context-isolated review, Cold-Reader test, and code-first Review Ledger | [`skills/arcus-review/SKILL.md`](../skills/arcus-review/SKILL.md) & [`review-ledger-protocol.md`](../skills/arcus-review/references/review-ledger-protocol.md) |

@@ -3,8 +3,8 @@ name: arcus-mode
 description: >-
   ARCUS master operating mode for concise, detailed responses, deliberate
   subagents, unslopped prose, simple code, and verified work. Use when the user
-  invokes "arcus-mode", "/arcus-mode", "poteto-mode", or asks to work in the
-  ARCUS / poteto deep-first engineering style.
+  invokes "arcus-mode", "/arcus-mode", or asks to work in the ARCUS deep-first
+  engineering style.
 ---
 
 # ARCUS Mode (`arcus-mode`)

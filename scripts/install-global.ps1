@@ -26,7 +26,9 @@ $T3AgyBase = "$HOME\.t3\userdata\providers\antigravity"
 if (Test-Path $T3AgyBase) {
     Get-ChildItem -Path $T3AgyBase -Directory | ForEach-Object {
         $T3ConfigSkills = Join-Path $_.FullName "config\skills"
-        $AgentSkillDirs.Add($T3ConfigSkills)
+        if ($AgentSkillDirs -notcontains $T3ConfigSkills) {
+            $AgentSkillDirs.Add($T3ConfigSkills)
+        }
     }
 }
 
@@ -41,15 +43,15 @@ foreach ($TargetBase in $AgentSkillDirs) {
     # Prune stale arcus-* skill links that were renamed or removed from skills/
     Get-ChildItem -Path $TargetBase -Filter "arcus-*" -Force -ErrorAction SilentlyContinue | ForEach-Object {
         if ($ActiveSkillNames -notcontains $_.Name) {
-            Remove-Item -Path $_.FullName -Recurse -Force
+            Remove-Item -LiteralPath $_.FullName -Recurse -Force
             Write-Host "[PRUNED] Removed stale skill link $($_.FullName)"
         }
     }
 
     foreach ($Skill in $SkillFolders) {
         $Dest = Join-Path $TargetBase $Skill.Name
-        if (Test-Path $Dest) {
-            Remove-Item -Path $Dest -Recurse -Force
+        if ($null -ne (Get-Item -LiteralPath $Dest -Force -ErrorAction SilentlyContinue)) {
+            Remove-Item -LiteralPath $Dest -Recurse -Force
         }
         New-Item -ItemType Junction -Path $Dest -Target $Skill.FullName | Out-Null
         Write-Host "[OK] Linked $($Skill.Name) -> $Dest"

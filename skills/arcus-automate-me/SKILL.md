@@ -11,7 +11,7 @@ description: >-
 
 A guided flow for turning the user's working conventions into a skill agents will follow. The output is one `-mode` skill tailored to them (e.g. `sacru-mode`, `arcus-mode`).
 
-This skill orchestrates three pieces: an inline mining pass (step 1), [`arcus-skill-maker`](../arcus-skill-maker/SKILL.md) (universal skill authoring), and [../arcus-mode/internal/unslop.md](../arcus-mode/internal/unslop.md) (prose discipline). It sequences them; it doesn't replace them.
+This skill orchestrates three pieces: an inline mining pass (step 1), [`arcus-skill-maker`](../arcus-skill-maker/SKILL.md) (when co-installed, for universal skill authoring), and [../arcus-mode/internal/unslop.md](../arcus-mode/internal/unslop.md) (when co-installed, for prose discipline). It sequences them; it doesn't replace them.
 
 ## Flow
 
@@ -63,11 +63,11 @@ Group the combined signals into sections. Common ones (use only what applies):
 - **Process**: git worktrees, commits, PRs, review/merge tooling.
 - **Skills**: skill-authoring habits, fix-the-skill-first, proposing new skills.
 
-The [`arcus-mode`](../arcus-mode/SKILL.md) skill shows the shape. Read it for granularity. Don't copy its content blindly; the user's rules are tailored to them.
+The [`arcus-mode`](../arcus-mode/SKILL.md) skill (when co-installed) shows the shape. Read it for granularity. Don't copy its content blindly; the user's rules are tailored to them.
 
 ### 4. Draft the skill
 
-Follow [`arcus-skill-maker`](../arcus-skill-maker/SKILL.md) and its [universal-skill-spec.md](../arcus-skill-maker/references/universal-skill-spec.md) to author the skill:
+Follow [`arcus-skill-maker`](../arcus-skill-maker/SKILL.md) and its [universal-skill-spec.md](../arcus-skill-maker/references/universal-skill-spec.md) (when co-installed) to author the skill:
 
 - Path: default to `.agents/skills/<handle>-mode/SKILL.md` in the project (or `~/.agents/skills/<handle>-mode/SKILL.md` / `arcus-stack/skills/<handle>-mode/SKILL.md` if the user prefers a global skill).
 - Handle: the user's chosen identifier.
@@ -75,7 +75,7 @@ Follow [`arcus-skill-maker`](../arcus-skill-maker/SKILL.md) and its [universal-s
 
 ### 5. Iterate on prose
 
-Apply [../arcus-mode/internal/unslop.md](../arcus-mode/internal/unslop.md) to every line.
+Apply [../arcus-mode/internal/unslop.md](../arcus-mode/internal/unslop.md) (when co-installed; otherwise strip filler, em-dashes, connector colons, and abstract metaphors, and keep sentences short and declarative) to every line.
 
 Show the draft to the user and take feedback. Expect multiple iterations. Cut ruthlessly. A mode skill is not a manual.
 

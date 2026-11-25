@@ -17,7 +17,7 @@ This document records the core architectural and directional decisions of **`arc
   - Build `arcus-stack` exclusively on pure Markdown (`SKILL.md` + `AGENTS.md`) with zero MCP runtime dependencies.
   - Restrict `SKILL.md` YAML frontmatter strictly to `name` and `description`. Express tool constraints and trigger postures in plain Markdown body text.
   - *Rejected Alternative*: Maintaining separate per-agent skill builds or requiring an MCP server process.
-- **Enforced By**: Automated frontmatter & relative-link verification check in repo validation and [`skills/arcus-skill-maker/references/universal-skill-spec.md`](./skills/arcus-skill-maker/references/universal-skill-spec.md).
+- **Enforced By**: [`scripts/validate.ps1`](./scripts/validate.ps1) and [`skills/arcus-skill-maker/references/universal-skill-spec.md`](./skills/arcus-skill-maker/references/universal-skill-spec.md).
 
 ---
 
@@ -30,7 +30,7 @@ This document records the core architectural and directional decisions of **`arc
   - Encapsulate all 60+ internal modules (`principles/`, `playbooks/`, `internal/`, `references/`) inside `skills/arcus-mode/` (and self-contained skill `references/`), loaded on-demand via relative Markdown links.
   - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
   - *Rejected Alternative*: Flat top-level `skills/principle-*` folders or cross-skill hard dependencies that break on partial installation.
-- **Enforced By**: One-level directory layout under `skills/` and relative-link validation script.
+- **Enforced By**: One-level directory layout under `skills/` and [`scripts/validate.ps1`](./scripts/validate.ps1).
 
 ---
 

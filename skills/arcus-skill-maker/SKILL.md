@@ -25,4 +25,4 @@ Transform any idea, workflow, or external skill (from Claude Code, Cursor `.mdc`
    - Use strictly `name: arcus-<name>` and a comprehensive `description` in the YAML frontmatter so all 5 agents parse it without warnings.
 4. **Verify & Register**:
    - Create the skill files under `skills/arcus-<name>/`.
-   - Document the new skill in the root `README.md` table.
+   - Document the new skill in all language `README*.md` tables and `rules/AGENTS.md` (when working inside `arcus-stack`).
