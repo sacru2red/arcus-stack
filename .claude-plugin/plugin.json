@@ -1,0 +1,10 @@
+{
+  "name": "arcus-stack",
+  "version": "0.1.0",
+  "description": "ARCUS (Agent Rules, Commands & Universal Skills) — Universal Deep-First & Ultrawork skill stack for Antigravity (agy), Claude Code, Codex, Cursor, and OpenCode.",
+  "author": {
+    "name": "sacru2red",
+    "url": "https://github.com/sacru2red"
+  },
+  "repository": "https://github.com/sacru2red/arcus-stack"
+}

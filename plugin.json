@@ -1,0 +1,12 @@
+{
+  "name": "arcus-stack",
+  "author": {
+    "name": "sacru2red",
+    "url": "https://github.com/sacru2red"
+  },
+  "homepage": "https://github.com/sacru2red/arcus-stack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sacru2red/arcus-stack.git"
+  }
+}
