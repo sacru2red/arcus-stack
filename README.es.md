@@ -77,6 +77,11 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
+> **Nota sobre habilidades renombradas o eliminadas:** `npx skills` no elimina automáticamente las habilidades que cambiaron de nombre o se eliminaron en el repositorio (por ejemplo, `arcus-work` renombrada a `arcus-work-loop`). Si una habilidad antigua sigue apareciendo tras actualizar, elimínala con:
+> ```bash
+> npx skills remove arcus-work -g -y
+> ```
+
 ### Método 2. Gestores de Plugins Nativos de cada Agente
 
 - **Antigravity (`agy`)**:

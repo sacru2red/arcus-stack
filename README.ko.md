@@ -77,6 +77,11 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
+> **이름이 변경되거나 삭제된 스킬 정리 안내:** `npx skills`의 `add`/`update` 명령은 저장소에서 이름이 바뀌거나 사라진 옛 스킬(예: `arcus-work` → `arcus-work-loop`)을 자동으로 삭제하지 않습니다. 업데이트 후에도 옛 스킬 이름이 목록에 함께 보인다면 아래 명령어로 옛 스킬을 한 번 제거해 주세요:
+> ```bash
+> npx skills remove arcus-work -g -y
+> ```
+
 ### 방법 2. 에이전트 자체 플러그인 매니저 사용
 
 - **Antigravity (`agy`)**:

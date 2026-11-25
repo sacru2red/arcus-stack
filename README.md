@@ -77,6 +77,11 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
+> **Note on Renamed or Removed Skills:** `npx skills` does not automatically delete skills that were renamed or removed upstream (for example, `arcus-work` renamed to `arcus-work-loop`). If an old skill name still appears in your agent list after updating, remove it once with:
+> ```bash
+> npx skills remove arcus-work -g -y
+> ```
+
 ### Method 2. Native Agent Plugin Managers
 
 - **Antigravity (`agy`)**:

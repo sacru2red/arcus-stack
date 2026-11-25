@@ -77,6 +77,11 @@ npx skills add sacru2red/arcus-stack -g -y
 npx skills update
 ```
 
+> **关于重命名或已移除技能的清理说明：** `npx skills` 的 `add`/`update` 不会自动删除仓库中已重命名或移除的旧技能（例如 `arcus-work` 重命名为 `arcus-work-loop`）。如果更新后列表中仍显示旧技能，请运行以下命令将其移除：
+> ```bash
+> npx skills remove arcus-work -g -y
+> ```
+
 ### 方法 2. 使用助手自带的插件管理器
 
 - **Antigravity (`agy`)**：

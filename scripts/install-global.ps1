@@ -13,6 +13,14 @@ $AgentSkillDirs = [System.Collections.Generic.List[string]]@(
     "$HOME\.cursor\skills"
 )
 
+# Auto-detect any other dot-directories with a skills/ folder created by npx skills
+Get-ChildItem -Path $HOME -Filter ".*" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+    $CandidateSkills = Join-Path $_.FullName "skills"
+    if ((Test-Path $CandidateSkills) -and ($AgentSkillDirs -notcontains $CandidateSkills)) {
+        $AgentSkillDirs.Add($CandidateSkills)
+    }
+}
+
 # Auto-detect T3 Code isolated Antigravity provider config directories
 $T3AgyBase = "$HOME\.t3\userdata\providers\antigravity"
 if (Test-Path $T3AgyBase) {
@@ -45,6 +53,26 @@ foreach ($TargetBase in $AgentSkillDirs) {
         }
         New-Item -ItemType Junction -Path $Dest -Target $Skill.FullName | Out-Null
         Write-Host "[OK] Linked $($Skill.Name) -> $Dest"
+    }
+}
+
+# Clean stale arcus-* entries from ~/.agents/.skill-lock.json if present
+$LockFile = "$HOME\.agents\.skill-lock.json"
+if (Test-Path $LockFile) {
+    $LockJson = Get-Content $LockFile -Raw | ConvertFrom-Json
+    if ($null -ne $LockJson.skills) {
+        $RemovedFromLock = $false
+        $Props = @($LockJson.skills.PSObject.Properties | Where-Object { $_.Name -like "arcus-*" })
+        foreach ($Prop in $Props) {
+            if ($ActiveSkillNames -notcontains $Prop.Name) {
+                $LockJson.skills.PSObject.Properties.Remove($Prop.Name)
+                $RemovedFromLock = $true
+                Write-Host "[PRUNED] Removed stale '$($Prop.Name)' from $LockFile"
+            }
+        }
+        if ($RemovedFromLock) {
+            $LockJson | ConvertTo-Json -Depth 10 | Set-Content -Path $LockFile -Encoding UTF8
+        }
     }
 }
 
