@@ -65,6 +65,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 | ⭐ **`arcus-work-loop`** | **Core · Autonomous Execution** | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
 | ⭐ **`arcus-review`** | **Core · Isolated Plan & Code Review** | Prevents confirmation bias by reviewing plans and code in a context-isolated subagent on a pinned snapshot. Runs Cold-Reader comprehension tests on designs, checks external docs, and maintains a code-first Review Ledger across rounds. |
 | ⭐ **`arcus-explain`** | **Core · 20s CS Grad Explainer & Briefing** | Translates goals, architectural plans, completed code changes, or complex concepts into the clear, jargon-decoded tone of explaining to a 20-something SW/CS graduate (CS mental models, mechanism & trade-offs, zero childish analogies or fluff). Automatically briefs you at the end of `arcus-plan`, `arcus-work-loop`, and non-trivial `arcus-mode` runs. |
+| **`arcus-security`** | Security, Authz & Supply-Chain Audit | Catches real exploitable flaws instead of generic security filler. Runs context-isolated trust-boundary and authz/IDOR checks, traces untrusted input sinks, redacts secrets, executes non-blocking dependency and `PATH`-only scanner audits, proves `CRITICAL`/`HIGH` issues with local/isolated negative tests, and tracks findings in a persistent Security Ledger (`S-01`, `S-02`, ...). |
 | **`arcus-ui-propose`** | Visual UI 4-Screenshot Proposal | Stops agents from locking in a single unreviewed UI design. For visual UI tasks, captures **1 Baseline ("Before") screenshot** and **3 distinct proposed variant screenshots (`Option A`, `Option B`, `Option C`)** by sequentially applying, capturing, saving reusable `.patch` files, and reverting (`git checkout`) on your working branch—then applies only the option you pick. |
 | **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |
 | **`arcus-maintain-verification`** | Verification Upkeep | Keeps your project's automated verification skill from rotting as features evolve. Compares source code against live app behavior to fix outdated verification recipes. |
@@ -100,7 +101,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
-1. **User-Facing Core Skills (14 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 14 high-level entrypoints appear in your skill menu.
+1. **User-Facing Core Skills (15 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 15 high-level entrypoints appear in your skill menu.
 2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, `backend-reliability`, 24 principles, 23 playbooks, and 20 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
@@ -152,7 +153,7 @@ npx skills update
 
 ### Method 3. Local Clone + Global Symlinks (`scripts/install-global.ps1` / `.sh`)
 
-If you clone this repository locally and run the symlink script, all 14 skills are linked directly to the global directories of all 5 agents (including T3 Code's isolated Antigravity sandbox).
+If you clone this repository locally and run the symlink script, all 15 skills are linked directly to the global directories of all 5 agents (including T3 Code's isolated Antigravity sandbox).
 
 ```powershell
 # Windows (PowerShell)
@@ -194,7 +195,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows global symlink installer (5 agents + T3 Code)
 │   └── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
-└── skills/                      # ⭐ 14 User-Facing Core Skills
+└── skills/                      # ⭐ 15 User-Facing Core Skills
     ├── arcus-mode/              # Master mode + encapsulated internal modules
     │   ├── SKILL.md
     │   ├── worker.md
@@ -206,6 +207,7 @@ arcus-stack/
     ├── arcus-work-loop/
     ├── arcus-review/
     ├── arcus-explain/
+    ├── arcus-security/
     ├── arcus-ui-propose/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/

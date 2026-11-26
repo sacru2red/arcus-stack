@@ -18,7 +18,7 @@
 | Rule / Invariant | Enforced By |
 | :--- | :--- |
 | Universal 5-agent `SKILL.md` frontmatter (`name` + `description` only, no broken relative links) | [`scripts/validate.ps1`](../scripts/validate.ps1) & [`universal-skill-spec.md`](../skills/arcus-skill-maker/references/universal-skill-spec.md) |
-| Two-tier encapsulation (only 14 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`, `D-008`, `D-009`)](../DECISIONS.md) |
+| Two-tier encapsulation (only 15 public `skills/arcus-*/SKILL.md` entrypoints; helpers under `skills/arcus-mode/`) | One-level scanner boundary & [`DECISIONS.md` (`D-002`, `D-008`, `D-009`, `D-012`)](../DECISIONS.md) |
 | Stale `arcus-*` junctions and `.skill-lock.json` entries pruned on rename/update | [`scripts/install-global.ps1`](../scripts/install-global.ps1) & [`scripts/install-global.sh`](../scripts/install-global.sh) |
 | Context-isolated review, Cold-Reader test, and code-first Review Ledger | [`skills/arcus-review/SKILL.md`](../skills/arcus-review/SKILL.md) & [`review-ledger-protocol.md`](../skills/arcus-review/references/review-ledger-protocol.md) |
 | User-authorized `DECISIONS.md` proposals & 3-tier opt-out persistence (Git config / `AGENTS.md` comment / `.agents/settings.json`) | [`skills/arcus-mode/internal/decisions.md`](../skills/arcus-mode/internal/decisions.md) & [`DECISIONS.md` (`D-006`)](../DECISIONS.md) |
@@ -27,6 +27,7 @@
 | Visual UI 4-screenshot proposal (`00-before.png` + `01-option-a..c.png` via sequential working-branch apply ➔ capture ➔ patch save ➔ `git checkout` revert before user selection) | [`skills/arcus-ui-propose/SKILL.md`](../skills/arcus-ui-propose/SKILL.md) & [`DECISIONS.md` (`D-009`)](../DECISIONS.md) |
 | Archify-first visualization routing (`tt-a1i/archify` 10 diagram types, 1-page visual explainers, and codebase architecture diagnosis isolated under `os.tmpdir()/archify/` with non-blocking 3-tier fallback) | [`skills/arcus-mode/internal/archify-visualization.md`](../skills/arcus-mode/internal/archify-visualization.md) & [`DECISIONS.md` (`D-010`)](../DECISIONS.md) |
 | Zero-downtime Expand-Contract migrations for live DB schemas, persisted queues/caches, and rolling-deploy wire contracts (separate Expand/dual-write PR, chunked idempotent backfill + parity check, separate Contract PR; exempt from single-wave cutover) | [`skills/arcus-mode/playbooks/safe-migration.md`](../skills/arcus-mode/playbooks/safe-migration.md) & [`DECISIONS.md` (`D-011`)](../DECISIONS.md) |
+| PoC-backed security, authz/IDOR, redacted secret hygiene, and non-blocking supply-chain auditing (local/isolated PoCs only, `S-01`.. ledger) | [`skills/arcus-security/SKILL.md`](../skills/arcus-security/SKILL.md) & [`DECISIONS.md` (`D-012`)](../DECISIONS.md) |
 
 ## 4. Available Core Skills (`arcus-*`)
 - `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 23 task playbooks, unslopped prose, and deliberate subagent delegation.
@@ -34,6 +35,7 @@
 - `arcus-work-loop`: Autonomous checklist-driven execution loop that implements, diagnoses, and checks off each task item with real verification evidence.
 - `arcus-review`: Context-isolated critique and review for both architectural plans (`arcus-plan`) and code changes (`arcus-work-loop`), maintaining a persistent Review Ledger.
 - `arcus-explain`: Explain goals, architectural plans, completed code changes, or complex concepts calibrated internally to a 20-something SW/CS graduate level (CS mental models, mechanism & trade-offs, no childish analogies or fluff; never echo the internal persona label in visible headings/text, and localize all headings and 4 bullet labels to the user's active conversation language); automatically briefs at the end of `arcus-plan`, `arcus-work-loop`, and non-trivial `arcus-mode` runs.
+- `arcus-security`: Context-isolated, PoC-backed security, authz/IDOR, redacted secret hygiene, and non-blocking supply-chain audit skill with local-only negative tests and a persistent Security Findings Ledger (`S-01`, `S-02`, ...).
 - `arcus-ui-propose`: Capture 1 baseline ("Before") screenshot and 3 distinct proposed variant screenshots (Option A, B, C) for visual UI work by sequentially applying, capturing, saving patch files, and reverting on the working branch until the user selects an option.
 - `arcus-create-verification`: Generate and prove a project-local verification skill (`verify-<app>`) and user-POV feature map.
 - `arcus-maintain-verification`: Audit and update an existing project verification skill via parallel source readers and a live driving pass.

@@ -1,5 +1,5 @@
 # Official ARCUS-STACK Repository Validation Script
-# Enforces D-001 (Universal Frontmatter & Relative Links), D-002/D-009 (14 Public Core Skills), and D-003 (Zero Cursor/pstack Lock-in)
+# Enforces D-001 (Universal Frontmatter & Relative Links), D-002/D-009/D-012 (15 Public Core Skills), and D-003 (Zero Cursor/pstack Lock-in)
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
@@ -72,8 +72,8 @@ Write-Host "[3/4] Checked $($SkillMarkdownFiles.Count) skill files for unadapted
 
 # 4. Two-Tier Public Skill Count & .agents/skills.json Parity Check
 $TopLevelSkills = @(Get-ChildItem -Path $SkillsRoot -Directory | Sort-Object Name)
-if ($TopLevelSkills.Count -ne 14) {
-    $Failures.Add("[Skill Count] Expected 14 public core skills under skills/, found $($TopLevelSkills.Count)")
+if ($TopLevelSkills.Count -ne 15) {
+    $Failures.Add("[Skill Count] Expected 15 public core skills under skills/, found $($TopLevelSkills.Count)")
 }
 foreach ($Dir in $TopLevelSkills) {
     $EntryFile = Join-Path $Dir.FullName "SKILL.md"

@@ -21,14 +21,14 @@ This document records the core architectural and directional decisions of **`arc
 
 ---
 
-## `D-002`: Two-Tier Skill Encapsulation (14 Public Core Skills + Private Internal Modules)
-- **Date / Pin**: `2026-11-25` (`5f2bb3c`, updated by `D-008`, `D-009`)
+## `D-002`: Two-Tier Skill Encapsulation (15 Public Core Skills + Private Internal Modules)
+- **Date / Pin**: `2026-11-25` (`5f2bb3c`, updated by `D-008`, `D-009`, `D-012`)
 - **Status**: `ACTIVE`
 - **Context**: Flattening 70+ granular skills (24 principles, 22 playbooks, 17 helper sub-skills) directly under `skills/` pollutes user slash-command menus (`/`) and wastes always-on skill description tokens.
 - **Decision & Tradeoff**:
-  - Expose only **14 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
+  - Expose only **15 high-level `arcus-*` core skills** at `skills/arcus-*/SKILL.md` (since all 5 agent skill scanners scan exactly one directory level deep under `skills/`).
   - Encapsulate all 60+ internal modules (`principles/`, `playbooks/`, `internal/`, `references/`) inside `skills/arcus-mode/` (and self-contained skill `references/`), loaded on-demand via relative Markdown links.
-  - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-ui-propose`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
+  - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-security`, `arcus-ui-propose`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
   - *Rejected Alternative*: Flat top-level `skills/principle-*` folders or cross-skill hard dependencies that break on partial installation.
 - **Enforced By**: One-level directory layout under `skills/` and [`scripts/validate.ps1`](./scripts/validate.ps1).
 
@@ -154,14 +154,30 @@ This document records the core architectural and directional decisions of **`arc
 
 ---
 
+## `D-012`: Standalone Security, Authz & Supply-Chain Audit Core Skill (`arcus-security`)
+- **Date / Pin**: `2026-11-26` (Current)
+- **Status**: `ACTIVE`
+- **Context**: Routine code reviews (`arcus-review`) focus on correctness, architecture boundaries, and regressions. Folding threat modeling, horizontal/vertical authz (IDOR/BOLA) matrices, taint-to-sink tracing, secret redaction, local PoC verification, and cross-ecosystem dependency/SAST scanning into `arcus-review` as a third mode ("Mode C") would slow down everyday reviews, mix security triage states (`OPEN`, `FIXED_VERIFIED`, `MITIGATED`, `ACCEPTED_RISK`, `FALSE_POSITIVE`) with general code findings (`F-01`..), and hide a dedicated `/arcus-security` entrypoint for pre-launch and high-risk PR audits.
+- **Decision & Tradeoff**:
+  - Add `arcus-security` as the 15th public core skill ([`skills/arcus-security/SKILL.md`](./skills/arcus-security/SKILL.md)) with its self-contained protocol at [`skills/arcus-security/references/security-audit-protocol.md`](./skills/arcus-security/references/security-audit-protocol.md) and zero required links outside `skills/arcus-security/` per `D-002`.
+  - Apply `D-004` context isolation (fresh read-only subagent or Cold-Reader Reset fallback) and separate the Security Findings Ledger (`S-01`, `S-02`, ...) from general review ledgers (`F-01`, `F-02`, ...).
+  - **Local/Isolated PoCs Only**: Prohibit firing exploit payloads against staging, production, live `.env` endpoints, or external hosts. Prove `CRITICAL`/`HIGH` issues with verified `file:line` traces and clean local, mocked, or ephemeral (`127.0.0.1`) negative regression tests, leaving zero untracked throwaway exploit scripts.
+  - **Strict Secret Redaction**: Report only `file:line`, secret class, and a masked preview (such as `sk_live_***`), never raw secrets, tokens, or real PII.
+  - **Non-Blocking Scanner Fallback**: Run ecosystem native audits (`npm`/`pnpm`/`yarn audit`, `pip-audit`, `cargo audit`, `govulncheck`) and optional `PATH`-only scanners (`gitleaks`, `semgrep`, `osv-scanner`) non-blockingly, marking missing or offline tools `SKIPPED` without ever stalling to install tools.
+  - Wire narrow escalation hooks across `arcus-mode`, `arcus-plan`, `arcus-work-loop`, and `arcus-review` so security checks fire only on authn/authz, billing, PII/secrets, untrusted input sinks, SSRF/egress, deserialization, CI workflows, or dependency manifests.
+  - *Rejected Alternative*: Adding a Mode C inside `arcus-review` (rejected because it bloats routine diff reviews, conflates `F-xx` and `S-xx` ledgers, and lacks an explicit `/arcus-security` user command).
+- **Enforced By**: [`skills/arcus-security/SKILL.md`](./skills/arcus-security/SKILL.md), [`skills/arcus-security/references/security-audit-protocol.md`](./skills/arcus-security/references/security-audit-protocol.md), [`scripts/validate.ps1`](./scripts/validate.ps1), and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
 ## `D-013`: Backend & Data-Access Reliability Guardrails (`backend-reliability.md`)
 - **Date / Pin**: `2026-11-26` (Current)
 - **Status**: `ACTIVE`
-- **Context**: Backend and data-access work frequently regresses in production through unbounded full-table reads, N+1 query loops, database transactions held open across slow network/LLM/payment/queue I/O, missing outbound timeouts or cancellation propagation, indiscriminate retry loops that mask 4xx/logic bugs, missing backpressure/rate limits, and logs leaking credentials or unredacted PII. However, adding a 15th top-level skill would violate `D-002` (14 public core skills), placing backend prose inside always-on `rules/AGENTS.md` would tax every non-backend turn, and hardcoding ORM/SDK-specific advice would violate `D-005` (no volatile framework/version fact claims).
+- **Context**: Backend and data-access work frequently regresses in production through unbounded full-table reads, N+1 query loops, database transactions held open across slow network/LLM/payment/queue I/O, missing outbound timeouts or cancellation propagation, indiscriminate retry loops that mask 4xx/logic bugs, missing backpressure/rate limits, and logs leaking credentials or unredacted PII. However, adding an extra top-level skill for routine backend guardrails would bloat `D-002`'s curated core skill menu, placing backend prose inside always-on `rules/AGENTS.md` would tax every non-backend turn, and hardcoding ORM/SDK-specific advice would violate `D-005` (no volatile framework/version fact claims).
 - **Decision & Tradeoff**:
   - Encapsulate backend, data-access, and distributed reliability guardrails as the 20th private internal sub-skill at [`skills/arcus-mode/internal/backend-reliability.md`](./skills/arcus-mode/internal/backend-reliability.md), symmetrical to [`typescript-best-practices.md`](./skills/arcus-mode/internal/typescript-best-practices.md), incurring zero always-on token cost on frontend or docs-only sessions.
   - Keep every rule strictly language- and framework-agnostic (`D-005`), delegating cross-boundary convergence mechanics to [`principle-make-operations-idempotent.md`](./skills/arcus-mode/principles/principle-make-operations-idempotent.md) rather than duplicating its prose.
   - Enforce a strict **transient-vs-logic retry boundary**: allow bounded, jittered exponential backoff only for transient transport faults or HTTP 429/503 responses on idempotent operations, while forbidding arbitrary retries that hide logic errors or 4xx bugs (preserving `rules/AGENTS.md` root-cause discipline).
   - Wire on-demand triggers symmetrically across `arcus-mode`, `arcus-plan`, `arcus-work-loop`, `arcus-review`, and `review-rubric.md` with `*(when co-installed; inline fallback: ...)*` guards for `D-002` partial-install safety.
-  - *Rejected Alternative*: Adding a 15th public `arcus-backend` skill, duplicating backend checklists into always-on `AGENTS.md`, or encoding framework/ORM-specific API rules that rot across versions.
+  - *Rejected Alternative*: Adding an extra public `arcus-backend` skill, duplicating backend checklists into always-on `AGENTS.md`, or encoding framework/ORM-specific API rules that rot across versions.
 - **Enforced By**: [`skills/arcus-mode/internal/backend-reliability.md`](./skills/arcus-mode/internal/backend-reliability.md), [`skills/arcus-review/references/review-rubric.md`](./skills/arcus-review/references/review-rubric.md), and [`scripts/validate.ps1`](./scripts/validate.ps1).
