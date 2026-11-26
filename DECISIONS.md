@@ -107,17 +107,22 @@ This document records the core architectural and directional decisions of **`arc
 
 ---
 
-## `D-009`: Visual UI 4-Screenshot Proposal (`arcus-ui-propose`) via Sequential Working-Branch Apply, Capture & Revert
-- **Date / Pin**: `2026-11-25` (Current)
+## `D-009`: Visual UI 4-Screenshot Proposal (`arcus-ui-propose`) & PR/MR Before/After Visual Evidence Pipeline
+- **Date / Pin**: `2026-11-25` (extended `2026-11-26`)
 - **Status**: `ACTIVE`
-- **Context**: In visual UI tasks, agents typically commit to the first design they think of without showing the current baseline or alternative layouts. Conversely, spawning 3 full git worktrees and 3 separate dev servers just to preview UI variants is slow, consumes ports/RAM, and breaks when local dev environments only support a single active instance.
+- **Context**: In visual UI tasks, agents typically commit to the first design they think of without showing the current baseline or alternative layouts. Conversely, spawning 3 full git worktrees and 3 separate dev servers just to preview UI variants is slow, consumes ports/RAM, and breaks when local dev environments only support a single active instance. When opening PRs or GitLab MRs for UI diffs, agents also either omit Before/After visual proof, reuse stale draft screenshots, paste broken local filesystem paths into remote PR bodies, or accidentally commit raw binary PNGs to the feature branch.
 - **Decision & Tradeoff**:
   - Add `arcus-ui-propose` as the 14th public core skill ([`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md)) and auto-wire it into `arcus-plan` and `arcus-mode` for visual UI tasks.
   - **Sequential Working-Branch Cycle with Dirty-Tree Protection**:
     1. Snapshot any pre-existing uncommitted diff (`00-base-dirty.patch`) and capture **1 Baseline ("Before") screenshot** (`00-before.png`) at a locked viewport/theme.
     2. For each of **3 genuinely distinct variants (`Option A`, `Option B`, `Option C`)**: apply the edit directly on the working branch ➔ wait for hot-reload/render ➔ capture `0N-option-X.png` ➔ export `option-X.patch` to `.audit/ui-propose/<task-slug>/` ➔ revert via `git checkout HEAD -- <files>` (plus re-applying `00-base-dirty.patch` if initially dirty).
     3. Present all 4 screenshots side-by-side with a trade-off matrix while leaving the working tree clean, then instantaneously apply (`git apply`) whichever option (or hybrid graft) the user selects.
-- **Enforced By**: [`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md), [`skills/arcus-ui-propose/references/ui-proposal-protocol.md`](./skills/arcus-ui-propose/references/ui-proposal-protocol.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).
+  - **PR/MR Before/After Visual Evidence Pipeline**:
+    1. Sync `## Visual Changes` (UI diffs only; dropped if non-UI) between `## Blast Radius` and `## Verification` in both `worker.md` and `opening-a-pr.md`, keeping single-view tables inside the 40-line cap and offloading multi-screen or multi-viewport grids to a linked PR comment.
+    2. Capture a fresh post-polish `99-after-final.png` matching `00-before.png` (or capture `before.png` from a temporary detached `merge-base` worktree when `arcus-ui-propose` did not run, degrading non-blockingly when `merge-base` cannot boot or capture is unavailable), and guard `git diff --cached --name-only` so zero `.audit/ui-propose/` or scratch PNGs are committed.
+    3. Resolve the forge before uploading: auto-upload on GitLab via `glab api "projects/:fullpath/uploads" --form "file=@<path>"` (or a configured repo media uploader), and use the GitHub Safe Handoff Default (2-column drag-and-drop placeholder table in the remote PR body plus exact absolute local paths and inline Markdown previews in the chat handoff reply) whenever no CLI attachment API exists.
+    4. *Rejected Alternatives*: Committing raw binary PNGs to the feature branch (bloats git history and pollutes code diffs) or auto-pushing an orphan media branch (creates unrequested remote refs, conflicts with branch policies, and risks leaking screenshots outside PR scope).
+- **Enforced By**: [`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md), [`skills/arcus-ui-propose/references/ui-proposal-protocol.md`](./skills/arcus-ui-propose/references/ui-proposal-protocol.md), [`skills/arcus-mode/playbooks/opening-a-pr.md`](./skills/arcus-mode/playbooks/opening-a-pr.md), [`skills/arcus-mode/worker.md`](./skills/arcus-mode/worker.md), [`skills/arcus-work-loop/SKILL.md`](./skills/arcus-work-loop/SKILL.md), [`skills/arcus-review/references/review-rubric.md`](./skills/arcus-review/references/review-rubric.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).
 
 ---
 

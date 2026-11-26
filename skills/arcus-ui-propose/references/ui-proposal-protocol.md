@@ -110,3 +110,46 @@ Present the 4 screenshots and comparison table directly in your reply so the use
 
 **Which option should I apply?** (`Option A`, `Option B`, `Option C`, or a combination such as *"Option B with Option A's header"*)
 ```
+
+---
+
+## 4. PR / MR Before-After Handoff Template
+
+After final polish and passing checks, capture `.audit/ui-propose/<task-slug>/99-after-final.png` at the identical route, viewport, scroll position, and light or dark theme used for `00-before.png`. Run `git diff --cached --name-only` before committing and verify zero `.audit/ui-propose/` PNG files are staged.
+
+Keep single-view Before/After tables compact inside the 40-line PR body cap. Offload multi-screen or multi-viewport grids to a PR or MR comment linked from `## Visual Changes`.
+
+For GitHub (`gh`) and any forge without CLI attachment upload (Safe Handoff Default), never paste local filesystem paths into the remote PR body and never commit binary PNGs to the feature branch. Put this 2-column table with drag-and-drop slots in the PR body:
+
+```markdown
+## Visual Changes
+
+Route: `<route>` | Viewport: `<width>x<height>` | Theme: `<light|dark>`
+
+| Before | After |
+| :--- | :--- |
+| <!-- drop 00-before.png --> | <!-- drop 99-after-final.png --> |
+```
+
+For GitLab MRs (`glab api "projects/:fullpath/uploads" --form "file=@<path>"`) or a configured repository media uploader, embed the returned hosted URLs in the same 2-column table:
+
+```markdown
+## Visual Changes
+
+Route: `<route>` | Viewport: `<width>x<height>` | Theme: `<light|dark>`
+
+| Before | After |
+| :--- | :--- |
+| ![Before](/uploads/<hash>/00-before.png) | ![After](/uploads/<hash>/99-after-final.png) |
+```
+
+When using the GitHub Safe Handoff Default, include the exact absolute local paths and inline Markdown previews in your chat handoff reply so the user can inspect and drag-and-drop both PNGs into the PR body:
+
+```markdown
+### Local Visual Evidence
+- Before: `/absolute/path/to/.audit/ui-propose/<task-slug>/00-before.png`
+- After: `/absolute/path/to/.audit/ui-propose/<task-slug>/99-after-final.png`
+
+![Before](/absolute/path/to/.audit/ui-propose/<task-slug>/00-before.png)
+![After](/absolute/path/to/.audit/ui-propose/<task-slug>/99-after-final.png)
+```

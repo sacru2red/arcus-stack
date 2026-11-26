@@ -37,5 +37,6 @@ Verify every quality gate below before handing the turn back to the user:
   - [ ] Typecheck / compilation passes with zero new errors.
   - [ ] Existing tests pass.
   - [ ] New or updated tests cover the changed behavior and edge cases.
+  - [ ] For visual UI changes (especially after [`arcus-ui-propose`](../../arcus-ui-propose/SKILL.md) *(when co-installed)*), captured a fresh post-polish `99-after-final.png` matching `00-before.png`'s route, viewport, scroll position, and theme, and verified `git diff --cached --name-only` stages zero `.audit/` PNGs before commit.
 - [ ] **End-of-Loop `arcus-explain` Briefing (Localized & Persona-Label-Free)**:
   - [ ] Immediately after the `- [x]` checklist and verification evidence (and before any optional `DECISIONS.md` authorization prompt), summarize the completed work in 4 concise points using **only the single label matching the user's conversation language** (e.g., in English: **Core Essence**, **Mental Model**, **Mechanism & Trade-offs**, **Impact & Verification**; in Korean: **핵심 요약**, **구조 및 동작 모델**, **동작 원리 및 트레이드오프**, **적용 효과 및 검증 기준**—never slash-combined bilingual labels) per [`arcus-explain`](../../arcus-explain/SKILL.md) (when co-installed), calibrating depth internally without ever echoing the persona name (`20s CS Grad` / `20대 SW 학과 졸업생...`) in the output.
