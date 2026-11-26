@@ -21,3 +21,4 @@ Evaluate plans (`arcus-plan`) and code changes (`arcus-work-loop`) strictly agai
 ## 5. Verification Evidence Quality
 - **In a Plan**: Every checklist item (`- [ ]`) must have a concrete `➔ Verify:` command or observable proof that would fail if the step were broken.
 - **In Code**: Automated tests and typecheckers must cover both the happy path and the failure/edge case, and must have been actually executed.
+- **In Visual UI PRs/MRs**: For PRs or MRs touching visual UI files, verify that `## Visual Changes` includes Before/After evidence captured after final polish at matching route, viewport, scroll position, and light or dark theme, with zero broken local paths in remote PR descriptions and zero accidental `.audit/` binary PNG commits.

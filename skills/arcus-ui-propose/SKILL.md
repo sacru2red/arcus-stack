@@ -55,4 +55,6 @@ For each variant `X` in `a`, `b`, `c`:
 
 ### Step 5 — Apply Chosen Variant & Verify
 1. Once the user selects an option (or hybrid), restore the clean `HEAD` baseline on `<touched-files>` (`git checkout HEAD -- <touched-files>`), apply the saved patch (`git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch`), and copy back any untracked variant files from `.audit/ui-propose/<task-slug>/files-<chosen>/` into the workspace (or graft the selected parts cleanly).
-2. Run full verification (typecheck, linter, tests, and final screenshot proof) or hand off to [`arcus-work-loop`](../arcus-work-loop/SKILL.md) for the remaining implementation checklist.
+2. Run full verification (typecheck, linter, and tests) or hand off to [`arcus-work-loop`](../arcus-work-loop/SKILL.md) *(when co-installed)* for the remaining implementation checklist.
+3. After all polish edits and verification checks pass, capture a fresh post-polish `.audit/ui-propose/<task-slug>/99-after-final.png` at the identical route, viewport, scroll position, and light or dark theme locked for `00-before.png` (never reuse stale draft option screenshots as PR evidence). Format the PR or MR visual summary per [ui-proposal-protocol.md](./references/ui-proposal-protocol.md#4-pr--mr-before-after-handoff-template) and [`opening-a-pr.md`](../arcus-mode/playbooks/opening-a-pr.md) *(when co-installed)*.
+4. Before any commit or push, check `git diff --cached --name-only` and verify that zero `.audit/ui-propose/` PNG files are staged.

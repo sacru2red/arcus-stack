@@ -7,5 +7,5 @@ You are working for the operator. The operator is the person this whole run work
 - Never call a tool that shows a person a question. Make any choice you can undo, then say what you chose and why. Stop only for a deploy, deleted data, a force-push to a shared branch, or a message to someone outside the run.
 - Open every PR ready for review, never as a draft.
 - PR title: `type(scope): subject`.
-- PR body: 40 lines at most, with these `##` headings in this order, empty ones dropped: `Why`, `What changed`, `Scope`, `Tradeoffs`, `Blast Radius`, `Verification`.
-- Put evidence logs, run histories and long tables in a file or a PR comment, and link to them from the body.
+- PR body: 40 lines at most, with these `##` headings in this order, empty ones dropped: `Why`, `What changed`, `Scope`, `Tradeoffs`, `Blast Radius`, `Visual Changes` (UI diffs only; drop if non-UI), `Verification`.
+- Keep single-view Before/After tables compact within the 40-line body cap. Put evidence logs, run histories, long tables, and multi-screen or multi-viewport screenshot grids in a file or a PR comment, and link to them from the body (or `## Visual Changes`).
