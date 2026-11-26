@@ -65,6 +65,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 | ⭐ **`arcus-work-loop`** | **Clave · Bucle de Ejecución Autónoma** | Completa tareas complejas de principio a fin sin detenerse a mitad de camino ni dejar código incompleto. Avanza ítem por ítem sobre la lista de verificación, marcando cada paso como completado (`- [x]`) solo tras superar pruebas y compilación reales. |
 | ⭐ **`arcus-review`** | **Clave · Revisión Aislada de Planes y Código** | Evita heredar los puntos ciegos del autor ejecutando las revisiones en un subagente con contexto aislado sobre un snapshot fijo. Incluye pruebas de comprensión para lectores sin contexto previo, consulta de referencias externas y un registro de hallazgos (Review Ledger) que evalúa el código antes de leer respuestas. |
 | ⭐ **`arcus-explain`** | **Clave · Explicación y Briefing Nivel Graduado CS** | Explica objetivos, planes arquitectónicos, cambios de código completados o conceptos complejos en el **tono claro de explicarle a un graduado veinteañero de Ingeniería de Software / CS** (modelos mentales de CS, mecanismos y trade-offs, sin analogías infantiles ni relleno). Proporciona un briefing automático al finalizar `arcus-plan`, `arcus-work-loop` y ejecuciones no triviales de `arcus-mode`. |
+| **`arcus-security`** | Auditoría de Seguridad, Authz y Cadena de Suministro | Detecta fallos realmente explotables en lugar de relleno genérico de seguridad. Ejecuta auditorías con contexto aislado sobre fronteras de confianza, authz/IDOR y sumideros de entrada no confiable, redacta secretos, corre auditorías de dependencias y escáneres sin bloquear, demuestra hallazgos `CRITICAL`/`HIGH` con pruebas negativas locales aisladas y los rastrea en un Registro de Seguridad (`S-01`, `S-02`, ...). |
 | **`arcus-ui-propose`** | Propuesta Visual UI de 4 Capturas | Evita que el agente imponga un único diseño de UI sin consultarte. En tareas visuales de UI, captura **1 pantalla base ("Before")** y **3 variantes propuestas distintas (`Option A`, `Option B`, `Option C`)** aplicando, capturando, guardando parches `.patch` y revirtiendo (`git checkout`) secuencialmente en tu rama de trabajo para que elijas qué opción aplicar. |
 | **`arcus-create-verification`** | Verificación de App | Te ahorra tener que abrir y probar manualmente la aplicación tras cada cambio. Crea y comprueba una habilidad local del proyecto (`verify-<app>`) que ejecuta y opera tu app como un usuario real. |
 | **`arcus-maintain-verification`** | Mantenimiento de Verificación | Evita que las recetas de verificación de tu proyecto queden obsoletas cuando cambia el código. Compara el código fuente con la ejecución en vivo de la app para mantener actualizada la guía de verificación. |
@@ -100,7 +101,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
-1. **Habilidades Principales para el Usuario (14 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 14 habilidades principales aparecen en tu menú.
+1. **Habilidades Principales para el Usuario (15 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 15 habilidades principales aparecen en tu menú.
 2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 23 playbooks y 20 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, `backend-reliability`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
@@ -191,7 +192,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Instalador global de enlaces simbólicos en Windows (5 agentes + T3 Code)
 │   └── install-global.sh        # Instalador global de enlaces simbólicos en macOS/Linux (5 agentes + T3 Code)
-└── skills/                      # ⭐ 14 Habilidades Principales para el Usuario
+└── skills/                      # ⭐ 15 Habilidades Principales para el Usuario
     ├── arcus-mode/              # Modo maestro + módulos internos encapsulados
     │   ├── SKILL.md
     │   ├── worker.md
@@ -203,6 +204,7 @@ arcus-stack/
     ├── arcus-work-loop/
     ├── arcus-review/
     ├── arcus-explain/
+    ├── arcus-security/
     ├── arcus-ui-propose/
     ├── arcus-create-verification/
     ├── arcus-maintain-verification/

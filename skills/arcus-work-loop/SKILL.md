@@ -31,6 +31,7 @@ Execute the task autonomously in an iterative implementation-and-verification lo
    - If new requirements or edge cases surface mid-task, update the checklist dynamically so nothing is forgotten.
 3. **Self-Diagnostics & Guarded Repair**:
    - Immediately run each item's verification check (typecheck, linter, unit/integration tests, build) after editing.
+   - When edits touch authn/authz, billing, untrusted input sinks, secrets/PII, CI workflows, or dependency manifests, verify with [`arcus-security`](../arcus-security/SKILL.md) *(when co-installed; inline fallback: run clean local/mocked negative authz and input tests, confirm zero raw secret or PII leaks in code, logs, or output, and run the ecosystem native dependency audit non-blockingly)*.
    - Mark an item `- [x]` **only** after its verification check passes with real evidence. If a check fails, diagnose the root cause and fix all reported issues before re-running.
 4. **Evidence-Gated Completion & `arcus-explain` Briefing**:
    - Audit your final state against [work-loop-checklist.md](./references/work-loop-checklist.md).
