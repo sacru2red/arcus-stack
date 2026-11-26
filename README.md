@@ -101,7 +101,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (14 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 14 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, 24 principles, 22 playbooks, and 18 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, 24 principles, 22 playbooks, and 19 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 
@@ -200,7 +200,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Internal] 22 task playbooks
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 18 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, etc.)
+    │   ├── internal/            # [Internal] 19 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

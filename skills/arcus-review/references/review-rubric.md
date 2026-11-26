@@ -4,7 +4,7 @@ Evaluate plans (`arcus-plan`) and code changes (`arcus-work-loop`) strictly agai
 
 ## 1. Premise & Root-Cause Validity (vs. Symptom Patching)
 - **In a Plan**: Question the premise itself. Why was this approach chosen over simpler alternatives that the author discarded? Does the plan assume a file, tool, path, or invariant exists without verifying it in the repo?
-- **In Code**: Red flags include adding `try/catch` that swallows errors, optional chaining (`?.`) without knowing why a value is `undefined`, or arbitrary retries/sleeps instead of enforcing invariants at the origin boundary.
+- **In Code**: Red flags include adding `try/catch` that swallows errors, optional chaining (`?.`) without knowing why a value is absent, forced type-safety bypasses (in TypeScript, `as T` or `as unknown as` where `satisfies` or narrowing works), collapsing absent, unset, empty, and zero values into one sentinel instead of enforcing per-domain contracts, or arbitrary retries/sleeps instead of enforcing invariants at the origin boundary.
 
 ## 2. Cold-Reader Comprehensibility (Design & Docs)
 - Can an uninitiated engineer (or fresh agent session) understand the design from the document and code alone without sitting in the author's chat session?
@@ -16,6 +16,7 @@ Evaluate plans (`arcus-plan`) and code changes (`arcus-work-loop`) strictly agai
 
 ## 4. Architectural Hygiene & Blast Radius
 - Minimal surface area: no dead code, no duplicated instructions, no speculative abstractions, and no leaking internal details across module boundaries.
+- Domain naming & state ownership: identifiers reflect verified domain meaning rather than UI display copy (following active repo grammar rather than copying legacy pockets), shared state defaults avoid mutable containers, and duplicate data-fetching or mutation flows converge on one owning module. *(In TypeScript, check against [`typescript-best-practices.md`](../../arcus-mode/internal/typescript-best-practices.md) when co-installed: local inference vs. boundary contracts, generic inference over repeated callback types, immutable `const` transforms with safe local exceptions, and avoiding mutable `Set`/`Map` defaults.)*
 
 ## 5. Verification Evidence Quality
 - **In a Plan**: Every checklist item (`- [ ]`) must have a concrete `➔ Verify:` command or observable proof that would fail if the step were broken.

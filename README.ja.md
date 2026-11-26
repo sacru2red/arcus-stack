@@ -101,7 +101,7 @@ AIモデルは学習データの時期の制約により、最新のCSSやWeb標
 数十個の細かいスキルを最上位の `skills/` フォルダにそのまま並べると、スラッシュコマンド（`/`）の候補が溢れかえり、コンテキストも圧迫します。`arcus-stack` はこれを **2階層カプセル化構造** で解決しています。
 
 1. **ユーザー呼び出し用コアスキル（14種）**: `skills/arcus-*/SKILL.md` に配置。メニューにはこの14個の主要スキルだけがすっきり表示されます。
-2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、22のプレイブック、18の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
+2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、22のプレイブック、19の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
 
 ---
 
@@ -197,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [内部専用] 22のタスクプレイブック
     │   ├── principles/          # [内部専用] 24の設計原則
-    │   ├── internal/            # [内部専用] 18の補助スキル (unslop, bro, modern-web-guidance, archify-visualization など)
+    │   ├── internal/            # [内部専用] 19の補助スキル (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices など)
     │   └── references/          # [内部専用] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

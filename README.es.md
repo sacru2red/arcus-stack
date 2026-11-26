@@ -101,7 +101,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
 1. **Habilidades Principales para el Usuario (14 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 14 habilidades principales aparecen en tu menú.
-2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 18 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
+2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 19 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
 
@@ -197,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Interno] 22 playbooks de tareas
     │   ├── principles/          # [Interno] 24 principios de ingeniería
-    │   ├── internal/            # [Interno] 18 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, archify-visualization, etc.)
+    │   ├── internal/            # [Interno] 19 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
     │   └── references/          # [Interno] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

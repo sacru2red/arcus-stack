@@ -86,6 +86,7 @@ Work in a worktree or branch off main when applicable. Commit and push or open a
 ## Guardrails
 
 - **Don't overfit to one conversation.** A preference stated once and contradicted another time is noise. Require multiple instances before codifying it.
+- **Don't codify legacy repo notation as user preference.** Historical naming conventions in old files are repository artifacts, not an immutable personal style.
 - **Don't be clever.** Restating other skills' contents, inventing metaphors, or writing "poetic" prose for an agent reader is cost without benefit. Keep it operational.
 - **Reference, don't inline.** Other skills the user relies on should appear as relative path references, not pasted excerpts.
 - **Keep sections minimal.** Only add a section if the user has a specific, non-default rule there.

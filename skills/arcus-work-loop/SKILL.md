@@ -24,6 +24,7 @@ Execute the task autonomously in an iterative implementation-and-verification lo
 2. **Minimal, High-Precision Implementation**:
    - Work through the checklist systematically, following existing codebase conventions, types, and module boundaries.
    - For HTML/CSS or client-side JS/DOM changes, consult `npx -y modern-web-guidance@latest search "<2-5 word query>"` and `retrieve "<id>"` (falling back to `npx --offline -y` or skipping non-blockingly if offline) before writing custom UI or DOM workarounds.
+   - For TypeScript, domain naming, or stateful query and mutation changes, follow [`typescript-best-practices.md`](../arcus-mode/internal/typescript-best-practices.md) *(when co-installed; inline fallback: verify domain meaning over UI copy, follow active repo grammar not legacy pockets, infer locals and annotate boundaries, prefer `satisfies` and generics over forced assertions or repeated callback types, separate `null`/`undefined`/`""`/`0` per domain, default to immutable `const` transforms without mutable `Set`/`Map` defaults, and centralize duplicate queries or mutations under one owner)*.
    - Never apply symptom patches (e.g., swallowing errors, arbitrary timeouts, blind null checks). Fix the underlying logic.
    - If new requirements or edge cases surface mid-task, update the checklist dynamically so nothing is forgotten.
 3. **Self-Diagnostics & Guarded Repair**:
