@@ -57,7 +57,7 @@ node -e "const fs=require('fs'),os=require('os'),p=require('path'),h=os.homedir(
      ```sh
      node "<ARCHIFY_MJS>" finalize <type> "<out-dir>/candidate.json" "<out-dir>/<slug>.html" --quality showcase --json
      ```
-     *(Add `--repo-root "<repo-root>"` for repository-backed diagrams, or run `node "<ARCHIFY_MJS>" code-analysis prepare "<repo-root>" --out "<out-dir>/analysis"` for architecture health investigations.)*
+     *(For `explainer`, pass `"<out-dir>/candidate.archify.md"` in place of `candidate.json`; add `--repo-root "<repo-root>"` for repository-backed diagrams, or run `node "<ARCHIFY_MJS>" code-analysis prepare "<repo-root>" --out "<out-dir>/analysis"` for architecture health investigations.)*
 
 ### Tier 2 — Non-Blocking Auto-Bootstrap When Not Installed
 

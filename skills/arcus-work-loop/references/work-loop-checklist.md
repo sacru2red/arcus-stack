@@ -9,17 +9,18 @@
 
 ## 1. 4-Tier Task Checklist Resolution & Live Tracking Rules
 
-Before writing code, locate—or create—the active **Task Checklist** in this exact order:
+Before writing code, locate—or create—the active **Task Checklist** in this exact order.
+> **Goal-Alignment, Freshness & Non-Empty Pending Guard (`PendingCount > 0`)**: A checklist candidate from Tiers 1–3 is valid **only if** (a) its scope matches the user's current task goal, and (b) it still has **at least one unchecked `- [ ]` item** that has not already been completed in later chat turns or `git log`. If a candidate file is missing on disk, belongs to an earlier finished task, is a general project roadmap backlog, or already has all items marked `- [x]`, **do not adopt it and do not exit as "already done"**—fall through immediately to the next tier (ultimately Tier 4 Self-Seed).
 
-1. **Tier 1 — User Prompt / Named File**: Check if the user passed `- [ ]` items inline or named a specific file path (e.g., `docs/plan.md`, `TODO.md`).
-2. **Tier 2 — Conversation History (`arcus-plan` / `arcus-review` output)**: Scan earlier turns in the chat transcript for the most recent `Actionable Execution & Verification Checklist` (such as Plan v2 after `arcus-review`) and adopt its `- [ ]` items.
-3. **Tier 3 — Workspace Plan Artifacts**: If running in a fresh thread or after context compaction with no chat checklist, check for a matching workspace plan file (`PLAN.md`, `TODO.md`, `TASKS.md`, or `.audit/*.md`).
-4. **Tier 4 — Mandatory Self-Seed (Fallback When No Checklist Exists Anywhere)**:
-   - If Tiers 1–3 find no checklist, **do not exit the loop and do not ask the user where the checklist document is**.
-   - Inspect the target files in the repository, generate a 3–7 item task checklist right now (pairing each concrete edit with `➔ Verify: <command>`), register the steps in your session's step tracker (`update_steps` / `TodoWrite` if available), and execute them immediately.
+1. **Tier 1 — User Prompt / Named File**: Check if the user passed `- [ ]` items inline or named a specific file path (e.g., `docs/plan.md`, `TODO.md`). If the named file exists and has pending `- [ ]` items for this task, adopt them (along with their paired `➔ Verify:` lines); if the file does not exist or has 0 pending items, fall through to Tier 2 without erroring out.
+2. **Tier 2 — Conversation History (`arcus-plan` / `arcus-review` output)**: Scan earlier turns in the chat transcript for the most recent `Actionable Execution & Verification Checklist` (such as Plan v2 after `arcus-review`, per [`arcus-plan`](../../arcus-plan/SKILL.md) *(when co-installed)*). Adopt its unchecked `- [ ]` items and indented `- ➔ **Verify**:` sub-bullets **only if** that plan matches the current request and was not already executed in subsequent turns (exclude optional `DECISIONS.md` items unless explicitly authorized by the user). Otherwise, fall through to Tier 3.
+3. **Tier 3 — Workspace Plan Artifacts**: If running in a fresh thread or after context compaction with no matching chat checklist, check for a workspace plan file (`PLAN.md`, `TODO.md`, `TASKS.md`, or `.audit/*.md`) whose target files/goal match the current request and that still has unchecked `- [ ]` items not yet in `git log`. Never hijack unrelated project roadmap backlogs in `TODO.md`, stale `.audit/*.md` files from prior tasks, or all-`[x]` completed plans; fall through to Tier 4 instead.
+4. **Tier 4 — Mandatory Self-Seed (Fallback Whenever Tiers 1–3 Yield 0 Matching Unchecked `- [ ]` Items)**:
+   - If Tiers 1–3 find no matching pending checklist, **do not exit the loop, do not claim completion with 0 edits, and do not ask the user where the checklist document is**.
+   - Inspect the target files in the repository, generate a 3–7 item task checklist right now (pairing each concrete edit with `➔ Verify: <command>` per [`checklist.md`](../../arcus-mode/internal/checklist.md) *(when co-installed)*), register the steps in your session's step tracker (`update_steps` / `TodoWrite` if available), and execute them immediately.
 
 ### Live Maintenance Rules (During Execution)
-- **Action + Proof Pairing**: Every task item must follow `- [ ] [Target File/Module] Change ➔ Verify: [Command / Expected Output]`.
+- **Action + Proof Pairing (Both Two-Line & Single-Line Formats Supported)**: Every task item must pair a concrete change with its verification proof—either as the two-line indented sub-bullet format from `arcus-plan` (`- [ ] **Step N — [Target File/Module]**: Change` followed by `  - ➔ **Verify**: [Command / Expected Output]`) or the single-line inline format (`- [ ] [Target File/Module] Change ➔ Verify: [Command / Expected Output]`). When adopting a two-line checklist from `arcus-plan`, always carry over the indented `- ➔ **Verify**:` sub-bullet with its parent `- [ ]` item.
 - **Dynamic Upkeep**: When an edit reveals a new caller, migration step, or edge case, add a new `- [ ]` line immediately rather than keeping it only in memory.
 - **Evidence-Gated Checkoff**: Never mark `- [x]` based on "I wrote the code". Mark `- [x]` only after running the verification command and observing the passing result.
 

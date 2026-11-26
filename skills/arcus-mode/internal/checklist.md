@@ -5,11 +5,11 @@ description: "Internal sub-skill for building and maintaining a goal-aligned exe
 
 # Goal-Aligned Execution & Verification Checklist
 
-Use this internal protocol whenever planning (`arcus-plan`) or driving multi-step work (`arcus-mode` / `arcus-work-loop`) so no requirement, edge case, or verification step slips through the cracks.
+Use this internal protocol whenever planning ([`arcus-plan`](../../arcus-plan/SKILL.md) *(when co-installed)*) or driving multi-step work (`arcus-mode` / [`arcus-work-loop`](../../arcus-work-loop/SKILL.md) and [`work-loop-checklist.md`](../../arcus-work-loop/references/work-loop-checklist.md) *(when co-installed)*) so no requirement, edge case, or verification step slips through the cracks.
 
 ## 1. Shape of a Valid Checklist Item
 
-Never write vague todo items (`- [ ] fix auth bug`, `- [ ] add tests`). Every item must name the **target seam**, the **behavior change**, and the **observable proof**:
+Never write vague todo items (`- [ ] fix auth bug`, `- [ ] add tests`). Every item must name the **target seam**, the **behavior change**, and the **observable proof** (either as a two-line indented sub-bullet or a single-line inline `➔ Verify:` clause):
 
 ```markdown
 - [ ] **[File / Module]**: <What changes and why>
