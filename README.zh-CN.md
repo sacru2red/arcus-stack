@@ -60,7 +60,7 @@
 
 | 技能名称 | 类别 | 核心收益与功能说明 |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **核心 · 主控模式** | 去除客套废话，直接获得简洁回答与经过验证的代码，全面提升助手的默认工程水准。根据任务自动应用 24 条工程原则、22 个任务剧本以及子智能体委派规范。 |
+| ⭐ **`arcus-mode`** | **核心 · 主控模式** | 去除客套废话，直接获得简洁回答与经过验证的代码，全面提升助手的默认工程水准。根据任务自动应用 24 条工程原则、23 个任务剧本以及子智能体委派规范。 |
 | ⭐ **`arcus-plan`** | **核心 · 规划与检查清单** | 避免一上来就改代码导致方向跑偏或遗漏需求。在写代码前先定位根本原因与改动影响范围，并围绕当前任务目标生成可逐项追踪的执行与验证检查清单（`- [ ]`）。 |
 | ⭐ **`arcus-work-loop`** | **核心 · 自主执行循环** | 杜绝半途而废或留下未完成的占位代码，将任务一气呵成执行到底。按任务检查清单逐项推进，仅在真实测试与构建验证通过后才将条目勾选为完成（`- [x]`）。 |
 | ⭐ **`arcus-review`** | **核心 · 上下文隔离的计划与代码审查** | 在不继承作者上下文与盲区的隔离子智能体中，基于固定快照审查设计方案与代码。涵盖无背景读者的文档可理解性测试、外部参考资料核对，以及基于问题台账的“先看代码、后看回复”多轮评审机制。 |
@@ -84,7 +84,7 @@
 | 对比维度 | 👑 **`arcus-mode`（主控操作系统模式 / OS）** | 🔄 **`arcus-work-loop`（检查清单执行引擎）** |
 | :--- | :--- | :--- |
 | **核心定位** | 统管整个会话的工程判断准则、精炼文风与子智能体协同的顶层主控模式。 | 围绕既定任务检查清单（`- [ ]`），专注循环执行 **实现 ➔ 验证 ➔ 修复 ➔ 勾选完成（`[x]`）** 的执行引擎。 |
-| **覆盖范围** | 全局：根据场景从 24 条工程原则和 22 个任务剧本（根因调查、重构、方案竞技、性能调优、PR 照看等）中自动匹配最佳流程。 | 聚焦：接管 `arcus-plan` 生成的检查清单，逐项编写代码并运行真实测试/构建，仅在验证通过后勾选 `- [x]` 直至全部完成。 |
+| **覆盖范围** | 全局：根据场景从 24 条工程原则和 23 个任务剧本（根因调查、重构、方案竞技、性能调优、PR 照看等）中自动匹配最佳流程。 | 聚焦：接管 `arcus-plan` 生成的检查清单，逐项编写代码并运行真实测试/构建，仅在验证通过后勾选 `- [x]` 直至全部完成。 |
 | **何时调用** | 会话刚开始希望开启高级工程师准则时，或面对需要深入调研、架构权衡与多智能体协作的复杂任务时。 | 在 `$arcus-plan` 确定好方案与检查清单后，希望助手不要中途停顿、一气呵成跑完所有实现与验证时。 |
 
 ### 2. 推荐分步流水线
@@ -101,7 +101,7 @@
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
 1. **面向用户的核心技能（14 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 14 个高频入口。
-2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、22 个任务剧本和 19 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
+2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、23 个任务剧本和 19 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
 
@@ -178,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # 日文文档 (Japanese)
 ├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
 ├── README.es.md                 # 西班牙文文档 (Spanish)
-├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-010)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-011)
 ├── plugin.json                  # Antigravity (agy) 插件清单
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 插件清单
@@ -195,7 +195,7 @@ arcus-stack/
     ├── arcus-mode/              # 主控模式 + 内部封装模块
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [内部专用] 22 个任务剧本
+    │   ├── playbooks/           # [内部专用] 23 个任务剧本
     │   ├── principles/          # [内部专用] 24 条工程原则
     │   ├── internal/            # [内部专用] 19 个辅助子技能 (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices 等)
     │   └── references/          # [内部专用] bugbot-triage.md

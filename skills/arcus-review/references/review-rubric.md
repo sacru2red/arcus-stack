@@ -12,7 +12,7 @@ Evaluate plans (`arcus-plan`) and code changes (`arcus-work-loop`) strictly agai
 
 ## 3. External Reference Grounding & Failure Modes
 - **Beyond the Repo**: Do not stay trapped inside the repository's existing habits. When touching external APIs, libraries, CLIs, or standards, verify against official external documentation or specifications.
-- **Edge Cases & Dependencies**: Broken cross-references, partial-install failures, empty/boundary inputs, partial failures, race conditions, resource leaks, rollback behavior, and security boundaries.
+- **Edge Cases & Dependencies**: Broken cross-references, partial-install failures, empty/boundary inputs, partial failures, race conditions, resource leaks, rollback behavior, and security boundaries. For live database schemas, persisted queues/caches, or rolling-deploy wire contracts, flag single-PR Expand+Contract, destructive or blocking DDL (`DROP`/`RENAME` column, rewriting `ALTER TYPE`, full-table `SET NOT NULL` without `NOT VALID` + `VALIDATE CONSTRAINT`, blocking index without `CONCURRENTLY`/online DDL), unbatched full-table updates, or `N-1`/`N` rolling-deploy incompatibility *(see [`safe-migration.md`](../../arcus-mode/playbooks/safe-migration.md) when co-installed)*.
 
 ## 4. Architectural Hygiene & Blast Radius
 - Minimal surface area: no dead code, no duplicated instructions, no speculative abstractions, and no leaking internal details across module boundaries.

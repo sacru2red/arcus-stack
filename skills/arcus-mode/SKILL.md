@@ -21,6 +21,7 @@ The remaining triggers live only here:
 - Starting any subagent or worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path.
 - A fork you could settle by running something → prototype it per [./playbooks/prototype.md](./playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [./internal/architect.md](./internal/architect.md). Fan-out → [./internal/swarm.md](./internal/swarm.md). Bakeoff → [./internal/arena.md](./internal/arena.md). Contested design → [./internal/interrogate.md](./internal/interrogate.md).
+- Live database schemas, persisted queues or caches, data backfills, or rolling-deploy wire contracts → [./playbooks/safe-migration.md](./playbooks/safe-migration.md) (Expand-Contract across separate PRs; never single-wave destructive DDL).
 - TypeScript, domain naming, or state and query-mutation design → [./internal/typescript-best-practices.md](./internal/typescript-best-practices.md).
 - Web UI, HTML/CSS layout or animation, or client-side JS/DOM → [./internal/modern-web-guidance.md](./internal/modern-web-guidance.md) first before writing code. When the task involves visual UI design, layout, styling, or component changes (and the user has not locked a single pixel spec), run [`arcus-ui-propose`](../arcus-ui-propose/SKILL.md) to capture 1 "Before" baseline screenshot and 3 distinct proposed variant screenshots (Option A, B, C) via sequential working-branch apply ➔ capture ➔ revert (`git checkout`) so the user picks from real screenshots before finalizing.
 - Visualization, architecture/workflow/sequence/dataflow/lifecycle/ERD/class/tree/timeline/waterfall diagramming, codebase architecture mapping, or 1-page visual explainer request → prioritize [`tt-a1i/archify`](https://github.com/tt-a1i/archify) per [./internal/archify-visualization.md](./internal/archify-visualization.md) (writing temporary outputs to `os.tmpdir()/archify/` unless a repo path is requested) before falling back to static Mermaid.
@@ -46,7 +47,7 @@ Read the leaf file in full (`./principles/principle-<title>.md`, with the title 
 - **Attack the Premise** ([principle-attack-the-premise.md](./principles/principle-attack-the-premise.md)). Two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it.
 - **Subtract Before You Add** ([principle-subtract-before-you-add.md](./principles/principle-subtract-before-you-add.md)). Sequencing an addition, refactor, or rewrite. Remove dead weight first, then build on the simpler base.
 - **Minimize Reader Load** ([principle-minimize-reader-load.md](./principles/principle-minimize-reader-load.md)). Reviewing or shaping code that's hard to trace. Count layers and hidden state, collapse one-caller wrappers, shrink mutable scope.
-- **Outcome-Oriented Execution** ([principle-outcome-oriented-execution.md](./principles/principle-outcome-oriented-execution.md)). Planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture, don't preserve throwaway compatibility states.
+- **Outcome-Oriented Execution** ([principle-outcome-oriented-execution.md](./principles/principle-outcome-oriented-execution.md)). Planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture, don't preserve throwaway compatibility states (exempt for live DB schemas, persisted data, and rolling-deploy wire contracts; use [safe-migration.md](./playbooks/safe-migration.md)).
 - **Experience First** ([principle-experience-first.md](./principles/principle-experience-first.md)). Product, UX, or feature-scope tradeoffs. Choose user delight over implementation convenience.
 - **Exhaust the Design Space** ([principle-exhaust-the-design-space.md](./principles/principle-exhaust-the-design-space.md)). A novel interaction or architectural decision with no precedent. Build 2-3 competing prototypes and compare before committing.
 - **Build the Lever** ([principle-build-the-lever.md](./principles/principle-build-the-lever.md)). Any non-trivial work. Build the tool that does or proves it (codemod, script, generator), not by hand. The tool is the artifact a reviewer reruns.
@@ -57,7 +58,7 @@ Read the leaf file in full (`./principles/principle-<title>.md`, with the title 
 - **Boundary Discipline** ([principle-boundary-discipline.md](./principles/principle-boundary-discipline.md)). Wiring validation, error handling, or framework adapters. Guards at system boundaries, trust internal types, keep business logic pure.
 - **Type System Discipline** ([principle-type-system-discipline.md](./principles/principle-type-system-discipline.md)). Designing types or a signature in any typed language. Make illegal states unrepresentable, brand primitives, parse external data at boundaries.
 - **Make Operations Idempotent** ([principle-make-operations-idempotent.md](./principles/principle-make-operations-idempotent.md)). Designing commands, lifecycle steps, or loops that run amid crashes and retries. Converge to the same end state.
-- **Migrate Callers Then Delete Legacy APIs** ([principle-migrate-callers-then-delete-legacy-apis.md](./principles/principle-migrate-callers-then-delete-legacy-apis.md)). Introducing a new internal API while old callers exist. Migrate and delete in one wave.
+- **Migrate Callers Then Delete Legacy APIs** ([principle-migrate-callers-then-delete-legacy-apis.md](./principles/principle-migrate-callers-then-delete-legacy-apis.md)). Introducing a new internal code-only API while old callers exist. Migrate and delete in one wave (for live DB schemas, persisted queues/caches, or rolling-deploy wire contracts, use [safe-migration.md](./playbooks/safe-migration.md)).
 - **Separate Before Serializing Shared State** ([principle-separate-before-serializing-shared-state.md](./principles/principle-separate-before-serializing-shared-state.md)). Concurrent actors might write the same file, branch, key, or object. Eliminate the sharing first.
 
 **Verification**
@@ -114,6 +115,7 @@ Available playbooks in `./playbooks/`:
 - [trace-forensics.md](./playbooks/trace-forensics.md)
 - [feature.md](./playbooks/feature.md)
 - [refactoring.md](./playbooks/refactoring.md)
+- [safe-migration.md](./playbooks/safe-migration.md)
 - [prototype.md](./playbooks/prototype.md)
 - [visual-parity.md](./playbooks/visual-parity.md)
 - [authoring-a-skill.md](./playbooks/authoring-a-skill.md)

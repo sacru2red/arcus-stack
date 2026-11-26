@@ -26,9 +26,10 @@
 | Engineering & Domain Brain (`ONBOARDING.md` 7-pillar domain-to-code mappings, business invariants, authz tiers, and legacy minefields with `[as of YYYY-MM-DD \| Source: ...]` tags) | [`skills/arcus-onboard/SKILL.md`](../skills/arcus-onboard/SKILL.md) & [`DECISIONS.md` (`D-008`)](../DECISIONS.md) |
 | Visual UI 4-screenshot proposal (`00-before.png` + `01-option-a..c.png` via sequential working-branch apply ➔ capture ➔ patch save ➔ `git checkout` revert before user selection) | [`skills/arcus-ui-propose/SKILL.md`](../skills/arcus-ui-propose/SKILL.md) & [`DECISIONS.md` (`D-009`)](../DECISIONS.md) |
 | Archify-first visualization routing (`tt-a1i/archify` 10 diagram types, 1-page visual explainers, and codebase architecture diagnosis isolated under `os.tmpdir()/archify/` with non-blocking 3-tier fallback) | [`skills/arcus-mode/internal/archify-visualization.md`](../skills/arcus-mode/internal/archify-visualization.md) & [`DECISIONS.md` (`D-010`)](../DECISIONS.md) |
+| Zero-downtime Expand-Contract migrations for live DB schemas, persisted queues/caches, and rolling-deploy wire contracts (separate Expand/dual-write PR, chunked idempotent backfill + parity check, separate Contract PR; exempt from single-wave cutover) | [`skills/arcus-mode/playbooks/safe-migration.md`](../skills/arcus-mode/playbooks/safe-migration.md) & [`DECISIONS.md` (`D-011`)](../DECISIONS.md) |
 
 ## 4. Available Core Skills (`arcus-*`)
-- `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 22 task playbooks, unslopped prose, and deliberate subagent delegation.
+- `arcus-mode`: Master operating mode enforcing the 24 deep-first principles, 23 task playbooks, unslopped prose, and deliberate subagent delegation.
 - `arcus-plan`: Deep-first root-cause analysis, blast-radius mapping, and an actionable execution and verification checklist tailored to the task goal.
 - `arcus-work-loop`: Autonomous checklist-driven execution loop that implements, diagnoses, and checks off each task item with real verification evidence.
 - `arcus-review`: Context-isolated critique and review for both architectural plans (`arcus-plan`) and code changes (`arcus-work-loop`), maintaining a persistent Review Ledger.

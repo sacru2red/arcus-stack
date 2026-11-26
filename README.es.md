@@ -60,7 +60,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 
 | Habilidad | Categoría | Beneficio y Descripción |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **Clave · Modo Maestro** | Eleva la calidad base de cada respuesta y cambio de código sin texto de relleno. Aplica automáticamente 24 principios de ingeniería, 22 playbooks de tareas y delegación disciplinada en subagentes. |
+| ⭐ **`arcus-mode`** | **Clave · Modo Maestro** | Eleva la calidad base de cada respuesta y cambio de código sin texto de relleno. Aplica automáticamente 24 principios de ingeniería, 23 playbooks de tareas y delegación disciplinada en subagentes. |
 | ⭐ **`arcus-plan`** | **Clave · Planificación y Checklist** | Evita perder tiempo reescribiendo código o pasando por alto requisitos. Investiga primero la causa raíz y el alcance del cambio para generar una lista de verificación (`- [ ]`) de ejecución y pruebas adaptada al objetivo de tu tarea. |
 | ⭐ **`arcus-work-loop`** | **Clave · Bucle de Ejecución Autónoma** | Completa tareas complejas de principio a fin sin detenerse a mitad de camino ni dejar código incompleto. Avanza ítem por ítem sobre la lista de verificación, marcando cada paso como completado (`- [x]`) solo tras superar pruebas y compilación reales. |
 | ⭐ **`arcus-review`** | **Clave · Revisión Aislada de Planes y Código** | Evita heredar los puntos ciegos del autor ejecutando las revisiones en un subagente con contexto aislado sobre un snapshot fijo. Incluye pruebas de comprensión para lectores sin contexto previo, consulta de referencias externas y un registro de hallazgos (Review Ledger) que evalúa el código antes de leer respuestas. |
@@ -84,7 +84,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 | Dimensión | 👑 **`arcus-mode` (Modo Maestro / Sistema Operativo)** | 🔄 **`arcus-work-loop` (Motor de Ejecución de Checklist)** |
 | :--- | :--- | :--- |
 | **Rol Principal** | Establece el criterio de ingeniería, el estilo de respuesta conciso y la coordinación de subagentes para toda la sesión. | Toma una lista de verificación (`- [ ]`) y ejecuta el bucle **implementar ➔ probar ➔ corregir ➔ marcar (`[x]`)** hasta completar cada ítem. |
-| **Alcance** | Amplio: selecciona entre 24 principios de ingeniería y 22 playbooks (investigación, refactorización, comparativas de diseño, optimización, gestión de PRs). | Enfocado: toma la lista generada por `arcus-plan`, aplica cambios mínimos y marca `- [x]` únicamente tras validar con tests y compilación reales. |
+| **Alcance** | Amplio: selecciona entre 24 principios de ingeniería y 23 playbooks (investigación, refactorización, comparativas de diseño, optimización, gestión de PRs). | Enfocado: toma la lista generada por `arcus-plan`, aplica cambios mínimos y marca `- [x]` únicamente tras validar con tests y compilación reales. |
 | **Cuándo Usarlo** | Al iniciar una sesión para activar estándares de ingeniería senior, o en tareas abiertas de investigación, arquitectura y depuración. | Justo después de `$arcus-plan` (y `$arcus-review`), cuando el plan ya está decidido y quieres que el agente implemente y verifique todo sin detenerse a mitad de camino. |
 
 ### 2. Flujo de Trabajo Paso a Paso Recomendado
@@ -101,7 +101,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
 1. **Habilidades Principales para el Usuario (14 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 14 habilidades principales aparecen en tu menú.
-2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 22 playbooks y 19 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
+2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 23 playbooks y 19 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
 
@@ -178,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # Documentación en japonés (Japanese)
 ├── README.zh-CN.md              # Documentación en chino simplificado (Simplified Chinese)
 ├── README.es.md                 # Documentación en español (Spanish)
-├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-010)
+├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-011)
 ├── plugin.json                  # Manifiesto de plugin para Antigravity (agy)
 ├── .claude-plugin/
 │   └── plugin.json              # Manifiesto de plugin para Claude Code
@@ -195,7 +195,7 @@ arcus-stack/
     ├── arcus-mode/              # Modo maestro + módulos internos encapsulados
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [Interno] 22 playbooks de tareas
+    │   ├── playbooks/           # [Interno] 23 playbooks de tareas
     │   ├── principles/          # [Interno] 24 principios de ingeniería
     │   ├── internal/            # [Interno] 19 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
     │   └── references/          # [Interno] bugbot-triage.md

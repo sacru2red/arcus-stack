@@ -60,7 +60,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 
 | Skill | Category | Benefit & Description |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **Core · Master Mode** | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 22 task playbooks, and disciplined subagent delegation. |
+| ⭐ **`arcus-mode`** | **Core · Master Mode** | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 23 task playbooks, and disciplined subagent delegation. |
 | ⭐ **`arcus-plan`** | **Core · Planning & Checklist** | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
 | ⭐ **`arcus-work-loop`** | **Core · Autonomous Execution** | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
 | ⭐ **`arcus-review`** | **Core · Isolated Plan & Code Review** | Prevents confirmation bias by reviewing plans and code in a context-isolated subagent on a pinned snapshot. Runs Cold-Reader comprehension tests on designs, checks external docs, and maintains a code-first Review Ledger across rounds. |
@@ -84,7 +84,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 | Dimension | 👑 **`arcus-mode` (Master Operating System)** | 🔄 **`arcus-work-loop` (Checklist Execution Engine)** |
 | :--- | :--- | :--- |
 | **Role** | Sets the agent's overall engineering persona, prose discipline, and decision rules for the entire session. | Drives a concrete implementation-and-verification checklist item by item until every check passes. |
-| **Scope** | Broad: selects from 24 engineering principles and 22 task playbooks (investigation, bug-fix, refactoring, arena comparison, PR babysitting, etc.), enforces concise `unslop` writing, and coordinates subagents. | Focused: takes the `- [ ]` checklist from `arcus-plan` (or builds one), edits code, runs tests/builds, repairs failures, and marks items `- [x]` only with real verification proof. |
+| **Scope** | Broad: selects from 24 engineering principles and 23 task playbooks (investigation, bug-fix, refactoring, arena comparison, PR babysitting, etc.), enforces concise `unslop` writing, and coordinates subagents. | Focused: takes the `- [ ]` checklist from `arcus-plan` (or builds one), edits code, runs tests/builds, repairs failures, and marks items `- [x]` only with real verification proof. |
 | **When to Invoke** | At the start of a session when you want senior-level engineering judgment, or when tackling open-ended problems (architecture, debugging, perf tuning, PR management). | Right after `arcus-plan` (and `arcus-review`) when the plan is decided and you want the agent to execute and verify every checklist step to completion without stopping halfway. |
 
 ### 2. Recommended Step-by-Step Pipeline
@@ -101,7 +101,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (14 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 14 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, 24 principles, 22 playbooks, and 19 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, 24 principles, 23 playbooks, and 19 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 
@@ -181,7 +181,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
-├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-010)
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-011)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
@@ -198,7 +198,7 @@ arcus-stack/
     ├── arcus-mode/              # Master mode + encapsulated internal modules
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [Internal] 22 task playbooks
+    │   ├── playbooks/           # [Internal] 23 task playbooks
     │   ├── principles/          # [Internal] 24 engineering principles
     │   ├── internal/            # [Internal] 19 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
