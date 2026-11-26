@@ -101,7 +101,7 @@ AI models frequently write outdated JavaScript workarounds or CSS hacks because 
 Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
 
 1. **User-Facing Core Skills (14 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 14 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, 24 principles, 23 playbooks, and 19 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
+2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, `backend-reliability`, 24 principles, 23 playbooks, and 20 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
 
 ---
 
@@ -181,7 +181,7 @@ arcus-stack/
 ├── README.ja.md                 # Japanese documentation
 ├── README.zh-CN.md              # Simplified Chinese documentation
 ├── README.es.md                 # Spanish documentation
-├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-011)
+├── DECISIONS.md                 # On-demand architectural decision records (D-001..D-013)
 ├── plugin.json                  # Antigravity (agy) plugin manifest
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
@@ -200,7 +200,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Internal] 23 task playbooks
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 19 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
+    │   ├── internal/            # [Internal] 20 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability, etc.)
     │   └── references/          # [Internal] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

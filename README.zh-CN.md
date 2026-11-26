@@ -101,7 +101,7 @@
 如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
 
 1. **面向用户的核心技能（14 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 14 个高频入口。
-2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、23 个任务剧本和 19 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
+2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、23 个任务剧本和 20 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices`、`backend-reliability` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
 
 ---
 
@@ -178,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # 日文文档 (Japanese)
 ├── README.zh-CN.md              # 简体中文文档 (Simplified Chinese)
 ├── README.es.md                 # 西班牙文文档 (Spanish)
-├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-011)
+├── DECISIONS.md                 # 按需架构决策记录 (D-001..D-013)
 ├── plugin.json                  # Antigravity (agy) 插件清单
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code 插件清单
@@ -197,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [内部专用] 23 个任务剧本
     │   ├── principles/          # [内部专用] 24 条工程原则
-    │   ├── internal/            # [内部专用] 19 个辅助子技能 (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices 等)
+    │   ├── internal/            # [内部专用] 20 个辅助子技能 (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability 等)
     │   └── references/          # [内部专用] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/
