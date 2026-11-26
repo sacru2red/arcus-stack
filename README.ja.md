@@ -101,7 +101,7 @@ AIモデルは学習データの時期の制約により、最新のCSSやWeb標
 数十個の細かいスキルを最上位の `skills/` フォルダにそのまま並べると、スラッシュコマンド（`/`）の候補が溢れかえり、コンテキストも圧迫します。`arcus-stack` はこれを **2階層カプセル化構造** で解決しています。
 
 1. **ユーザー呼び出し用コアスキル（14種）**: `skills/arcus-*/SKILL.md` に配置。メニューにはこの14個の主要スキルだけがすっきり表示されます。
-2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、23のプレイブック、19の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
+2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、23のプレイブック、20の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices`、`backend-reliability` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
 
 ---
 
@@ -178,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # 日本語ドキュメント (Japanese)
 ├── README.zh-CN.md              # 中国語（簡体字）ドキュメント (Simplified Chinese)
 ├── README.es.md                 # スペイン語ドキュメント (Spanish)
-├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-011)
+├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-013)
 ├── plugin.json                  # Antigravity (agy) プラグインマニフェスト
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code プラグインマニフェスト
@@ -197,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [内部専用] 23のタスクプレイブック
     │   ├── principles/          # [内部専用] 24の設計原則
-    │   ├── internal/            # [内部専用] 19の補助スキル (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices など)
+    │   ├── internal/            # [内部専用] 20の補助スキル (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability など)
     │   └── references/          # [内部専用] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/

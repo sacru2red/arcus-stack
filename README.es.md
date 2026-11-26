@@ -101,7 +101,7 @@ Debido a la fecha de corte de sus datos de entrenamiento, los modelos de IA suel
 Colocar docenas de habilidades detalladas directamente en la carpeta `skills/` satura el menú de comandos (`/`) y consume contexto. `arcus-stack` resuelve esto mediante una **estructura encapsulada de dos niveles**:
 
 1. **Habilidades Principales para el Usuario (14 habilidades)**: Ubicadas en `skills/arcus-*/SKILL.md`. Solo estas 14 habilidades principales aparecen en tu menú.
-2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 23 playbooks y 19 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
+2. **Módulos Internos Encapsulados (más de 60 archivos)**: Ubicados dentro de `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Como los escáneres de habilidades solo registran el primer nivel bajo `skills/`, los 24 principios, 23 playbooks y 20 sub-habilidades internas (`unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, `backend-reliability`, etc.) no ensucian el menú del usuario y el agente los carga bajo demanda mediante enlaces relativos.
 
 ---
 
@@ -178,7 +178,7 @@ arcus-stack/
 ├── README.ja.md                 # Documentación en japonés (Japanese)
 ├── README.zh-CN.md              # Documentación en chino simplificado (Simplified Chinese)
 ├── README.es.md                 # Documentación en español (Spanish)
-├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-011)
+├── DECISIONS.md                 # Registro de decisiones arquitectónicas (D-001..D-013)
 ├── plugin.json                  # Manifiesto de plugin para Antigravity (agy)
 ├── .claude-plugin/
 │   └── plugin.json              # Manifiesto de plugin para Claude Code
@@ -197,7 +197,7 @@ arcus-stack/
     │   ├── worker.md
     │   ├── playbooks/           # [Interno] 23 playbooks de tareas
     │   ├── principles/          # [Interno] 24 principios de ingeniería
-    │   ├── internal/            # [Interno] 19 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, etc.)
+    │   ├── internal/            # [Interno] 20 sub-habilidades auxiliares (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability, etc.)
     │   └── references/          # [Interno] bugbot-triage.md
     ├── arcus-plan/
     ├── arcus-work-loop/
