@@ -133,3 +133,16 @@ This document records the core architectural and directional decisions of **`arc
     2. **Tier 2 (Auto-Bootstrap)**: If not installed and online, run `npx -y skills@latest add https://archify.si --skill archify -g --copy --yes` non-blockingly and re-run Tier 1.
     3. **Tier 3 (Offline / Sandbox Fallback)**: If offline or restricted, fall back immediately to inline Mermaid (or declared host `html_render`) with a 1-line note without blocking the session.
 - **Enforced By**: [`skills/arcus-mode/internal/archify-visualization.md`](./skills/arcus-mode/internal/archify-visualization.md) and [`rules/AGENTS.md`](./rules/AGENTS.md).
+
+---
+
+## `D-011`: Zero-Downtime Expand-Contract Migrations (`safe-migration.md`) Over Single-Wave Cutover
+- **Date / Pin**: `2026-11-26` (Current)
+- **Status**: `ACTIVE`
+- **Context**: Existing refactoring rules (`skills/arcus-mode/playbooks/refactoring.md` and `principle-migrate-callers-then-delete-legacy-apis.md`) ban compatibility shims and parallel old-and-new paths, while `principle-outcome-oriented-execution.md` permits scoped intermediate breakage. Applying those rules verbatim to live production database schemas, persisted queues or caches, or rolling-deploy external wire contracts causes blocking table locks, `N-1`/`N` rolling-deploy failures, failed rollbacks, and data loss.
+- **Decision & Tradeoff**:
+  - Add [`skills/arcus-mode/playbooks/safe-migration.md`](./skills/arcus-mode/playbooks/safe-migration.md) as the 23rd internal playbook enforcing a 4-phase Expand -> Backfill & Verify -> Contract lifecycle split across separate deployable PRs (PR A Expand and dual-write, bounded chunked idempotent backfill with parity checks, bake window, then PR B Contract).
+  - Explicitly scope single-wave cutover in `refactoring.md` and `principle-migrate-callers-then-delete-legacy-apis.md` to internal code-only APIs, and forbid intermediate breakage in `principle-outcome-oriented-execution.md` for live DB schemas, persisted data, and rolling-deploy wire contracts.
+  - Wire partial-install-safe (`D-002`) inline fallback guards into `arcus-plan`, `arcus-work-loop`, and `arcus-review` (`review-rubric.md`), and surface the exemption directly in `skills/arcus-mode/SKILL.md`.
+  - *Rejected Alternative*: Applying single-wave destructive migrations (or shipping Expand and Contract in a single PR) to live production schemas and rolling-deploy wire contracts, which breaks `N-1` nodes during deploys or rollbacks and risks long table locks.
+- **Enforced By**: [`skills/arcus-mode/playbooks/safe-migration.md`](./skills/arcus-mode/playbooks/safe-migration.md), [`skills/arcus-mode/playbooks/refactoring.md`](./skills/arcus-mode/playbooks/refactoring.md), [`skills/arcus-mode/principles/principle-migrate-callers-then-delete-legacy-apis.md`](./skills/arcus-mode/principles/principle-migrate-callers-then-delete-legacy-apis.md), [`skills/arcus-mode/principles/principle-outcome-oriented-execution.md`](./skills/arcus-mode/principles/principle-outcome-oriented-execution.md), [`skills/arcus-review/references/review-rubric.md`](./skills/arcus-review/references/review-rubric.md), and [`rules/AGENTS.md`](./rules/AGENTS.md).

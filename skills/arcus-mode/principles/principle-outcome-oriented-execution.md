@@ -18,3 +18,4 @@ Optimize for the intended, verifiable end state rather than preserving smooth in
 - Declare where temporary breakage is acceptable
 - Keep high-signal checks for actively touched areas while migrating
 - Require full static and runtime verification at plan completion
+- Never allow intermediate breakage on live production database schemas, persisted data, or rolling-deploy wire contracts. Use [../playbooks/safe-migration.md](../playbooks/safe-migration.md) to run Expand-Contract across separate PRs
