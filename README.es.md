@@ -291,6 +291,8 @@ Vuelve a verificar las 15 habilidades publicas, el frontmatter YAML y los enlace
 
 ## Seis proyectos open source de inspiracion y atribuciones de licencia
 
+El proyecto usa la licencia MIT ([`LICENSE`](./LICENSE)). Los archivos adaptados de pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify y modern-web-guidance (ambos Apache-2.0) se listan con sus avisos de copyright en [`NOTICE`](./NOTICE); los textos completos de las licencias están en [`LICENSES/`](./LICENSES/).
+
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"Si quieres ir rapido, profundiza primero."* (Analisis de causa raiz, radio de impacto minimo, codigo verificable)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Bucles de ejecucion autonoma y separacion entre estrategia y ejecucion
 - [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode): Delegacion por roles y flujos autopilot

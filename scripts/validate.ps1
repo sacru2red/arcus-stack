@@ -30,7 +30,7 @@ foreach ($File in $SkillMarkdownFiles) {
         $Failures.Add("[Frontmatter] Missing YAML frontmatter in $($File.FullName)")
     }
 }
-Write-Host "[1/4] Checked YAML frontmatter in $FrontmatterChecked skill markdown files."
+Write-Host "[1/5] Checked YAML frontmatter in $FrontmatterChecked skill markdown files."
 
 # 2. Relative Markdown Link Resolution Check (Stripping fenced blocks, masking inline code spans)
 $AllMarkdownFiles = Get-ChildItem -Path $RepoRoot -Filter "*.md" -Recurse | Where-Object {
@@ -61,7 +61,7 @@ foreach ($File in $AllMarkdownFiles) {
         }
     }
 }
-Write-Host "[2/4] Checked $LinksChecked relative Markdown links across $($AllMarkdownFiles.Count) files."
+Write-Host "[2/5] Checked $LinksChecked relative Markdown links across $($AllMarkdownFiles.Count) files."
 
 # 3. Forbidden Unadapted pstack/Cursor Dependency Check in skills/
 $ForbiddenPattern = "disable-model-invocation|arcus-in-your-own-words|comment-sicko|decision-log-template\.tsv|scripts/log\.sh|watch-pr/watch-pr|worktree-audit\.sh|pstack-models\.mdc|cursor-team-kit|/deslop|control-ui|control-cli|(?<!make a )control skill|create-skill|/loop\b|claude-opus-5-5-|claude-fable-5-2|gemini-4-neon-xhigh|poteto-mode|poteto-agent|subagent_type|generalPurpose|environment:\s*`"(cloud|local)`"|Cursor cloud agent|Cursor's|~/.cursor/projects|\.cursor/worktrees|\*\*(ketchup|why|in-your-own-words|explain)\*\*"
@@ -69,7 +69,7 @@ $ForbiddenHits = @($SkillMarkdownFiles | Select-String -Pattern $ForbiddenPatter
 foreach ($Hit in $ForbiddenHits) {
     $Failures.Add("[Forbidden Dependency] $($Hit.Path):$($Hit.LineNumber): $($Hit.Line.Trim())")
 }
-Write-Host "[3/4] Checked $($SkillMarkdownFiles.Count) skill files for unadapted Cursor/pstack dependencies (Hits: $($ForbiddenHits.Count))."
+Write-Host "[3/5] Checked $($SkillMarkdownFiles.Count) skill files for unadapted Cursor/pstack dependencies (Hits: $($ForbiddenHits.Count))."
 
 # 4. Two-Tier Public Skill Layout, Manifest JSON & .agents/skills.json Parity Check
 $TopLevelSkills = @(Get-ChildItem -Path $SkillsRoot -Directory | Where-Object { -not $_.Name.StartsWith('.') } | Sort-Object Name)
@@ -116,7 +116,25 @@ if ($ParsedManifests.ContainsKey($SkillsJsonPath)) {
         $Failures.Add("[Manifest Parity] .agents/skills.json entries ($($EntryPaths -join ', ')) must include 'skills'")
     }
 }
-Write-Host "[4/4] Verified $($TopLevelSkills.Count) public core skills and $($ManifestFiles.Count) JSON manifests."
+Write-Host "[4/5] Verified $($TopLevelSkills.Count) public core skills and $($ManifestFiles.Count) JSON manifests."
+
+# 5. License Attribution Check (LICENSE, NOTICE, LICENSES/ texts, and every NOTICE-listed file exists)
+foreach ($Required in @("LICENSE", "NOTICE", "LICENSES\pstack-MIT.txt", "LICENSES\Apache-2.0.txt")) {
+    if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Required))) {
+        $Failures.Add("[License] Missing $Required")
+    }
+}
+$NoticePath = Join-Path $RepoRoot "NOTICE"
+$NoticeEntries = @()
+if (Test-Path -LiteralPath $NoticePath) {
+    $NoticeEntries = @([regex]::Matches((Get-Content -LiteralPath $NoticePath -Raw), '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
+    foreach ($Entry in $NoticeEntries) {
+        if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Entry))) {
+            $Failures.Add("[License] NOTICE lists '$Entry' but the file does not exist")
+        }
+    }
+}
+Write-Host "[5/5] Checked license files and $($NoticeEntries.Count) NOTICE-attributed paths."
 
 if ($Failures.Count -gt 0) {
     Write-Host "`nVALIDATION FAILED ($($Failures.Count) issues):" -ForegroundColor Red

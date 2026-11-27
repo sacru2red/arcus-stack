@@ -291,6 +291,8 @@ arcus-stack/
 
 ## 영감을 받은 6개 오픈소스 프로젝트 및 라이선스 고지
 
+이 프로젝트는 MIT 라이선스입니다([`LICENSE`](./LICENSE)). pstack(MIT, Copyright (c) 2026 Lauren Tan), Archify, modern-web-guidance(둘 다 Apache-2.0)에서 가져온 파일과 각 저작권 고지는 [`NOTICE`](./NOTICE)에, 라이선스 전문은 [`LICENSES/`](./LICENSES/)에 있습니다.
+
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"빠르게 가려면 먼저 깊게 파고들어라."* (근본 원인 파악, 최소 변경, 검증 가능한 코드)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 자율 실행 루프와 전략·실행 분리
 - [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode): 설계·구현·검증 역할 분담과 오토파일럿 워크플로우

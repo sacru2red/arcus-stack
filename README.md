@@ -291,6 +291,8 @@ Re-verify the 15 public core skills, YAML frontmatter, relative Markdown links, 
 
 ## Six open-source inspirations and license attributions
 
+The project is MIT-licensed ([`LICENSE`](./LICENSE)). Files adapted from pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify, and modern-web-guidance (both Apache-2.0) are listed with their copyright notices in [`NOTICE`](./NOTICE); full license texts are in [`LICENSES/`](./LICENSES/).
+
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Autonomous execution loops and strategy/execution separation
 - [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode): Role-specialized delegation and autopilot workflows

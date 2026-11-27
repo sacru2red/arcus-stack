@@ -2,16 +2,105 @@ arcus-stack
 Copyright (c) 2026 sacru2red
 Licensed under the MIT License (see LICENSE).
 
-This project includes files adapted from third-party works licensed under the
-Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
-Those files keep their original license; each carries a modification notice
-in its header as required by Apache-2.0 Section 4(b).
+This project includes material from the third-party works below. Each keeps
+its original license; the full license texts are in LICENSES/.
 
-- skills/arcus-mode/internal/archify-visualization.md
-  Adapted from tt-a1i/archify (https://github.com/tt-a1i/archify)
-  Copyright tt-a1i and Archify contributors.
+--------------------------------------------------------------------------------
+pstack (https://github.com/cursor/plugins/tree/main/pstack)
+Copyright (c) 2026 Lauren Tan
+Licensed under the MIT License (LICENSES/pstack-MIT.txt).
+Adapted from upstream commit b7b93c36be9b.
 
-- skills/arcus-mode/internal/modern-web-guidance.md
-  Adapted from GoogleChrome/modern-web-guidance
-  (https://github.com/GoogleChrome/modern-web-guidance)
-  Copyright Google LLC.
+The following 72 files are adapted from pstack (renamed, re-scoped to the
+arcus-* namespace, and edited to work across agents):
+  - skills/arcus-automate-me/SKILL.md
+  - skills/arcus-correct/SKILL.md
+  - skills/arcus-create-verification/references/feature-map-example/create-note.md
+  - skills/arcus-create-verification/references/feature-map-example/README.md
+  - skills/arcus-create-verification/references/feature-map-example/search.md
+  - skills/arcus-create-verification/SKILL.md
+  - skills/arcus-ketchup/SKILL.md
+  - skills/arcus-maintain-verification/SKILL.md
+  - skills/arcus-mode/internal/architect.md
+  - skills/arcus-mode/internal/arena.md
+  - skills/arcus-mode/internal/benchmark-checklist.md
+  - skills/arcus-mode/internal/blast-radius.md
+  - skills/arcus-mode/internal/bro.md
+  - skills/arcus-mode/internal/figure-it-out.md
+  - skills/arcus-mode/internal/how.md
+  - skills/arcus-mode/internal/interrogate.md
+  - skills/arcus-mode/internal/no-comments.md
+  - skills/arcus-mode/internal/show-me-your-work.md
+  - skills/arcus-mode/internal/swarm.md
+  - skills/arcus-mode/internal/tdd.md
+  - skills/arcus-mode/internal/technical-writing.md
+  - skills/arcus-mode/internal/unslop.md
+  - skills/arcus-mode/playbooks/authoring-a-skill.md
+  - skills/arcus-mode/playbooks/autonomous-run.md
+  - skills/arcus-mode/playbooks/autopilot-full.md
+  - skills/arcus-mode/playbooks/autopilot-stack.md
+  - skills/arcus-mode/playbooks/babysit.md
+  - skills/arcus-mode/playbooks/bug-fix.md
+  - skills/arcus-mode/playbooks/eval.md
+  - skills/arcus-mode/playbooks/feature.md
+  - skills/arcus-mode/playbooks/hillclimb.md
+  - skills/arcus-mode/playbooks/investigation.md
+  - skills/arcus-mode/playbooks/multi-phase-plan.md
+  - skills/arcus-mode/playbooks/opening-a-pr.md
+  - skills/arcus-mode/playbooks/pause-safely.md
+  - skills/arcus-mode/playbooks/perf-issue.md
+  - skills/arcus-mode/playbooks/prototype.md
+  - skills/arcus-mode/playbooks/refactoring.md
+  - skills/arcus-mode/playbooks/runtime-forensics.md
+  - skills/arcus-mode/playbooks/session-pickup.md
+  - skills/arcus-mode/playbooks/shipping.md
+  - skills/arcus-mode/playbooks/trace-forensics.md
+  - skills/arcus-mode/playbooks/visual-parity.md
+  - skills/arcus-mode/playbooks/worktree-cleanup.md
+  - skills/arcus-mode/principles/principle-attack-the-premise.md
+  - skills/arcus-mode/principles/principle-boundary-discipline.md
+  - skills/arcus-mode/principles/principle-build-the-lever.md
+  - skills/arcus-mode/principles/principle-encode-lessons-in-structure.md
+  - skills/arcus-mode/principles/principle-exhaust-the-design-space.md
+  - skills/arcus-mode/principles/principle-experience-first.md
+  - skills/arcus-mode/principles/principle-explain-the-number.md
+  - skills/arcus-mode/principles/principle-fix-root-causes.md
+  - skills/arcus-mode/principles/principle-foundational-thinking.md
+  - skills/arcus-mode/principles/principle-guard-the-context-window.md
+  - skills/arcus-mode/principles/principle-laziness-protocol.md
+  - skills/arcus-mode/principles/principle-make-operations-idempotent.md
+  - skills/arcus-mode/principles/principle-migrate-callers-then-delete-legacy-apis.md
+  - skills/arcus-mode/principles/principle-minimize-reader-load.md
+  - skills/arcus-mode/principles/principle-model-the-domain.md
+  - skills/arcus-mode/principles/principle-never-block-on-the-human.md
+  - skills/arcus-mode/principles/principle-outcome-oriented-execution.md
+  - skills/arcus-mode/principles/principle-prove-it-works.md
+  - skills/arcus-mode/principles/principle-redesign-from-first-principles.md
+  - skills/arcus-mode/principles/principle-separate-before-serializing-shared-state.md
+  - skills/arcus-mode/principles/principle-sequence-verifiable-units.md
+  - skills/arcus-mode/principles/principle-subtract-before-you-add.md
+  - skills/arcus-mode/principles/principle-test-behavior-not-implementation.md
+  - skills/arcus-mode/principles/principle-type-system-discipline.md
+  - skills/arcus-mode/references/bugbot-triage.md
+  - skills/arcus-mode/SKILL.md
+  - skills/arcus-mode/worker.md
+  - skills/arcus-why/SKILL.md
+
+--------------------------------------------------------------------------------
+Archify (https://github.com/tt-a1i/archify)
+Copyright (c) 2026 tt-a1i (Archify)
+Copyright (c) 2025 Cocoon AI
+Archify originated from Cocoon-AI/architecture-diagram-generator:
+https://github.com/Cocoon-AI/architecture-diagram-generator
+Licensed under the Apache License, Version 2.0 (LICENSES/Apache-2.0.txt).
+
+  - skills/arcus-mode/internal/archify-visualization.md
+    (adapted; modification notice in the file header per Apache-2.0 Section 4(b))
+
+--------------------------------------------------------------------------------
+GoogleChrome/modern-web-guidance (https://github.com/GoogleChrome/modern-web-guidance)
+Copyright Google LLC.
+Licensed under the Apache License, Version 2.0 (LICENSES/Apache-2.0.txt).
+
+  - skills/arcus-mode/internal/modern-web-guidance.md
+    (adapted; modification notice in the file header per Apache-2.0 Section 4(b))

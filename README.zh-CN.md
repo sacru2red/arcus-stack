@@ -291,6 +291,8 @@ arcus-stack/
 
 ## 六大开源项目灵感来源与许可证声明
 
+本项目采用 MIT 许可证（[`LICENSE`](./LICENSE)）。源自 pstack（MIT, Copyright (c) 2026 Lauren Tan）、Archify 和 modern-web-guidance（均为 Apache-2.0）的文件及其版权声明列于 [`NOTICE`](./NOTICE)，许可证全文位于 [`LICENSES/`](./LICENSES/)。
+
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack)：*“欲速则先深潜”*（根本原因分析、最小改动面、可验证代码）
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)：自主执行循环与策略/执行分离
 - [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)：按角色委派与自动化工作流
