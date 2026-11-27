@@ -101,12 +101,35 @@ Test-Case "LICENSES reference followed by a period still fails when missing" 1 {
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See LICENSES/a."
 }
 
-Test-Case "quoted, fragment, URL and THIRD-PARTY LICENSES mentions resolve or are skipped" 0 {
+Test-Case "./LICENSES reference to a missing file fails" 1 {
+    param($d)
+    Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See ./LICENSES/missing-MIT.txt"
+}
+
+# Each line pins one guard of the license-reference regex: dropping that guard makes the
+# reference resolve to a non-existent path (or a skipped one get checked), so the case exits 1.
+Test-Case "wrapped, punctuated, fragment, URL and THIRD-PARTY LICENSES mentions resolve or are skipped" 0 {
     param($d)
     $Lines = @(
-        'Quoted: "LICENSES/pstack-MIT.txt" and `LICENSES/Apache-2.0.txt` and <LICENSES/pstack-MIT.txt>!',
+        'Double quotes: "LICENSES/pstack-MIT.txt"is',
+        'Single quotes: ''LICENSES/pstack-MIT.txt''s',
+        'Backticks: `LICENSES/Apache-2.0.txt`x',
+        'Angle brackets: <LICENSES/pstack-MIT.txt>x',
+        'Reference link: [LICENSES/pstack-MIT.txt][1]',
+        'Tight emphasis: *LICENSES/pstack-MIT.txt*x',
+        'Square brackets: [LICENSES/pstack-MIT.txt]',
+        'Emphasis: *LICENSES/pstack-MIT.txt*',
+        'Period: LICENSES/pstack-MIT.txt.',
+        'Comma: LICENSES/pstack-MIT.txt, then text',
+        'Exclamation: LICENSES/pstack-MIT.txt!',
+        'Question: LICENSES/pstack-MIT.txt?',
+        'Dot slash: ./LICENSES/pstack-MIT.txt',
         'Fragment: LICENSES/Apache-2.0.txt#L1',
-        'URL: https://example.com/LICENSES/none.txt and https://example.com/?f=LICENSES/none.txt',
+        'URL path: https://example.com/LICENSES/none.txt',
+        'Query value: https://example.com/?f=LICENSES/none.txt',
+        'Query start: https://example.com/a?LICENSES/none.txt',
+        'Query join: https://example.com/a?x=1&LICENSES/none.txt',
+        'Dotted name: see.LICENSES/none.txt',
         'Other tool: THIRD-PARTY-LICENSES/none.txt'
     )
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value $Lines
