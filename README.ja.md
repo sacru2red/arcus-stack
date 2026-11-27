@@ -16,7 +16,7 @@
   <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
   <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
   <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
-  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-69%20On--Demand-d29922?style=flat-square">
 </p>
 
 </div>
@@ -115,7 +115,7 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 *図2. メニューには15個の公開コアスキルのみを表示し、`skills/arcus-mode/` 内部モジュール、各スキル `references/`、ルート `DECISIONS.md` を必要時のみ相対リンクで読み込む2階層構造。*
 
 - **Tier 1（公開コアスキル15種）**: `skills/arcus-*/SKILL.md` のみがメニューに表示されます。各コアスキルは固有の `references/`（11ファイル）を同梱し、部分インストールでも独立動作します。
-- **Tier 2（`skills/arcus-mode/` 内部モジュール68個 ＋ `worker.md`）**: 原則24、プレイブック23、内部補助スキル20、リファレンス1（`bugbot-triage.md`）をメニュー外に格納し、必要時のみロードします。
+- **Tier 2（`skills/arcus-mode/` 内部モジュール69個 ＋ `worker.md`）**: 原則24、プレイブック23、内部補助スキル21、リファレンス1（`bugbot-triage.md`）をメニュー外に格納し、必要時のみロードします。
 
 ---
 
@@ -124,7 +124,7 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 | 比較項目 | `arcus-mode`（マスター動作モード） | `arcus-work-loop`（チェックリスト実行エンジン） |
 | :--- | :--- | :--- |
 | **役割** | セッション全体の設計判断、簡潔な文体、サブエージェント委譲規則を統括します。 | 確定した `- [ ]` チェックリストを受け取り、実装、検証、修正、完了（`[x]`）を完走します。 |
-| **適用範囲** | 24原則・23プレイブック・20内部モジュールから状況に合う手順を自動選択します。 | `arcus-plan` のチェックリストを引き継ぎ、実ビルド・テスト通過まで反復実行します。 |
+| **適用範囲** | 24原則・23プレイブック・21内部モジュールから状況に合う手順を自動選択します。 | `arcus-plan` のチェックリストを引き継ぎ、実ビルド・テスト通過まで反復実行します。 |
 | **使い分け** | セッション開始時や、原因調査・設計探索・性能改善など複合判断が必要なとき。 | 計画確定後、途中で止まらず最後まで実装と検証をやり切らせたいとき。 |
 
 ---
@@ -258,12 +258,12 @@ arcus-stack/
 │   ├── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
 │   └── validate.ps1             # フロントマター・相対リンク・15スキル・互換性自動検証スクリプト
 └── skills/                      # 公開コアスキル 15種 (+ 個別スキル references/ 11ファイル)
-    ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール 68個 + worker.md
+    ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール 69個 + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
     │   ├── playbooks/           # [内部] 23のタスクプレイブック (safe-migration, opening-a-pr など)
     │   ├── principles/          # [内部] 24の設計原則
-    │   ├── internal/            # [内部] 20の補助スキル (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization など)
+    │   ├── internal/            # [内部] 21の補助スキル (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization など)
     │   └── references/          # [内部] 1リファレンス (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/

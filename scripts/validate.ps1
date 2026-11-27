@@ -127,14 +127,16 @@ foreach ($Required in @("LICENSE", "NOTICE", "LICENSES\pstack-MIT.txt", "LICENSE
 $NoticePath = Join-Path $RepoRoot "NOTICE"
 $NoticeEntries = @()
 if (Test-Path -LiteralPath $NoticePath) {
-    $NoticeEntries = @([regex]::Matches((Get-Content -LiteralPath $NoticePath -Raw), '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
-    foreach ($Entry in $NoticeEntries) {
+    $NoticeRaw = Get-Content -LiteralPath $NoticePath -Raw
+    $NoticeEntries = @([regex]::Matches($NoticeRaw, '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
+    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '\((LICENSES/[^)\s]+)\)') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
+    foreach ($Entry in @($NoticeEntries) + @($NoticeLicenseRefs)) {
         if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Entry))) {
-            $Failures.Add("[License] NOTICE lists '$Entry' but the file does not exist")
+            $Failures.Add("[License] NOTICE references '$Entry' but the file does not exist")
         }
     }
 }
-Write-Host "[5/5] Checked license files and $($NoticeEntries.Count) NOTICE-attributed paths."
+Write-Host "[5/5] Checked license files, $($NoticeEntries.Count) NOTICE-attributed paths, and $($NoticeLicenseRefs.Count) license-text references."
 
 if ($Failures.Count -gt 0) {
     Write-Host "`nVALIDATION FAILED ($($Failures.Count) issues):" -ForegroundColor Red

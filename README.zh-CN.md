@@ -16,7 +16,7 @@
   <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
   <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
   <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
-  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-69%20On--Demand-d29922?style=flat-square">
 </p>
 
 </div>
@@ -115,7 +115,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 *图 2. 顶层菜单仅暴露 15 个公开核心技能，而 `skills/arcus-mode/` 内部模块、各技能自带 `references/` 与根目录 `DECISIONS.md` 仅在需要时按相对路径按需加载。*
 
 - **Tier 1（15 个公开核心技能）**：仅 `skills/arcus-*/SKILL.md` 出现在用户菜单中。独立技能自带 `references/`（11 个文件），支持按需部分安装而不报错。
-- **Tier 2（`skills/arcus-mode/` 68 个内部模块 + `worker.md`）**：包含 24 条原则、23 个剧本、20 个内部子技能和 1 份参考（`bugbot-triage.md`），不污染菜单，按需读取。
+- **Tier 2（`skills/arcus-mode/` 69 个内部模块 + `worker.md`）**：包含 24 条原则、23 个剧本、21 个内部子技能和 1 份参考（`bugbot-triage.md`），不污染菜单，按需读取。
 
 ---
 
@@ -124,7 +124,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 | 对比维度 | `arcus-mode`（主控运行模式） | `arcus-work-loop`（检查清单执行引擎） |
 | :--- | :--- | :--- |
 | **核心职责** | 统管整个会话的工程判断准则、精炼文风与子智能体委派规则。 | 接收已确认的 `- [ ]` 检查清单，循环执行实现、验证、修复与勾选完成（`[x]`）。 |
-| **适用范围** | 广度：从 24 条原则、23 个剧本与 20 个内部模块中按场景自动路由。 | 聚焦：承接 `arcus-plan` 清单，持续运行直至真实构建与测试全部通过。 |
+| **适用范围** | 广度：从 24 条原则、23 个剧本与 21 个内部模块中按场景自动路由。 | 聚焦：承接 `arcus-plan` 清单，持续运行直至真实构建与测试全部通过。 |
 | **何时调用** | 会话刚开始，或面对架构调研、排障、性能优化等开放式任务时。 | 方案已确认，希望助手不停顿地把清单逐项实现并验证到底时。 |
 
 ---
@@ -258,12 +258,12 @@ arcus-stack/
 │   ├── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
 │   └── validate.ps1             # Frontmatter、相对链接、15 项公开技能与跨工具兼容性校验脚本
 └── skills/                      # 面向用户的 15 个公开核心技能 (+ 各技能 references/ 11 个文件)
-    ├── arcus-mode/              # 主控模式 + 68 个内部封装模块 + worker.md
+    ├── arcus-mode/              # 主控模式 + 69 个内部封装模块 + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
     │   ├── playbooks/           # [内部] 23 个任务剧本 (safe-migration, opening-a-pr 等)
     │   ├── principles/          # [内部] 24 条工程原则
-    │   ├── internal/            # [内部] 20 个内部子技能 (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization 等)
+    │   ├── internal/            # [内部] 21 个内部子技能 (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization 等)
     │   └── references/          # [内部] 1 份参考 (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/
