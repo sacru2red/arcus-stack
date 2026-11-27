@@ -8,9 +8,9 @@ Classify each Bugbot thread before acting:
 
 - `fix`: The comment identifies a plausible correctness, security, privacy, data loss, auth, billing, migration, idempotency, race, or shipped-behavior issue. Fix it in the lowest owning PR, then reply with the commit SHA and resolve the thread.
 - `dismiss`: The comment matches a documented low-risk noisy pattern, and the current code/context proves the concern does not need a code change. Reply with a short reason and resolve the thread.
-- `ask`: The comment is novel, high-severity, security/privacy/data-related, or ambiguous. Ask the user instead of guessing.
+- `ask`: The comment is novel, high-severity, security/privacy/data-related, or ambiguous. In the top-level session, ask the user instead of guessing. Inside a [`worker.md`](../worker.md) subagent, never call a question tool: leave the thread unresolved and list it under an `Open questions` heading in your report so the top-level session can ask.
 
-When in doubt, ask. Skipping a noisy code-quality comment is cheap; skipping a real data or security bug is not.
+When in doubt, ask (or, inside a worker, report it as an open question). Skipping a noisy code-quality comment is cheap; skipping a real data or security bug is not.
 
 ## Learned pattern format
 

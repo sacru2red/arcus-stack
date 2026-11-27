@@ -27,7 +27,7 @@ The remaining triggers live only here:
 - Web UI, HTML/CSS layout or animation, or client-side JS/DOM → [./internal/modern-web-guidance.md](./internal/modern-web-guidance.md) first before writing code. When the task involves visual UI design, layout, styling, or component changes (and the user has not locked a single pixel spec), run [`arcus-ui-propose`](../arcus-ui-propose/SKILL.md) to capture 1 "Before" baseline screenshot and 3 distinct proposed variant screenshots (Option A, B, C) via sequential working-branch apply ➔ capture ➔ revert (`git checkout`) so the user picks from real screenshots before finalizing.
 - Visualization, architecture/workflow/sequence/dataflow/lifecycle/ERD/class/tree/timeline/waterfall diagramming, codebase architecture mapping, or 1-page visual explainer request → prioritize [`tt-a1i/archify`](https://github.com/tt-a1i/archify) per [./internal/archify-visualization.md](./internal/archify-visualization.md) (writing temporary outputs to `os.tmpdir()/archify/` unless a repo path is requested) before falling back to static Mermaid.
 - Prose, your reply included → [./internal/unslop.md](./internal/unslop.md). Docs, PR descriptions, commit messages → [./internal/technical-writing.md](./internal/technical-writing.md).
-- Before commit or review → [./internal/no-comments.md](./internal/no-comments.md) and [`arcus-review`](../arcus-review/SKILL.md).
+- Before commit or review → [./internal/no-comments.md](./internal/no-comments.md), and in the top-level session [`arcus-review`](../arcus-review/SKILL.md). Inside a [`worker.md`](./worker.md) subagent, the kickoff's bar is the whole bar: start no review round unless the kickoff asks for one.
 - Authn/authz, billing, PII or secrets, untrusted input sinks, CI workflows, or dependency manifests → [`arcus-security`](../arcus-security/SKILL.md) (local/isolated PoCs only, strict secret redaction, and non-blocking dependency and scanner checks).
 - Multi-step planning or tracking progress against a goal → [./internal/checklist.md](./internal/checklist.md) and [`arcus-plan`](../arcus-plan/SKILL.md).
 - Domain terminology, code/DB identifier mappings, business invariants, authz tiers, or legacy minefields → check the workspace's `ONBOARDING.md` (or `CONTEXT.md`) first and cross-check cited paths against live code, or build/update it via [`arcus-onboard`](../arcus-onboard/SKILL.md).
@@ -84,7 +84,7 @@ Read the leaf file in full (`./principles/principle-<title>.md`, with the title 
 
 **Just do it.** Use any available tool. Reversible work and external actions proceed without asking.
 
-**Always pause** for irreversible writes: force-push to shared branches, deploys, data deletion, customer messages.
+**Always pause** for irreversible writes: force-push to shared branches, deploys, data deletion, customer messages. Inside a [`worker.md`](./worker.md) subagent, pausing means stopping and reporting, never calling a question tool.
 
 **Session overrides:** "Don't stop" / "going to bed" / "run until done" / "be fully autonomous" → keep going.
 
