@@ -9,7 +9,8 @@ $Failures = [System.Collections.Generic.List[string]]::new()
 Write-Host "=== ARCUS-STACK Validation Suite ==="
 
 # 1. YAML Frontmatter Check (Strictly name & description in leading frontmatter block across skills/**/*.md)
-$SkillMarkdownFiles = Get-ChildItem -Path $SkillsRoot -Filter "*.md" -Recurse
+$IgnoredPathPattern = '[\\/](\.git|\.omc|\.audit|node_modules)[\\/]'
+$SkillMarkdownFiles = Get-ChildItem -Path $SkillsRoot -Filter "*.md" -Recurse | Where-Object { $_.FullName -notmatch $IgnoredPathPattern }
 $FrontmatterChecked = 0
 
 foreach ($File in $SkillMarkdownFiles) {
@@ -31,17 +32,17 @@ foreach ($File in $SkillMarkdownFiles) {
 }
 Write-Host "[1/4] Checked YAML frontmatter in $FrontmatterChecked skill markdown files."
 
-# 2. Relative Markdown Link Resolution Check (Stripping fenced & inline code spans first)
+# 2. Relative Markdown Link Resolution Check (Stripping fenced blocks, masking inline code spans)
 $AllMarkdownFiles = Get-ChildItem -Path $RepoRoot -Filter "*.md" -Recurse | Where-Object {
-    $_.FullName -notmatch '[\\/]\.git[\\/]'
+    $_.FullName -notmatch $IgnoredPathPattern
 }
 $LinksChecked = 0
 
 foreach ($File in $AllMarkdownFiles) {
     $Raw = Get-Content -LiteralPath $File.FullName -Raw
-    # Strip fenced code blocks and inline code spans to prevent false positives on example links
+    # Strip fenced code blocks; mask inline code spans with a placeholder so [`label`](path) links stay checkable
     $Stripped = [regex]::Replace($Raw, '(?s)```.*?```', '')
-    $Stripped = [regex]::Replace($Stripped, '`[^`\r\n]+`', '')
+    $Stripped = [regex]::Replace($Stripped, '`[^`\r\n]+`', 'X')
 
     $LinkMatches = [regex]::Matches($Stripped, '\[[^\]]+\]\(([^)]+)\)')
     foreach ($Lm in $LinkMatches) {
@@ -70,29 +71,52 @@ foreach ($Hit in $ForbiddenHits) {
 }
 Write-Host "[3/4] Checked $($SkillMarkdownFiles.Count) skill files for unadapted Cursor/pstack dependencies (Hits: $($ForbiddenHits.Count))."
 
-# 4. Two-Tier Public Skill Count & .agents/skills.json Parity Check
-$TopLevelSkills = @(Get-ChildItem -Path $SkillsRoot -Directory | Sort-Object Name)
+# 4. Two-Tier Public Skill Layout, Manifest JSON & .agents/skills.json Parity Check
+$TopLevelSkills = @(Get-ChildItem -Path $SkillsRoot -Directory | Where-Object { -not $_.Name.StartsWith('.') } | Sort-Object Name)
 if ($TopLevelSkills.Count -ne 15) {
     $Failures.Add("[Skill Count] Expected 15 public core skills under skills/, found $($TopLevelSkills.Count)")
 }
 foreach ($Dir in $TopLevelSkills) {
+    if ($Dir.Name -notlike 'arcus-*') {
+        $Failures.Add("[Skill Namespace] Public skill folder '$($Dir.Name)' must start with 'arcus-'")
+    }
     $EntryFile = Join-Path $Dir.FullName "SKILL.md"
     if (-not (Test-Path -LiteralPath $EntryFile)) {
         $Failures.Add("[Skill Entry] Missing SKILL.md in $($Dir.FullName)")
+        continue
+    }
+    $EntryFm = [regex]::Match((Get-Content -LiteralPath $EntryFile -Raw), '\A---\r?\n([\s\S]*?)\r?\n---')
+    $NameMatch = [regex]::Match($EntryFm.Groups[1].Value, '(?m)^name:\s*['']?([A-Za-z0-9_-]+)['']?\s*$')
+    if (-not $NameMatch.Success -or $NameMatch.Groups[1].Value -ne $Dir.Name) {
+        $Failures.Add("[Skill Name] Frontmatter name in $EntryFile must equal folder name '$($Dir.Name)'")
+    }
+}
+
+$ManifestFiles = @(
+    (Join-Path $RepoRoot "plugin.json"),
+    (Join-Path $RepoRoot ".agents\skills.json")
+) + @(Get-ChildItem -Path (Join-Path $RepoRoot ".claude-plugin") -Filter "*.json" -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+$ParsedManifests = @{}
+foreach ($Manifest in $ManifestFiles) {
+    if (-not (Test-Path -LiteralPath $Manifest)) {
+        $Failures.Add("[Manifest] Missing $Manifest")
+        continue
+    }
+    try {
+        $ParsedManifests[$Manifest] = Get-Content -LiteralPath $Manifest -Raw | ConvertFrom-Json
+    } catch {
+        $Failures.Add("[Manifest JSON] Invalid JSON in ${Manifest}: $($_.Exception.Message)")
     }
 }
 
 $SkillsJsonPath = Join-Path $RepoRoot ".agents\skills.json"
-if (-not (Test-Path -LiteralPath $SkillsJsonPath)) {
-    $Failures.Add("[Manifest] Missing .agents/skills.json")
-} else {
-    $SkillsJson = Get-Content -LiteralPath $SkillsJsonPath -Raw | ConvertFrom-Json
-    $EntryPaths = @($SkillsJson.entries | ForEach-Object { $_.path })
+if ($ParsedManifests.ContainsKey($SkillsJsonPath)) {
+    $EntryPaths = @($ParsedManifests[$SkillsJsonPath].entries | ForEach-Object { $_.path })
     if ($EntryPaths -notcontains "skills") {
         $Failures.Add("[Manifest Parity] .agents/skills.json entries ($($EntryPaths -join ', ')) must include 'skills'")
     }
 }
-Write-Host "[4/4] Verified $($TopLevelSkills.Count) public core skills and .agents/skills.json parity."
+Write-Host "[4/4] Verified $($TopLevelSkills.Count) public core skills and $($ManifestFiles.Count) JSON manifests."
 
 if ($Failures.Count -gt 0) {
     Write-Host "`nVALIDATION FAILED ($($Failures.Count) issues):" -ForegroundColor Red

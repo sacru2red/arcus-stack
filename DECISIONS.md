@@ -30,7 +30,7 @@ This document records the core architectural and directional decisions of **`arc
   - Encapsulate all 60+ internal modules (`principles/`, `playbooks/`, `internal/`, `references/`) inside `skills/arcus-mode/` (and self-contained skill `references/`), loaded on-demand via relative Markdown links.
   - Ensure standalone core skills (`arcus-plan`, `arcus-work-loop`, `arcus-review`, `arcus-security`, `arcus-ui-propose`) keep their essential templates inside their own `references/` folder so partial installation (`npx skills add --skill arcus-plan`) never causes `ENOENT` on `../arcus-mode/`.
   - *Rejected Alternative*: Flat top-level `skills/principle-*` folders or cross-skill hard dependencies that break on partial installation.
-- **Enforced By**: One-level directory layout under `skills/` and [`scripts/validate.ps1`](./scripts/validate.ps1).
+- **Enforced By**: One-level directory layout under `skills/` and [`scripts/validate.ps1`](./scripts/validate.ps1) (exactly 15 non-dot `skills/arcus-*` folders, each with a `SKILL.md` whose `name` equals the folder; dot-prefixed tool state such as `skills/.omc/` is ignored), with regression cases in [`scripts/test-validate.ps1`](./scripts/test-validate.ps1).
 
 ---
 
