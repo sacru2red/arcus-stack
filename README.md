@@ -1,6 +1,10 @@
-# 🏹 ARCUS-STACK (`arcus-stack`)
+<div align="center">
 
-<p align="center">
+# ARCUS-STACK
+
+**Zero-MCP, deep-first skill and workflow stack that runs identically across 5 AI coding agents**
+
+<p>
   <strong>English</strong> |
   <a href="./README.ko.md">한국어</a> |
   <a href="./README.ja.md">日本語</a> |
@@ -8,152 +12,206 @@
   <a href="./README.es.md">Español</a>
 </p>
 
-> **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(An anagram of **SACRU** — Universal Agent Skill & Workflow Stack)*
+<p>
+  <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
+  <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
+  <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+</p>
 
-**`arcus-stack`** is a universal skill and workflow pack that works out of the box across **`Antigravity` (`agy`), `Claude Code`, `Codex`, `Cursor`, and `OpenCode`**.
+</div>
+
+**ARCUS** (**A**gent **R**ules, **C**ommands & **U**niversal **S**kills) is a universal engineering workflow pack built on pure `SKILL.md` and `AGENTS.md` standards for **Antigravity (`agy`), Claude Code, Codex, Cursor, and OpenCode**.
+
+## 30-second quick start
+
+```bash
+# Install all 15 public core skills globally across all 5 agents
+npx skills add sacru2red/arcus-stack -g -y
+```
+
+Run the core pipeline in any supported agent right away:
+
+```text
+$arcus-mode      -> Recommended default: automatically applies the right principles, playbooks, and skills
+$arcus-plan      -> Trace root cause and generate a verification-gated checklist
+$arcus-review    -> Audit the plan or diff in an isolated subagent without author bias
+$arcus-work-loop -> Implement and check off items only after real build and test proof passes
+```
 
 ---
 
-## 💡 Why `arcus-stack`?
+## Common AI coding failures and how ARCUS prevents them
 
-When working in multi-agent environments like **T3 Code** or **Orca**, you constantly switch between or delegate across different coding agents (`agy`, `Claude Code`, `Codex`, `Cursor`, `OpenCode`). However, every agent expects skills and rules in different directories and frontmatter formats—making it frustratingly difficult to share the same workflows across all of them.
+ARCUS blocks seven recurring failure modes of single-session AI coding through workflow structure instead of wishful prompts.
 
-**`arcus-stack` was built to solve this fragmentation.** With zero MCP runtime overhead and strictly universal `SKILL.md` and `AGENTS.md` standards, it lets you invoke the exact same battle-tested skills no matter which agent or harness you are running.
+| Recurring AI coding failure | Structural defense in ARCUS-STACK | Skill or module |
+| :--- | :--- | :--- |
+| An active session cannot give its own work a genuinely critical review | Pinned-snapshot **isolated subagent review** plus a **code-first Review Ledger (`F-01`..)** judged before reading replies | `arcus-review` |
+| Destructive `DROP/RENAME COLUMN` or blocking DDL ships in one PR and breaks rolling deploys | Enforces 4-phase zero-downtime **Expand, Backfill and Verify, Contract** across separate PRs | `safe-migration.md` |
+| Agents overwrite UI layouts with a single unreviewed design | Captures **1 Before + 3 variant screenshots** safely on the working branch, applies only the chosen option, and carries Before/After proof to PRs/MRs | `arcus-ui-propose` |
+| Unbounded list reads, N+1 loops, and external HTTP/LLM calls inside DB transactions slip past unit tests | On-demand guardrails for query bounds, I/O outside transactions, bounded jittered retries, and PII log redaction | `backend-reliability.md` |
+| Reviews check authentication only and miss object-level IDOR, leaked secrets, and vulnerable packages | Isolated **trust-boundary and authz audit**, secret redaction, local-only negative tests, and Security Ledger (`S-01`..) | `arcus-security` |
+| Outdated web API workarounds and bloated `AGENTS.md` rule files | **Live Chrome web-platform guidance lookup** plus escalating repeated mistakes into types, lints, and tests while pruning dead prose | `modern-web-guidance`, `arcus-correct` |
+| Code changes land with vague summaries, leaving mechanism and trade-offs unclear | Automatic **engineering briefings** after plans and implementations translating repo jargon into clear CS mental models and trade-offs | `arcus-explain` |
 
-It distills and unifies the best ideas from six open-source projects:
-- **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
-- **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: `ultrawork` autonomous execution loops and strategy/execution separation
-- **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: Specialized role delegation (planning, execution, review) and autopilot workflows
-- **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: Context-engineered guardrails and mandatory verification evidence
-- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: Live web platform best-practice lookup (`npx -y modern-web-guidance@latest`) for HTML, CSS, and client-side JS/DOM (Apache-2.0)
-- **[`tt-a1i/archify`](https://github.com/tt-a1i/archify)**: Interactive HTML/SVG diagrams across 10 diagram types, 1-page visual explainers, and codebase architecture diagnosis prioritized automatically on visualization requests (Apache-2.0)
+---
 
-Beyond cross-agent compatibility, `arcus-stack` solves two structural blind spots of single-session AI coding:
+## End-to-end delivery pipeline
 
-### 1. Context-Isolated Review & The Review Ledger (`arcus-review`)
+Planning, isolated critique, guardrail-backed execution, security escalation, rule hygiene, and closing briefings form one closed loop.
 
-When the same agent session that wrote a plan or code reviews its own work, it inherits its own confirmation bias and blind spots—**a reviewer that shares the author's context shares the author's blind spots.** `arcus-review` breaks this cycle through **Context Isolation** and a **Review Ledger**:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/pipeline-light.svg">
+  <img alt="ARCUS Deep-First Delivery Pipeline" src="./assets/diagrams/pipeline-light.svg">
+</picture>
 
-- **Context-Isolated Sandbox**: Reviews run in a fresh subagent session on a pinned snapshot (`HEAD` SHA or diff hash) without the author's chat history or defensive framing. For design docs, it runs a **Cold-Reader Test** to verify an uninitiated reader can understand the design from the document alone, and checks external documentation beyond the repository.
-- **Persistent Review Ledger (`F-01`, `F-02`, ...)**: Every review tracks findings in a structured ledger table physically separated from the author's replies.
-- **Code-First Blind Verdict on Round 2+**: In multi-round reviews, the reviewer evaluates every open finding in the ledger (`OPEN`, `UNRESOLVED`, `DISPUTED`) by inspecting the **new code/doc snapshot first—before reading the author's replies or explanations**—to prevent being swayed by excuses before checking the facts:
+*Figure 1. Delivery loop from `$arcus-plan` through isolated `$arcus-review`, `$arcus-work-loop`, high-risk `$arcus-security` escalation, `$arcus-correct` rule hygiene, and `$arcus-explain` closing briefings.*
 
-| ID | Round | Pinned Snapshot | Severity | Target | Failure Scenario & Fix | Status |
+---
+
+## Five core capabilities
+
+### 1. Context-isolated review and code-first Review Ledger (`arcus-review`)
+A reviewer that shares the author's conversation context shares the author's blind spots. `arcus-review` pins a commit or diff snapshot and spawns a fresh isolated subagent to run a Cold-Reader comprehension test and external documentation checks. On Round 2 and later, the reviewer evaluates open findings against the **new code snapshot first before reading author replies**.
+
+**Example: `$arcus-review` Findings Ledger output format**
+
+| ID | Round | Pinned Snapshot | Severity | Target | Failure Scenario & Required Action | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Mid-loop question prompts block autonomous subagents. Defer prompt to top-level turn. | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Relative path breaks on partial install. Inline fallback rules. | `VALID_PUSHBACK` |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | Mid-loop question prompts stall autonomous subagents. Defer prompts to the top-level turn. | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | Relative path breaks on partial install. Inline fallback rules inside the skill body. | `VALID_PUSHBACK` |
 
 *(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. Automatic Modern Web Standards & Browser Compatibility (`modern-web-guidance`)
+### 2. Visual UI 4-screenshot proposal and PR/MR Before/After evidence (`arcus-ui-propose`)
+For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git checkout` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
 
-AI models frequently write outdated JavaScript workarounds or CSS hacks because their training data lags behind the modern web platform. With `arcus-stack`, when you work on HTML, CSS, or client-side JS/DOM (including inside React, Vue, or Svelte), you don't need to invoke a separate web skill or manually check `caniuse.com` for browser support. `modern-web-guidance` runs automatically under the hood during planning (`arcus-plan`), implementation (`arcus-work-loop`), and review (`arcus-review`):
+### 3. Zero-downtime migrations and backend reliability guardrails (`safe-migration.md`, `backend-reliability.md`)
+- **Zero-downtime migrations (`safe-migration.md`)**: Exempts live database schemas, persisted queues/caches, and rolling-deploy wire contracts from single-wave refactoring, enforcing online/`CONCURRENTLY` DDL, dual-write, chunked idempotent backfills, `N-1`/`N` rollback checks, and separate Contract PRs.
+- **Backend reliability (`backend-reliability.md`)**: Loads on demand for backend and data-access work to enforce bounded queries, N+1 elimination, external I/O outside DB transactions, explicit timeouts and cancellation, transient-only jittered retries, and redacted structured logs.
 
-1. **Live Official Guide Lookup**: Before writing UI code, the agent queries Google Chrome's latest web guidance catalog via `npx -y modern-web-guidance@latest search "<capability>"` and `retrieve "<id>"` rather than relying on outdated training weights.
-2. **Built-in Baseline & Browser Support Check**: Every retrieved guide includes current **Web Platform Baseline** status (`Widely available`, `Newly available`, or `Limited availability`) and exact browser version support (Chrome, Edge, Firefox, Safari).
-3. **Automatic Fallback Code**: Features that are `Baseline Widely available` are used cleanly without unnecessary polyfills, while newer features (`interpolate-size`, Anchor Positioning, View Transitions, etc.) automatically receive the guide's recommended `@supports` or graceful-degradation fallbacks.
+### 4. PoC-backed security, authz, and supply-chain audits (`arcus-security`)
+Escalates automatically when changes touch authn/authz, billing, PII or secrets, untrusted input sinks, CI workflows, or dependency manifests. Secrets are reported strictly masked (`sk_live_***`), `CRITICAL`/`HIGH` findings are proven with **local isolated negative tests** (never against live or staging hosts), and findings are tracked in a dedicated Security Ledger (`S-01`, `S-02`, ...).
+
+### 5. Live web standards, architecture visualization, and rule hygiene (`modern-web-guidance`, `archify`, `arcus-onboard`, `arcus-correct`)
+- **Live modern web standards**: Queries `npx -y modern-web-guidance@latest` before authoring HTML, CSS, or client-side JS so agents use current Web Platform Baseline status and apply `@supports` fallbacks only where needed.
+- **Architecture visualization (`archify`)**: Prioritizes `tt-a1i/archify` across 10 diagram types with OS temp-directory isolation (`D-010`) so working trees stay clean.
+- **Domain brain and rule hygiene**: `arcus-onboard` maintains a 1 to 2 page `ONBOARDING.md` with freshness tags (`[as of YYYY-MM-DD | Source: ...]`), and `arcus-correct` escalates recurring agent mistakes into architecture, types, lints, or tests while pruning dead or brittle prose rules.
 
 ---
 
-## 📦 Core Skills (`arcus-*`)
+## Two-tier skill encapsulation architecture
 
-| Skill | Category | Benefit & Description |
+Flattening dozens of granular rules into top-level `skills/` clutters slash menus (`/`) and wastes context tokens on every turn. Because all 5 agent skill scanners scan only one directory level under `skills/`, `arcus-stack` separates public entrypoints from internal modules.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/architecture-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/architecture-light.svg">
+  <img alt="Two-Tier Universal Skill Architecture" src="./assets/diagrams/architecture-light.svg">
+</picture>
+
+*Figure 2. Two-tier encapsulation keeping only 15 public core skills in the slash menu while loading `skills/arcus-mode/` internal modules, per-skill `references/`, and root `DECISIONS.md` on demand.*
+
+- **Tier 1 (15 public core skills)**: Only `skills/arcus-*/SKILL.md` appears in your skill menu. Standalone skills keep their own `references/` (11 files) so partial installation stays self-contained.
+- **Tier 2 (`skills/arcus-mode/` 68 internal modules + `worker.md`)**: 24 principles, 23 playbooks, 20 internal sub-skills, and 1 reference (`bugbot-triage.md`) stay hidden from user menus and load via relative links only when needed.
+
+---
+
+## `arcus-mode` vs. `arcus-work-loop`
+
+| Dimension | `arcus-mode` (Master operating mode) | `arcus-work-loop` (Checklist execution engine) |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **Core · Master Mode** | Raises the baseline quality of every response and edit without verbose filler. Automatically applies 24 engineering principles, 23 task playbooks, and disciplined subagent delegation. |
-| ⭐ **`arcus-plan`** | **Core · Planning & Checklist** | Prevents wasted implementation turns caused by jumping straight into code. Traces the root cause, maps affected files, and builds a goal-aligned execution and verification checklist (`- [ ]`) you can track to completion. |
-| ⭐ **`arcus-work-loop`** | **Core · Autonomous Execution** | Finishes complex tasks end-to-end without stopping halfway or leaving TODO stubs. Works through the task checklist item by item, marking steps done (`- [x]`) only after real test and build verification passes. |
-| ⭐ **`arcus-review`** | **Core · Isolated Plan & Code Review** | Prevents confirmation bias by reviewing plans and code in a context-isolated subagent on a pinned snapshot. Runs Cold-Reader comprehension tests on designs, checks external docs, and maintains a code-first Review Ledger across rounds. |
-| ⭐ **`arcus-explain`** | **Core · 20s CS Grad Explainer & Briefing** | Translates goals, architectural plans, completed code changes, or complex concepts into the clear, jargon-decoded tone of explaining to a 20-something SW/CS graduate (CS mental models, mechanism & trade-offs, zero childish analogies or fluff). Automatically briefs you at the end of `arcus-plan`, `arcus-work-loop`, and non-trivial `arcus-mode` runs. |
-| **`arcus-security`** | Security, Authz & Supply-Chain Audit | Catches real exploitable flaws instead of generic security filler. Runs context-isolated trust-boundary and authz/IDOR checks, traces untrusted input sinks, redacts secrets, executes non-blocking dependency and `PATH`-only scanner audits, proves `CRITICAL`/`HIGH` issues with local/isolated negative tests, and tracks findings in a persistent Security Ledger (`S-01`, `S-02`, ...). |
-| **`arcus-ui-propose`** | Visual UI 4-Screenshot Proposal | Stops agents from locking in a single unreviewed UI design. For visual UI tasks, captures **1 Baseline ("Before") screenshot** and **3 distinct proposed variant screenshots (`Option A`, `Option B`, `Option C`)** by sequentially applying, capturing, saving reusable `.patch` files, and reverting (`git checkout`) on your working branch—then applies only the option you pick. |
-| **`arcus-create-verification`** | App Verification | Saves you from manually launching and clicking through your app after every change. Generates and proves a project-local verification skill (`verify-<app>`) that drives your app like a real user. |
-| **`arcus-maintain-verification`** | Verification Upkeep | Keeps your project's automated verification skill from rotting as features evolve. Compares source code against live app behavior to fix outdated verification recipes. |
-| **`arcus-ketchup`** | Catch-up Briefing | Lets you see what changed and what needs your decision at a glance without reading long chat logs. Summarizes progress since your last message in plain language, diagrams, and decision-ready action items. |
-| **`arcus-why`** | History & Rationale | Saves time guessing why existing code was written a certain way. Traces `DECISIONS.md`, Git commits, and PR discussions to return cited design decisions and historical trade-offs. |
-| **`arcus-correct`** | Mistake Prevention & Rule Hygiene | Stops you from repeating the same corrections while keeping rule files lean. Escalates recurring mistakes into architecture, types, lint rules, or tests, and prunes dead, redundant, or brittle fact-claim rules. |
-| **`arcus-automate-me`** | Personal Style | Frees you from re-explaining your coding preferences and workflow habits in every session. Mines your recent transcripts and runs a quick interview to build a personal `*-mode` skill. |
-| **`arcus-onboard`** | Engineering & Domain Brain | Prevents agents from guessing domain rules or stepping on legacy code landmines. Mines your schemas/routes and runs a targeted interview to build a 1–2 page `ONBOARDING.md` covering system boundaries, domain term ↔ code/DB mappings, business formulas, authz/tier gates, legacy minefields, systems of record, and error conventions with `[as of YYYY-MM-DD \| Source: ...]` tags. |
-| **`arcus-skill-maker`** | Skill Converter | Makes external skills locked to a single tool usable across all 5 agents. Converts any workflow or external skill into the universal `arcus-*` standard. |
+| **Role** | Governs session-wide engineering judgment, concise prose, and subagent delegation. | Drives a confirmed `- [ ]` checklist through implement, verify, repair, and check-off cycles. |
+| **Scope** | Broad: selects dynamically from 24 principles, 23 playbooks, and 20 internal modules. | Focused: takes the `arcus-plan` checklist and loops until real build and test checks pass. |
+| **When to invoke** | At session start or for open-ended architecture, debugging, and performance work. | After a plan is approved and you want verified end-to-end execution without stopping halfway. |
 
 ---
 
-## 🎯 How to Use: `arcus-mode` vs. `arcus-work-loop` & Recommended Workflow
+## 15 core skills at a glance
 
-### 1. `arcus-mode` vs. `arcus-work-loop` — What's the Difference?
-
-| Dimension | 👑 **`arcus-mode` (Master Operating System)** | 🔄 **`arcus-work-loop` (Checklist Execution Engine)** |
+### 1. Daily core pipeline (5)
+| Skill | When to run | What you get |
 | :--- | :--- | :--- |
-| **Role** | Sets the agent's overall engineering persona, prose discipline, and decision rules for the entire session. | Drives a concrete implementation-and-verification checklist item by item until every check passes. |
-| **Scope** | Broad: selects from 24 engineering principles and 23 task playbooks (investigation, bug-fix, refactoring, arena comparison, PR babysitting, etc.), enforces concise `unslop` writing, and coordinates subagents. | Focused: takes the `- [ ]` checklist from `arcus-plan` (or builds one), edits code, runs tests/builds, repairs failures, and marks items `- [x]` only with real verification proof. |
-| **When to Invoke** | At the start of a session when you want senior-level engineering judgment, or when tackling open-ended problems (architecture, debugging, perf tuning, PR management). | Right after `arcus-plan` (and `arcus-review`) when the plan is decided and you want the agent to execute and verify every checklist step to completion without stopping halfway. |
+| **`arcus-mode`** | Session start, open-ended engineering | Automatic routing across 24 principles, 23 playbooks, concise prose, and subagent rules |
+| **`arcus-plan`** | Before modifying production code | Root-cause trace, blast-radius map, and verification-gated checklist (`- [ ]`) |
+| **`arcus-work-loop`** | Implementing an approved plan | Autonomous execution loop marking `- [x]` only after real test and build proof passes |
+| **`arcus-review`** | Auditing a plan, diff, or PR | Context-isolated, code-first review with a persistent Findings Ledger (`F-01`..) |
+| **`arcus-explain`** | Aligning goals or unpacking changes | Jargon-decoded briefing covering mental model, mechanism, trade-offs, and verification |
 
-### 2. Recommended Step-by-Step Pipeline
+### 2. Security, visual UI, and verification (4)
+| Skill | When to run | What you get |
+| :--- | :--- | :--- |
+| **`arcus-security`** | Authz, billing, secrets, CI, or dependency audits | Local negative PoC tests, masked secret reports, non-blocking audits, and `S-01`.. ledger |
+| **`arcus-ui-propose`** | Layout, styling, or component UI changes | 1 Before + 3 variant screenshots, reusable `.patch` files, and clean single-option apply |
+| **`arcus-create-verification`** | Repo lacks user-POV app verification | Project-local `verify-<app>` skill that launches and exercises real user flows |
+| **`arcus-maintain-verification`** | Feature changes broke older verify recipes | Updated verification skill and feature map reconciled against live code and app behavior |
 
-1. **Align & Plan (`$arcus-plan`)**: Investigate the root cause, map affected files, generate an actionable execution & verification checklist (`- [ ]`), and get an automatic **`arcus-explain`** briefing (20s CS grad mental model & trade-off summary).
-2. **Isolated Critique (`$arcus-review`)**: Spawn a context-isolated subagent to critique the plan (Cold-Reader test & premise check) before touching production code.
-3. **Autonomous Execution (`$arcus-work-loop`)**: Execute the approved checklist in a self-verifying loop until every item is checked off (`- [x]`), closing with an automatic **`arcus-explain`** completion briefing.
-4. **Final Code Review & Decision Log (`$arcus-review` / `DECISIONS.md`)**: Run an isolated diff review against the Review Ledger. When major architectural trade-offs or rule graduations (`$arcus-correct`) occur, agents ask for your explicit authorization to record them in `DECISIONS.md` (or remember your project opt-out via `.git/config`, `AGENTS.md`, or `.agents/settings.json`).
+### 3. Domain brain, history, and rule hygiene (4)
+| Skill | When to run | What you get |
+| :--- | :--- | :--- |
+| **`arcus-onboard`** | Joining a repo or capturing domain rules | 1 to 2 page `ONBOARDING.md` (term mappings, invariants, minefields) with date tags |
+| **`arcus-why`** | Tracing why existing code works a certain way | Cited rationale from `DECISIONS.md`, git commits, and PR discussions |
+| **`arcus-correct`** | Agent mistakes repeat or rules grow stale | Mistakes escalated into architecture, types, lints, or tests; dead rules and fact claims pruned |
+| **`arcus-ketchup`** | Catching up after a long session | Plain-language diff summary and decision-ready action items since your last message |
+
+### 4. Personalization and skill conversion (2)
+| Skill | When to run | What you get |
+| :--- | :--- | :--- |
+| **`arcus-automate-me`** | Tired of repeating personal coding preferences | Personal `*-mode` skill built from recent transcripts and a brief interview |
+| **`arcus-skill-maker`** | Porting external skills to all 5 agents | Validated Zero-MCP `arcus-*` skill conforming to the universal specification |
+
+### Which command should I run?
+- *"Trace the root cause of this bug or feature and write a verified plan"* -> **`$arcus-plan`**
+- *"Check my plan or PR diff for blind spots and missing edge cases"* -> **`$arcus-review`**
+- *"Execute this checklist until all tests and builds pass"* -> **`$arcus-work-loop`**
+- *"Show me 3 rendered UI options against the current screen before changing code"* -> **`$arcus-ui-propose`**
+- *"Audit this change for IDOR, leaked secrets, and vulnerable dependencies"* -> **`$arcus-security`**
+- *"Stop agents from repeating this mistake using types, lints, or tests"* -> **`$arcus-correct`**
+- *"Pick the right skills and principles automatically for the whole session"* -> **`$arcus-mode`**
 
 ---
 
-## 🏗️ Architecture: Two-Tier Skill Encapsulation
+## Installation, directory structure, and credits
 
-Importing dozens of granular skills directly into the top-level `skills/` directory pollutes your slash-command menu (`/`) and bloats agent context. `arcus-stack` solves this with a **two-tier encapsulation layout**:
+<details>
+<summary><strong>All installation and update methods (per-project install, plugin managers, local symlinks, renamed skill cleanup)</strong></summary>
 
-1. **User-Facing Core Skills (15 skills)**: Placed at `skills/arcus-*/SKILL.md`. Only these 15 high-level entrypoints appear in your skill menu.
-2. **Encapsulated Internal Modules (60+ files)**: Placed inside `skills/arcus-mode/` (`principles/`, `playbooks/`, `internal/`, `references/`). Because agent skill scanners only scan one level deep under `skills/`, helper modules like `unslop`, `bro`, `architect`, `swarm`, `arena`, `interrogate`, `checklist`, `decisions`, `modern-web-guidance`, `archify-visualization`, `typescript-best-practices`, `backend-reliability`, 24 principles, 23 playbooks, and 20 internal sub-skills remain invisible in user menus while being loaded on-demand by the agent via relative links.
-
----
-
-## 🚀 Installation & Updating
-
-### Method 1. `npx skills` CLI (Recommended — Global or Per-Project)
+### Method 1. `npx skills` CLI (recommended)
 
 ```bash
-# Install all skills globally across all 5 agents on your machine
+# Install or update all skills globally across all 5 agents
 npx skills add sacru2red/arcus-stack -g -y
+# or
+npx skills update
 
 # Install specific skills into the current project only
 npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
 ```
 
-#### 🔄 Updating via `npx skills`
-To pull the latest skills and updates from GitHub at any time, simply re-run the global install command (or run `npx skills update`):
-```bash
-npx skills add sacru2red/arcus-stack -g -y
-# or
-npx skills update
-```
-
-> **Note on Renamed or Removed Skills:** `npx skills` does not automatically delete skills that were renamed or removed upstream (for example, `arcus-work` → `arcus-work-loop` or `arcus-in-your-own-words` → `arcus-explain`). If an old skill name still appears in your agent list after updating, remove it once with:
+> **Cleanup for renamed skills (`D-003`):** `npx skills add` and `update` do not automatically delete upstream-renamed skills (`arcus-work` to `arcus-work-loop`, `arcus-in-your-own-words` to `arcus-explain`). Remove old names once if they still appear:
 > ```bash
 > npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
-### Method 2. Native Agent Plugin Managers
+### Method 2. Native agent plugin managers
 
 - **Antigravity (`agy`)**:
   ```bash
-  # Install
-  agy plugin install https://github.com/sacru2red/arcus-stack
-
-  # Update (re-run install to fetch latest)
   agy plugin install https://github.com/sacru2red/arcus-stack
   ```
 - **Claude Code**:
   ```bash
-  # Install
   /plugin marketplace add https://github.com/sacru2red/arcus-stack
   /plugin install arcus-stack
-
   # Update
   /plugin update arcus-stack
   ```
 
-### Method 3. Local Clone + Global Symlinks (`scripts/install-global.ps1` / `.sh`)
+### Method 3. Local clone + global symlinks (`scripts/install-global.ps1` / `.sh`)
 
-If you clone this repository locally and run the symlink script, all 15 skills are linked directly to the global directories of all 5 agents (including T3 Code's isolated Antigravity sandbox).
+Links all 15 public skills directly into the global directories of all 5 agents, including T3 Code's Antigravity sandbox.
 
 ```powershell
 # Windows (PowerShell)
@@ -165,15 +223,12 @@ If you clone this repository locally and run the symlink script, all 15 skills a
 ./scripts/install-global.sh
 ```
 
-#### 🔄 Updating a Local Clone
-Because symlinks point directly to your local clone, `git pull` updates every agent immediately. If new skill folders were added, re-run the script once:
-```bash
-git pull && ./scripts/install-global.sh   # (or .\scripts\install-global.ps1 on Windows)
-```
+Because symlinks point to your local clone, `git pull` updates every agent immediately (re-run the script once only when a new top-level skill folder is added).
 
----
+</details>
 
-## 🗂️ Directory Structure
+<details>
+<summary><strong>Full directory structure and validation command</strong></summary>
 
 ```text
 arcus-stack/
@@ -190,19 +245,26 @@ arcus-stack/
 │   └── skills.json              # Workspace skill discovery manifest
 ├── AGENTS.md                    # Root rules bridge
 ├── CLAUDE.md                    # Claude Code rules bridge
+├── assets/
+│   └── diagrams/                # Archify GitHub Dark/Light static SVGs (4 files)
+│       ├── pipeline-dark.svg
+│       ├── pipeline-light.svg
+│       ├── architecture-dark.svg
+│       └── architecture-light.svg
 ├── rules/
 │   └── AGENTS.md                # Core engineering rules shared across all 5 agents
 ├── scripts/
 │   ├── install-global.ps1       # Windows global symlink installer (5 agents + T3 Code)
-│   └── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
-└── skills/                      # ⭐ 15 User-Facing Core Skills
-    ├── arcus-mode/              # Master mode + encapsulated internal modules
+│   ├── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
+│   └── validate.ps1             # Frontmatter, relative-link, 15-skill, and portability validator
+└── skills/                      # 15 public core skills (+ 11 per-skill references/ files)
+    ├── arcus-mode/              # Master mode + 68 encapsulated internal modules + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [Internal] 23 task playbooks
+    │   ├── playbooks/           # [Internal] 23 task playbooks (safe-migration, opening-a-pr, ...)
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 20 helper sub-skills (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability, etc.)
-    │   └── references/          # [Internal] bugbot-triage.md
+    │   ├── internal/            # [Internal] 20 helper sub-skills (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization, ...)
+    │   └── references/          # [Internal] 1 reference (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
@@ -218,3 +280,23 @@ arcus-stack/
     ├── arcus-onboard/
     └── arcus-skill-maker/
 ```
+
+Re-verify the 15 public core skills, YAML frontmatter, relative Markdown links, and portability rules at any time:
+
+```powershell
+.\scripts\validate.ps1
+```
+
+</details>
+
+<details>
+<summary><strong>Six open-source inspirations and license attributions</strong></summary>
+
+- [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
+- [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Autonomous execution loops and strategy/execution separation
+- [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode): Role-specialized delegation and autopilot workflows
+- [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity): Phased quality guardrails and execution-evidence completion gates
+- [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance): Live modern web platform guidance lookup for HTML, CSS, and client-side JS (Apache-2.0)
+- [`tt-a1i/archify`](https://github.com/tt-a1i/archify): 10-type interactive diagram and static SVG visualization engine (Apache-2.0)
+
+</details>

@@ -1,6 +1,10 @@
-# 🏹 ARCUS-STACK (`arcus-stack`)
+<div align="center">
 
-<p align="center">
+# ARCUS-STACK
+
+**在 5 个 AI 编程助手中开箱即用的 Zero-MCP 深度优先技能与工作流栈**
+
+<p>
   <a href="./README.md">English</a> |
   <a href="./README.ko.md">한국어</a> |
   <a href="./README.ja.md">日本語</a> |
@@ -8,149 +12,206 @@
   <a href="./README.es.md">Español</a>
 </p>
 
-> **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(**SACRU** 的字母异位词 — 兼容 5 个 AI 编程助手的通用技能与工作流栈)*
+<p>
+  <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
+  <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
+  <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+</p>
 
-**`arcus-stack`** 是一套无需修改即可在 **`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor` 和 `OpenCode`** 5 个 AI 编程助手中通用的技能与工作流合集。
+</div>
+
+**ARCUS**（**A**gent **R**ules, **C**ommands & **U**niversal **S**kills）是一套完全基于标准 `SKILL.md` 与 `AGENTS.md` 的工程工作流合集，在 **Antigravity (`agy`)、Claude Code、Codex、Cursor 和 OpenCode** 中保持一致行为。
+
+## 30 秒快速开始
+
+```bash
+# 一次性为当前电脑上的 5 个编程助手全局安装全部 15 个公开核心技能
+npx skills add sacru2red/arcus-stack -g -y
+```
+
+安装完成后即可在任意受支持的助手中直接运行主流水线：
+
+```text
+$arcus-mode      -> 默认推荐入口：按场景自动调度合适的原则、剧本与技能
+$arcus-plan      -> 定位根本原因并生成附带验证条件的执行检查清单
+$arcus-review    -> 启动无作者偏见的隔离子智能体审查方案与代码变更
+$arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
+```
 
 ---
 
-## 💡 为什么要做这个项目？
+## 传统 AI 编程的常见痛点与 ARCUS 解法
 
-在 **T3 Code** 或 **Orca** 等多智能体编排环境中开发时，我们经常需要根据任务在不同编程助手（`agy`、`Claude Code`、`Codex`、`Cursor`、`OpenCode`）之间切换或并行调用。然而，不同工具读取技能的目录结构和配置格式各不相同，**导致在某个工具中顺手的技能无法在调用其他助手时直接复用**，非常不便。
+通过工作流结构而非口头提示，拦截单会话 AI 编程中最常重复出现的 7 类问题。
 
-**`arcus-stack` 正是为了解决这种碎片化问题而生。** 它不依赖沉重的 MCP 服务端进程，仅使用 5 个工具均原生支持的 `SKILL.md` 与 `AGENTS.md` 标准规范，让你无论在哪个环境中调用哪个助手，都能获得完全一致的技能与工程准则。
+| 传统 AI 编程的反复失败 | ARCUS-STACK 的结构化解法 | 对应技能 / 模块 |
+| :--- | :--- | :--- |
+| 正在进行的会话无法对自己的产出做出真正批判性的审查 | 基于固定快照的 **隔离子智能体审查** + 先查代码后看回复的 **问题台账（`F-01`..）** | `arcus-review` |
+| 在单个 PR 中执行 `DROP/RENAME COLUMN` 或锁表 DDL 导致线上故障 | 强制按 **Expand、Backfill & Verify、Contract** 分离 PR 执行零停机迁移 | `safe-migration.md` |
+| UI 改动时助手擅自敲定单一设计并直接覆盖 | 在当前分支安全采集 **Before + 3 套方案截图** 对比选择，仅应用选定方案并衔接 PR 前后图证 | `arcus-ui-propose` |
+| 无分页查询、N+1 循环、数据库事务内调用外部 HTTP/LLM 穿透单测上线 | 按需加载查询上限、事务外 I/O 隔离、幂等抖动重试与 PII 日志脱敏护栏 | `backend-reliability.md` |
+| 只查认证不查对象越权（IDOR）、密钥泄露与供应链漏洞 | 上下文隔离的 **信任边界与越权审计**、密钥脱敏、本地隔离负向测试与安全台账（`S-01`..） | `arcus-security` |
+| 编写过时 Web API 兼容补丁且 `AGENTS.md` 规则文件不断膨胀 | **实时查询 Chrome 现代 Web 标准** + 将反复犯错升级为类型与 Lint 并清理无效规则 | `modern-web-guidance`, `arcus-correct` |
+| 改完代码只给出笼统总结，难以看清底层机制与取舍 | 每次规划或实现结束后自动输出 **核心工程简报**，用标准 CS 模型阐明机制与权衡 | `arcus-explain` |
 
-本项目融合了以下六个开源项目的核心优势：
-- **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**：*“欲速则先深潜”*（深挖根本原因、最小化改动范围、编写可验证的代码）
-- **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**：自主循环直至任务彻底完成的 `ultrawork` 模式与策略/执行分离
-- **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**：规划、实现、审查角色分工与自动化工作流
-- **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**：分阶段质量护栏与基于真实运行证据的完成校验
-- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**：在编写 HTML、CSS 与客户端 JS 时实时检索最新现代 Web 标准指南（`npx -y modern-web-guidance@latest`，Apache-2.0）
-- **[`tt-a1i/archify`](https://github.com/tt-a1i/archify)**：涵盖架构、工作流、时序、ERD 等 10 类交互式 HTML/SVG 图表与单页可视化解说器（收到可视化请求时优先调度，Apache-2.0）
+---
 
-除了跨工具兼容之外，使用 `arcus-stack` 的核心理由在于它从架构上解决了传统单会话 AI 编程的两大痛点：
+## 端到端交付流水线
 
-### 1. 摆脱自身偏见的上下文隔离审查与问题台账（`arcus-review`）
+规划、隔离审查、护栏驱动的自主执行、高风险安全升级、规则治理与收尾简报构成完整闭环。
 
-如果在完成设计或编写代码的同一个会话中进行审查，审查者会完全继承原有的决策路径与思维盲区——**共享上下文的审查者也会共享盲区。** `arcus-review` 通过 **上下文隔离** 与 **问题台账（Review Ledger）** 解决这一问题：
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/pipeline-light.svg">
+  <img alt="ARCUS Deep-First Delivery Pipeline" src="./assets/diagrams/pipeline-light.svg">
+</picture>
 
-- **脱离实现上下文的隔离沙箱**：锁定待审查的提交或快照后，由不携带作者聊天记录的新子智能体从零审视设计文档与代码。不仅局限于仓库内部，还会主动查阅外部参考资料，并通过“冷读者测试”检验不了解背景的读者能否仅凭文档看懂设计。
-- **持久化问题台账（Review Ledger — `F-01`, `F-02`, ...）**：每次审查都会维护结构化的问题台账表格，并将问题列表与作者的回复说明在结构上物理分离。
-- **“先看代码、后看回复”的盲评机制（第 2 轮起）**：在后续轮次的审查中，审查者在浏览新改动或 **打开作者的回复解释之前，必须先仅凭最新代码/文档快照** 对台账中的遗留问题逐一作出裁定（已解决 `RESOLVED`、未解决 `UNRESOLVED`、反驳合理 `VALID_PUSHBACK` 或存在分歧 `DISPUTED`）：
+*图 1. 从 `$arcus-plan` 出发，经由隔离 `$arcus-review`、`$arcus-work-loop`、高风险 `$arcus-security` 升级、`$arcus-correct` 规则升级到 `$arcus-explain` 简报的交付闭环。*
+
+---
+
+## 五大核心能力
+
+### 1. 上下文隔离审查与代码优先问题台账 (`arcus-review`)
+共享作者上下文的审查者也会共享相同的思维盲区。`arcus-review` 锁定提交或 diff 快照并启动全新隔离子智能体，执行无背景读者理解测试（Cold-Reader Test）与外部官方文档核对。从第 2 轮起，审查者在阅读作者回复之前，必须 **先仅凭最新代码快照** 裁定遗留问题状态。
+
+**示例：`$arcus-review` 问题台账输出格式**
 
 | ID | 轮次 | 锁定快照 | 严重度 | 目标位置 | 故障场景与修复要求 | 状态 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自主子智能体运行中途弹窗提问会导致流程挂起，需移交顶层交互回合。 | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分安装时跨目录相对路径可能失效，需内联兜底规则。 | `VALID_PUSHBACK` |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自主子智能体运行中途提问会导致流程挂起，需移交顶层交互回合。 | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分安装时相对路径可能失效，需在技能正文内联兜底规则。 | `VALID_PUSHBACK` |
 
-*(裁定状态: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+*(状态：`OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. 现代 Web 标准与浏览器兼容性自动应用（`modern-web-guidance`）
+### 2. UI 4 张截图方案对比与 PR/MR 前后图证 (`arcus-ui-propose`)
+在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git checkout` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
 
-受限于训练数据截止时间，AI 模型经常会用过时的 JS 补丁去实现早已被现代 CSS 或 Web 标准原生支持的功能。使用 `arcus-stack` 开发 HTML、CSS 或客户端 JS（包括 React、Vue、Svelte 等框架内部）时，你无需手动调用额外技能，也不必每次去 `caniuse.com` 查阅浏览器支持率。在规划（`arcus-plan`）、实现（`arcus-work-loop`）和审查（`arcus-review`）阶段，系统会在底层自动触发 `modern-web-guidance`：
+### 3. 零停机数据库迁移与后端可靠性护栏 (`safe-migration.md`, `backend-reliability.md`)
+- **零停机迁移 (`safe-migration.md`)**：将线上数据库 Schema、持久化队列/缓存与滚动部署契约从单波次重构规则中豁免，强制采用在线/`CONCURRENTLY` DDL、双写、分块幂等回填、`N-1`/`N` 回滚校验及独立 Contract PR。
+- **后端可靠性 (`backend-reliability.md`)**：按需约束列表查询上限、消除 N+1 循环、将外部 I/O 移出数据库事务、配置超时与取消传播、仅对瞬时故障启用带抖动的有界重试，并避免在日志中泄露密钥或 PII。
 
-1. **实时检索官方最新指南**：助手不会依赖模型训练权重中过时的旧写法，而是在动手前自动调用 `npx -y modern-web-guidance@latest search "<功能>"` 与 `retrieve "<ID>"`，获取 Google Chrome 团队维护的最新 Web 最佳实践。
-2. **内置 Baseline 与浏览器兼容性判定**：检索出的每篇指南均附带 **Web Platform Baseline** 等级以及四大主流浏览器（Chrome、Edge、Firefox、Safari）的具体支持版本。
-3. **自动编写降级与兜底代码（Fallback）**：对已广泛支持（`Widely available`）的特性直接采用原生简洁写法；对部分浏览器尚未支持的新特性，则严格按照指南自动补齐 `@supports` 或渐进增强兜底代码。
+### 4. 基于 PoC 的安全、鉴权与供应链审计 (`arcus-security`)
+改动涉及认证/鉴权、计费、密钥或 PII、不可信输入汇聚点、CI 工作流或依赖清单时触发隔离审计。密钥统一以 `sk_live_***` 形式脱敏输出，`CRITICAL`/`HIGH` 风险仅通过 **本地隔离负向测试** 证实（严禁触碰线上或预发环境），并在独立安全台账（`S-01`, `S-02`, ...）中追踪。
+
+### 5. 现代 Web 标准实时查询、架构可视化与规则卫生 (`modern-web-guidance`, `archify`, `arcus-onboard`, `arcus-correct`)
+- **现代 Web 标准**：编写 HTML/CSS/客户端 JS 前自动通过 `npx -y modern-web-guidance@latest` 查询 Google Chrome 官方指南与 Web Platform Baseline 状态，仅在必要处补齐 `@supports` 降级方案。
+- **架构可视化 (`archify`)**：处理 10 类系统与流程图请求时优先调用 `tt-a1i/archify`，并将中间产物隔离在系统临时目录（`D-010`）以保持工作树干净。
+- **领域地图与规则卫生**：`arcus-onboard` 维护带日期与来源标签的 `ONBOARDING.md`，`arcus-correct` 将反复犯错升级为架构、类型、Lint 或测试约束，同时清理无效或易过时的文字规则。
 
 ---
 
-## 📦 核心技能 (`arcus-*`)
+## 双层技能封装架构
 
-| 技能名称 | 类别 | 核心收益与功能说明 |
+若将数十个细粒度规则平铺到顶层 `skills/` 目录，会导致斜杠命令（`/`）列表冗长并在每轮对话中浪费上下文。利用 5 个助手仅扫描 `skills/` 下一级目录的特性，`arcus-stack` 将公开入口与内部模块清晰分层。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/architecture-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/architecture-light.svg">
+  <img alt="Two-Tier Universal Skill Architecture" src="./assets/diagrams/architecture-light.svg">
+</picture>
+
+*图 2. 顶层菜单仅暴露 15 个公开核心技能，而 `skills/arcus-mode/` 内部模块、各技能自带 `references/` 与根目录 `DECISIONS.md` 仅在需要时按相对路径按需加载。*
+
+- **Tier 1（15 个公开核心技能）**：仅 `skills/arcus-*/SKILL.md` 出现在用户菜单中。独立技能自带 `references/`（11 个文件），支持按需部分安装而不报错。
+- **Tier 2（`skills/arcus-mode/` 68 个内部模块 + `worker.md`）**：包含 24 条原则、23 个剧本、20 个内部子技能和 1 份参考（`bugbot-triage.md`），不污染菜单，按需读取。
+
+---
+
+## `arcus-mode` 与 `arcus-work-loop` 的区别
+
+| 对比维度 | `arcus-mode`（主控运行模式） | `arcus-work-loop`（检查清单执行引擎） |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **核心 · 主控模式** | 去除客套废话，直接获得简洁回答与经过验证的代码，全面提升助手的默认工程水准。根据任务自动应用 24 条工程原则、23 个任务剧本以及子智能体委派规范。 |
-| ⭐ **`arcus-plan`** | **核心 · 规划与检查清单** | 避免一上来就改代码导致方向跑偏或遗漏需求。在写代码前先定位根本原因与改动影响范围，并围绕当前任务目标生成可逐项追踪的执行与验证检查清单（`- [ ]`）。 |
-| ⭐ **`arcus-work-loop`** | **核心 · 自主执行循环** | 杜绝半途而废或留下未完成的占位代码，将任务一气呵成执行到底。按任务检查清单逐项推进，仅在真实测试与构建验证通过后才将条目勾选为完成（`- [x]`）。 |
-| ⭐ **`arcus-review`** | **核心 · 上下文隔离的计划与代码审查** | 在不继承作者上下文与盲区的隔离子智能体中，基于固定快照审查设计方案与代码。涵盖无背景读者的文档可理解性测试、外部参考资料核对，以及基于问题台账的“先看代码、后看回复”多轮评审机制。 |
-| ⭐ **`arcus-explain`** | **核心 · 目标对齐与 CS 科班视角深度解说** | 以**向 20 多岁软件工程/计算机专业本科毕业生（初级工程师）讲解的清晰语调**，解说需求目标、架构方案、已完成的代码改动或复杂概念（拒绝幼稚比喻与空洞套话，用标准 CS 心智模型、运行机制与权衡取舍进行拆解）。在 `arcus-plan`、`arcus-work-loop` 和 `arcus-mode` 结束时自动提供核心简报。 |
-| **`arcus-security`** | 安全、鉴权与供应链审计 | 剔除空泛的安全套话，只报告有实证的可利用风险。在上下文隔离下梳理信任边界、水平/垂直越权（IDOR/BOLA）与不可信输入汇聚点，严格脱敏密钥，非阻塞运行依赖与静态扫描，使用本地隔离负向测试验证 `CRITICAL`/`HIGH` 问题，并在安全台账（`S-01`, `S-02`, ...）中持续追踪。 |
-| **`arcus-ui-propose`** | UI 4 张截图可视化方案对比 | 防止助手在 UI 任务中自作主张锁定单一设计。在当前工作分支上按“依次应用 ➔ 截图 ➔ 保存 `.patch` 补丁 ➔ `git checkout` 还原”的安全流程，采集 **1 张修改前（Before）基准截图** 和 **3 张不同设计提案（Option A、B、C）截图** 并排对比，待你选定后再即时应用所选方案。 |
-| **`arcus-create-verification`** | 生成应用验证技能 | 免去每次改动后人工启动应用逐一点选测试的繁琐工作。自动生成并实测一个像真实用户一样启动并操作应用的项目专属验证技能（`verify-<app>`）。 |
-| **`arcus-maintain-verification`** | 维护应用验证技能 | 防止业务代码更新后原有的验证流程过期失效。对比最新源码与真实运行表现，自动校准并更新项目的验证技能与功能清单。 |
-| **`arcus-ketchup`** | 进度简报 | 无需从头翻阅冗长的聊天记录，一眼看清当前进展以及需要你拍板的事项。用大白话、流程图和带推荐理由的待决策清单总结你上一条消息以来的所有变化。 |
-| **`arcus-why`** | 历史变更溯源 | 省去对着现有代码盲目猜测“当时为什么这么写”的时间。通过追溯 `DECISIONS.md`、Git 提交记录与 PR 讨论，有理有据地还原当初的设计考量与权衡。 |
-| **`arcus-correct`** | 杜绝重复犯错与规则瘦身 | 摆脱反复纠正同一个错误的疲劳感，同时防止规则文件臃肿浪费 Token。将反复违反的规则升级为架构、类型、Lint 或测试约束，并清理从未读取、无需提醒的常识规则以及易过时的 API 事实断言。 |
-| **`arcus-automate-me`** | 个人风格定制 | 不用在每次新建会话时重新解释你的代码偏好与回复风格。通过分析近期对话记录并进行简短的多选访谈，为你生成或更新专属的 `*-mode` 技能。 |
-| **`arcus-onboard`** | 工程领域与雷区地图 | 防止助手靠猜测编写业务逻辑或误触不可修改的遗留代码雷区。先扫描数据库Schema与路由再针对盲区提问，生成 1–2 页的 `ONBOARDING.md`（涵盖系统边界、业务术语 ↔ 代码/DB 标识符映射、核心业务计算公式与不变量、权限与套餐门槛、遗留代码雷区与安全红线、权威数据源、错误响应与文风规范），并附带日期与代码来源标签（`[as of YYYY-MM-DD \| Source: ...]`）。 |
-| **`arcus-skill-maker`** | 技能转换与制作 | 让原本只能在单一工具中使用的外部技能在 5 个助手中通用。分析外部技能或提示词，将其转换为跨工具兼容的 `arcus-*` 标准技能。 |
+| **核心职责** | 统管整个会话的工程判断准则、精炼文风与子智能体委派规则。 | 接收已确认的 `- [ ]` 检查清单，循环执行实现、验证、修复与勾选完成（`[x]`）。 |
+| **适用范围** | 广度：从 24 条原则、23 个剧本与 20 个内部模块中按场景自动路由。 | 聚焦：承接 `arcus-plan` 清单，持续运行直至真实构建与测试全部通过。 |
+| **何时调用** | 会话刚开始，或面对架构调研、排障、性能优化等开放式任务时。 | 方案已确认，希望助手不停顿地把清单逐项实现并验证到底时。 |
 
 ---
 
-## 🎯 使用指南：`arcus-mode` 与 `arcus-work-loop` 的区别及推荐工作流
+## 15 个核心技能速览
 
-### 1. `arcus-mode` 与 `arcus-work-loop` 有什么区别？
-
-| 对比维度 | 👑 **`arcus-mode`（主控操作系统模式 / OS）** | 🔄 **`arcus-work-loop`（检查清单执行引擎）** |
+### 1. 日常核心流水线（5 个）
+| 技能 | 使用时机 | 核心产出 |
 | :--- | :--- | :--- |
-| **核心定位** | 统管整个会话的工程判断准则、精炼文风与子智能体协同的顶层主控模式。 | 围绕既定任务检查清单（`- [ ]`），专注循环执行 **实现 ➔ 验证 ➔ 修复 ➔ 勾选完成（`[x]`）** 的执行引擎。 |
-| **覆盖范围** | 全局：根据场景从 24 条工程原则和 23 个任务剧本（根因调查、重构、方案竞技、性能调优、PR 照看等）中自动匹配最佳流程。 | 聚焦：接管 `arcus-plan` 生成的检查清单，逐项编写代码并运行真实测试/构建，仅在验证通过后勾选 `- [x]` 直至全部完成。 |
-| **何时调用** | 会话刚开始希望开启高级工程师准则时，或面对需要深入调研、架构权衡与多智能体协作的复杂任务时。 | 在 `$arcus-plan` 确定好方案与检查清单后，希望助手不要中途停顿、一气呵成跑完所有实现与验证时。 |
+| **`arcus-mode`** | 会话启动、综合设计与排障 | 自动调度 24 条原则、23 个剧本、精炼文风与子智能体协作规范 |
+| **`arcus-plan`** | 修改生产代码前的规划与溯源 | 根因定位、影响范围映射与带验证条件的执行检查清单（`- [ ]`） |
+| **`arcus-work-loop`** | 端到端落地已批准方案 | 仅在真实测试与构建通过后勾选 `- [x]` 的自主执行循环 |
+| **`arcus-review`** | 方案、diff 或 PR 客观评审 | 隔离子智能体代码优先裁定与持久化 Findings Ledger（`F-01`..） |
+| **`arcus-explain`** | 目标对齐或理解已完成改动 | 去除黑话的工程简报（心智模型、运行机制、权衡与验证标准） |
 
-### 2. 推荐分步流水线
+### 2. 安全、视觉 UI 与应用验证（4 个）
+| 技能 | 使用时机 | 核心产出 |
+| :--- | :--- | :--- |
+| **`arcus-security`** | 鉴权、计费、密钥、CI 与依赖审计 | 本地负向 PoC 测试、脱敏密钥报告、非阻塞审计与 `S-01`.. 台账 |
+| **`arcus-ui-propose`** | 布局、样式与 UI 组件改动 | 1 张 Before + 3 套方案截图对比、可复用 `.patch` 与无污染应用 |
+| **`arcus-create-verification`** | 项目缺少真实用户视角验证流程 | 能像真实用户一样启动并操作应用的项目级 `verify-<app>` 技能 |
+| **`arcus-maintain-verification`** | 业务演进导致旧验证流程失效 | 对照最新源码与实时运行校准后的验证技能与功能清单 |
 
-1. **规划与生成检查清单 (`$arcus-plan`)**：动手写代码前先定位根本原因与影响范围，生成带验证条件的检查清单（`- [ ]`），并在结尾通过 **`arcus-explain`**（20 岁 CS 毕业生视角的架构心智模型与取舍简报）清晰解说方案。
-2. **上下文隔离的方案评审 (`$arcus-review`)**：启动无历史偏见的隔离子智能体对方案进行冷读者测试与前提批判。
-3. **检查清单自主执行循环 (`$arcus-work-loop`)**：按确认后的清单逐项实现与实测，直到所有条目均被验证勾选为 `- [x]`，并在结束时通过 **`arcus-explain`** 简报改动的底层机制。
-4. **最终代码审查与架构决策记录 (`$arcus-review` / `DECISIONS.md`)**：基于问题台账（Review Ledger）对代码变更进行隔离审查。当产生重要架构取舍或规则升级（`$arcus-correct`）时，会在获得用户明确授权后记录至 `DECISIONS.md`（若用户拒绝，则通过 `.git/config`、`AGENTS.md` 或 `.agents/settings.json` 持久记住不再打扰）。
+### 3. 领域知识、历史溯源与规则卫生（4 个）
+| 技能 | 使用时机 | 核心产出 |
+| :--- | :--- | :--- |
+| **`arcus-onboard`** | 接手新仓库或沉淀领域规则 | 带日期来源标签的 1–2 页 `ONBOARDING.md`（术语映射、不变量、雷区） |
+| **`arcus-why`** | 追问现有代码为何如此设计 | 结合 `DECISIONS.md`、Git 提交与 PR 讨论给出的带引用结论 |
+| **`arcus-correct`** | 助手反复犯同类错或规则文件臃肿 | 将错因升级为架构、类型、Lint 或测试，并清理无效规则与事实断言 |
+| **`arcus-ketchup`** | 长对话后快速掌握进展与待决策项 | 上条消息以来的变更摘要与可直接拍板的待决策清单 |
+
+### 4. 个性化定制与外部技能转换（2 个）
+| 技能 | 使用时机 | 核心产出 |
+| :--- | :--- | :--- |
+| **`arcus-automate-me`** | 不想每次重新说明个人代码偏好 | 基于近期对话记录与简短访谈生成的个人专属 `*-mode` 技能 |
+| **`arcus-skill-maker`** | 将单工具外部技能迁移到 5 个助手 | 符合 Zero-MCP 通用规范的 `arcus-*` 技能及校验结果 |
+
+### 场景化命令速查
+- *“先定位这个功能或缺陷的根本原因并给出执行计划”* -> **`$arcus-plan`**
+- *“审查刚写的方案或 PR diff 中遗漏的边界与缺陷”* -> **`$arcus-review`**
+- *“按确认后的检查清单一直实现到测试全部通过”* -> **`$arcus-work-loop`**
+- *“在改代码前先给出 3 套 UI 方案截图与当前界面对比”* -> **`$arcus-ui-propose`**
+- *“审计这次改动是否存在越权（IDOR）、密钥泄露或依赖漏洞”* -> **`$arcus-security`**
+- *“用类型、Lint 或测试彻底拦截助手反复出现的同类错误”* -> **`$arcus-correct`**
+- *“根据任务自动挑选上述技能与原则推进整个会话”* -> **`$arcus-mode`**
 
 ---
 
-## 🏗️ 架构设计：双层技能封装结构
+## 详细安装、目录结构与致谢
 
-如果把几十个细粒度技能直接平铺在顶层 `skills/` 目录下，会导致斜杠命令（`/`）列表过度臃肿并占用上下文预算。`arcus-stack` 采用 **双层封装结构** 解决了这一问题：
+<details>
+<summary><strong>完整安装与更新方式（按项目安装、插件管理器、本地符号链接、旧技能清理）</strong></summary>
 
-1. **面向用户的核心技能（15 个）**：位于顶层 `skills/arcus-*/SKILL.md`。你的技能菜单中只会清爽地展示这 15 个高频入口。
-2. **内部封装模块（60+ 个文件）**：收纳在 `skills/arcus-mode/` 子目录（`principles/`、`playbooks/`、`internal/`、`references/`）中。由于各助手的技能扫描器仅扫描 `skills/` 下一级目录，24 条工程原则、23 个任务剧本和 20 个内部辅助技能（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices`、`backend-reliability` 等）不会污染用户菜单，而是由助手在执行过程中按需通过相对路径读取。
-
----
-
-## 🚀 安装与更新方法
-
-### 方法 1. 使用 `npx skills` CLI（推荐 — 全局或按项目安装）
+### 方式 1. `npx skills` CLI（推荐）
 
 ```bash
-# 在当前电脑的 5 个助手全局环境中一次性安装所有技能
-npx skills add sacru2red/arcus-stack -g -y
-
-# 仅在当前项目中按需安装指定技能
-npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
-```
-
-#### 🔄 使用 `npx skills` 更新至最新版本
-当仓库新增或改进了技能时，重新运行安装命令（或运行 `npx skills update`）即可覆盖更新：
-```bash
+# 为 5 个编程助手全局安装或更新全部技能
 npx skills add sacru2red/arcus-stack -g -y
 # 或
 npx skills update
+
+# 仅在当前项目按需安装指定技能
+npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
 ```
 
-> **关于重命名或已移除技能的清理说明：** `npx skills` 的 `add`/`update` 不会自动删除仓库中已重命名或移除的旧技能（例如 `arcus-work` → `arcus-work-loop`、`arcus-in-your-own-words` → `arcus-explain`）。如果更新后列表中仍显示旧技能，请运行以下命令将其移除：
+> **重命名旧技能清理说明 (`D-003`)：** `npx skills add`/`update` 不会自动移除仓库已重命名的旧技能（`arcus-work` -> `arcus-work-loop`、`arcus-in-your-own-words` -> `arcus-explain`）。如列表中仍出现旧名称，请执行一次清理：
 > ```bash
 > npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
-### 方法 2. 使用助手自带的插件管理器
+### 方式 2. 助手原生插件管理器
 
 - **Antigravity (`agy`)**：
   ```bash
-  # 安装及更新（重新执行即可拉取最新更改）
   agy plugin install https://github.com/sacru2red/arcus-stack
   ```
 - **Claude Code**：
   ```bash
-  # 安装
   /plugin marketplace add https://github.com/sacru2red/arcus-stack
   /plugin install arcus-stack
-
   # 更新
   /plugin update arcus-stack
   ```
 
-### 方法 3. 本地克隆 + 全局符号链接 (`scripts/install-global.ps1` / `.sh`)
+### 方式 3. 本地克隆 + 全局符号链接 (`scripts/install-global.ps1` / `.sh`)
 
-将本仓库克隆到本地并运行脚本，即可将所有技能直接链接到 5 个助手（包括 T3 Code 内置的 Antigravity 隔离目录）的全局技能路径。
+将 15 个公开技能直接链接到 5 个助手以及 T3 Code 内置 Antigravity 隔离目录。
 
 ```powershell
 # Windows (PowerShell)
@@ -162,15 +223,12 @@ npx skills update
 ./scripts/install-global.sh
 ```
 
-#### 🔄 本地克隆方式如何更新
-由于符号链接直接指向本地仓库目录，执行 `git pull` 即可在所有助手中实时生效（仅在新增了顶层技能文件夹时需重新运行一次脚本）：
-```bash
-git pull && ./scripts/install-global.sh   # (Windows 请运行 .\scripts\install-global.ps1)
-```
+由于符号链接指向本地仓库，执行 `git pull` 即可同步生效（仅在新增顶层技能目录时重新运行一次脚本）。
 
----
+</details>
 
-## 🗂️ 目录结构
+<details>
+<summary><strong>完整目录结构与校验命令</strong></summary>
 
 ```text
 arcus-stack/
@@ -187,19 +245,26 @@ arcus-stack/
 │   └── skills.json              # 本地工作区技能发现清单
 ├── AGENTS.md                    # 根目录规则桥接文件
 ├── CLAUDE.md                    # Claude Code 规则桥接文件
+├── assets/
+│   └── diagrams/                # archify 生成的 GitHub Dark/Light 静态 SVG (4 个)
+│       ├── pipeline-dark.svg
+│       ├── pipeline-light.svg
+│       ├── architecture-dark.svg
+│       └── architecture-light.svg
 ├── rules/
 │   └── AGENTS.md                # 5 个助手共享的核心工程准则
 ├── scripts/
 │   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 个助手 + T3 Code)
-│   └── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
-└── skills/                      # ⭐ 面向用户的 15 个核心技能
-    ├── arcus-mode/              # 主控模式 + 内部封装模块
+│   ├── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
+│   └── validate.ps1             # Frontmatter、相对链接、15 项公开技能与跨工具兼容性校验脚本
+└── skills/                      # 面向用户的 15 个公开核心技能 (+ 各技能 references/ 11 个文件)
+    ├── arcus-mode/              # 主控模式 + 68 个内部封装模块 + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [内部专用] 23 个任务剧本
-    │   ├── principles/          # [内部专用] 24 条工程原则
-    │   ├── internal/            # [内部专用] 20 个辅助子技能 (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability 等)
-    │   └── references/          # [内部专用] bugbot-triage.md
+    │   ├── playbooks/           # [内部] 23 个任务剧本 (safe-migration, opening-a-pr 等)
+    │   ├── principles/          # [内部] 24 条工程原则
+    │   ├── internal/            # [内部] 20 个内部子技能 (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization 等)
+    │   └── references/          # [内部] 1 份参考 (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
@@ -215,3 +280,23 @@ arcus-stack/
     ├── arcus-onboard/
     └── arcus-skill-maker/
 ```
+
+可随时运行以下命令复核 15 个公开技能、YAML Frontmatter 与相对链接完整性：
+
+```powershell
+.\scripts\validate.ps1
+```
+
+</details>
+
+<details>
+<summary><strong>六大开源项目灵感来源与许可证声明</strong></summary>
+
+- [`pstack`](https://github.com/cursor/plugins/tree/main/pstack)：*“欲速则先深潜”*（根本原因分析、最小改动面、可验证代码）
+- [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)：自主执行循环与策略/执行分离
+- [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)：按角色委派与自动化工作流
+- [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)：分阶段质量护栏与基于真实执行证据的完成门禁
+- [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)：面向 HTML/CSS/客户端 JS 的现代 Web 标准实时检索（Apache-2.0）
+- [`tt-a1i/archify`](https://github.com/tt-a1i/archify)：10 类交互式图表与静态 SVG 可视化引擎（Apache-2.0）
+
+</details>

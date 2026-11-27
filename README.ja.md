@@ -1,6 +1,10 @@
-# 🏹 ARCUS-STACK (`arcus-stack`)
+<div align="center">
 
-<p align="center">
+# ARCUS-STACK
+
+**5つのAIコーディングエージェントすべてで同じように動く Zero-MCP ディープファースト・スキル＆ワークフロースタック**
+
+<p>
   <a href="./README.md">English</a> |
   <a href="./README.ko.md">한국어</a> |
   <strong>日本語</strong> |
@@ -8,149 +12,206 @@
   <a href="./README.es.md">Español</a>
 </p>
 
-> **A**gent **R**ules, **C**ommands & **U**niversal **S**kills  
-> *(**SACRU**のアナグラム — 5つのコーディングエージェント対応の汎用スキル＆ワークフロースタック)*
+<p>
+  <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
+  <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
+  <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+</p>
 
-**`arcus-stack`** は、**`Antigravity` (`agy`)、`Claude Code`、`Codex`、`Cursor`、`OpenCode`** の5つのAIコーディングエージェントすべてでそのまま動作する汎用スキル＆ワークフロースタックです。
+</div>
+
+**ARCUS**（**A**gent **R**ules, **C**ommands & **U**niversal **S**kills）は、**Antigravity (`agy`)、Claude Code、Codex、Cursor、OpenCode** すべてで共通の標準仕様（`SKILL.md` + `AGENTS.md`）だけで動作するエンジニアリング・ワークフロースタックです。
+
+## 30秒クイックスタート
+
+```bash
+# PC内の5つのエージェントすべてに15個の公開コアスキルを一括インストール
+npx skills add sacru2red/arcus-stack -g -y
+```
+
+インストール後、どのエージェントからでもすぐに主要パイプラインを実行できます。
+
+```text
+$arcus-mode      -> 推奨デフォルト: 状況に合う原則・プレイブック・スキルを自動適用
+$arcus-plan      -> 根本原因を特定し、検証条件付きの実行チェックリストを作成
+$arcus-review    -> 作成者のバイアスを排した隔離サブエージェントで計画・差分を監査
+$arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だけを完了させ最後まで実装
+```
 
 ---
 
-## 💡 なぜ作ったのか？
+## 従来のAIコーディングの課題と ARCUS の解決策
 
-**T3 Code** や **Orca** のようなマルチエージェント環境で開発していると、タスクに応じて複数のエージェント（`agy`、`Claude Code`、`Codex`、`Cursor`、`OpenCode`）を切り替えたり並列に呼び出したりします。しかし、ツールごとにスキルの配置パスやフロントマターの仕様が異なるため、**「あるエージェントで愛用しているスキルを、別のエージェントを呼び出したときにそのまま使えない」** という大きな不便さがありました。
+単一セッションのAIコーディングで繰り返される7つの失敗を、お願いベースのプロンプトではなくワークフロー構造で防ぎます。
 
-**`arcus-stack` はこの分断を解消するために作られました。** 重いMCPサーバーへの依存を持たず、5つのツールすべてが共通して認識できる標準の `SKILL.md` と `AGENTS.md` 仕様のみで構成されているため、どの環境からどのエージェントを呼び出しても全く同じスキルと原則で作業できます。
+| 従来のAIコーディングの繰り返し失敗 | ARCUS-STACK の構造的な解決策 | 担当スキル / モジュール |
+| :--- | :--- | :--- |
+| 作業中のセッションは自分の成果物に対して本当に批判的なレビューができない | スナップショット固定の **隔離サブエージェントレビュー** ＋ 返信より先にコードを判定する **指摘台帳（`F-01`..）** | `arcus-review` |
+| 単一PRで `DROP/RENAME COLUMN` やブロッキングDDLを実行し本番障害を起こす | **Expand、Backfill & Verify、Contract** の4段階無停止マイグレーションをPR分割で強制 | `safe-migration.md` |
+| UI作業でエージェントが1つのデザインに決め打ちして上書きする | 作業ブランチで **Before ＋ 3案のスクリーンショット** を安全に比較し、選んだ案のみ適用・PR前後証跡へ連携 | `arcus-ui-propose` |
+| ページネーションなし取得、N+1、DBトランザクション内の外部HTTP/LLM呼出を混入する | クエリ上限、トランザクション外I/O分離、冪等・ジッター付きリトライ、PIIログマスクをオンデマンド適用 | `backend-reliability.md` |
+| 認証だけ確認してオブジェクト認可（IDOR）・シークレット漏洩・依存脆弱性を見落とす | 隔離コンテキストによる **信頼境界・認可監査**、シークレットマスク、ローカル専用負テスト、セキュリティ台帳（`S-01`..） | `arcus-security` |
+| 古いWeb APIの回避コード量産と `AGENTS.md` ルール肥大化 | **Chrome最新Web標準のリアルタイム照会** ＋ 繰り返しミスを型・Lintへ昇格し不要ルールを削除 | `modern-web-guidance`, `arcus-correct` |
+| コード変更後に曖昧な要約しか残らず、仕組みとトレードオフが追いにくい | 計画・実装完了ごとに独自用語を標準CSモデル・動作原理・トレードオフへ翻訳する **要点ブリーフィングを自動出力** | `arcus-explain` |
 
-以下の6つのオープンソースプロジェクトのコア思想を1つに統合しています：
-- **[`pstack`](https://github.com/cursor/plugins/tree/main/pstack)**: *「速く進みたいなら、まず深く潜れ」*（根本原因の特定、変更範囲の最小化、検証可能なコード）
-- **[`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)**: 完了まで自律的に走り切る `ultrawork` ループと戦略・実行の分離
-- **[`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode)**: 設計・実装・検証の役割分担とオートパイロット実行
-- **[`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)**: 段階的な品質ガードレールと実際の実行結果（証拠）に基づく完了検証
-- **[`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)**: HTML、CSS、クライアントJS作業時に最新のWeb標準ベストプラクティスを動的に照会（`npx -y modern-web-guidance@latest`）する仕組み（Apache-2.0）
-- **[`tt-a1i/archify`](https://github.com/tt-a1i/archify)**: アーキテクチャ、ワークフロー、シーケンス、ERDなど10種類のインタラクティブHTML/SVGダイアグラムと1ページExplainer生成エンジン（可視化リクエスト時に最優先で検討、Apache-2.0）
+---
 
-さらに、`arcus-stack` を使うべき理由はエージェント間の互換性だけではありません。従来のAIコーディングが抱える2つの構造的な死角を解決します：
+## エンドツーエンド・デリバリーパイプライン
 
-### 1. 思い込みに騙されないコンテキスト隔離レビューと指摘台帳（`arcus-review`）
+計画立案、隔離レビュー、ガードレール付き自律実行、セキュリティ監査、ルール衛生管理、最終ブリーフィングが1つの閉じたループとして連携します。
 
-設計や実装を行った同じセッションでレビューまで行うと、前提を選んだ経緯や捨てた代替案のバイアスをそのまま引き継いでしまいます。**文脈を共有するレビュアーは死角も共有します。** `arcus-review` はこれを防ぐため、**コンテキスト隔離** と **指摘台帳（Review Ledger）** を導入しています：
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/pipeline-light.svg">
+  <img alt="ARCUS Deep-First Delivery Pipeline" src="./assets/diagrams/pipeline-light.svg">
+</picture>
 
-- **実装コンテキストから隔離されたレビュー**: 対象コミットやスナップショットを固定し、作成者の対話履歴に汚染されていない新規サブエージェントが設計書とコードをゼロベースで検証します。リポジトリ内にとどまらず外部の公式リファレンスも参照し、前提知識のない読者が設計書だけで理解できるか（コールドリーダーテスト）を試験します。
-- **指摘台帳（Review Ledger — `F-01`, `F-02`, ...）**: レビューごとに指摘事項を台帳テーブルで管理し、指摘一覧と作成者の返信セクションを物理的に分離します。
-- **コード優先のブラインド判定（2回目以降）**: 2回目以降のレビューでは、新しいコードを見る前、かつ **作成者の返信や釈明を開く前に、まず最新のコード・文書スナップショットだけを見て** 台帳の各指摘が解決されたか（`RESOLVED`）、未解決か（`UNRESOLVED`）、反論が妥当か（`VALID_PUSHBACK`）、見解が分かれるか（`DISPUTED`）を先に判定します：
+*図1. `$arcus-plan` から隔離 `$arcus-review`、`$arcus-work-loop`、高リスク時の `$arcus-security` エスカレーション、`$arcus-correct` によるルール改善、`$arcus-explain` ブリーフィングへつながるデリバリーパイプライン。*
+
+---
+
+## 5つのコア機能
+
+### 1. コンテキスト隔離レビューとコード優先の指摘台帳 (`arcus-review`)
+作成者と対話文脈を共有するレビュアーは同じ死角も共有します。`arcus-review` はコミットまたはdiffスナップショットを固定し、新しい隔離サブエージェントで前提知識なしの読解テスト（Cold-Reader Test）と外部公式ドキュメント照合を実行します。2回目以降は作成者の説明を読む前に **最新コードスナップショットだけを見て** 未解決指摘を判定します。
+
+**例: `$arcus-review` 指摘台帳の出力フォーマット**
 
 | ID | 回次 | 固定スナップショット | 重大度 | 対象箇所 | 問題シナリオと必要な修正 | 状態 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自律サブエージェント実行中の質問呼び出しによる停止リスク。最上位ターンへの委譲が必要。 | `RESOLVED` |
-| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分インストール時の相対パス参照切れ。フォールバック規則の内蔵。 | `VALID_PUSHBACK` |
+| `F-01` | R1 | `4e058ee` | `CRITICAL` | `worker.md:7` | 自律サブエージェント実行中の質問呼び出しで停止する。最上位ターンへ委譲が必要。 | `RESOLVED` |
+| `F-02` | R1 | `4e058ee` | `HIGH` | `SKILL.md:44` | 部分インストール時に相対パス参照が切れる。スキル本文へフォールバック規則を内蔵。 | `VALID_PUSHBACK` |
 
-*(判定ステータス: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
+*(ステータス: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. 最新Web標準とブラウザ互換性の自動適用（`modern-web-guidance`）
+### 2. UI 4枚スクリーンショット比較提案と PR/MR 前後証跡 (`arcus-ui-propose`)
+視覚的なUI変更では、作業前（`00-before.png`）1枚と異なる3案（`Option A/B/C`）を作業ブランチ上で **順次適用、撮影、`.patch` 保存、`git checkout` 復元** の手順で安全に比較します。採用案の実装完了後は同じビューポート・テーマで `99-after-final.png` を再撮影し、GitLab MR 自動アップロードまたは GitHub PR 安全ハンドオフ（ブランチへのバイナリPNG混入防止）へ連携します。
 
-AIモデルは学習データの時期の制約により、最新のCSSやWeb標準APIでシンプルに解決できる処理でも古いJSのハックで書いてしまうことがよくあります。`arcus-stack` を使えば、HTML、CSS、クライアントサイドJS（React、Vue、Svelteなどのフレームワーク内を含む）の作業で専用スキルを手動で呼び出したり、毎回 `caniuse.com` でブラウザ対応状況を確認したりする必要はありません。設計（`arcus-plan`）、実装（`arcus-work-loop`）、レビュー（`arcus-review`）の各段階で、内部的に `modern-web-guidance` が自動実行されます：
+### 3. 無停止DBマイグレーションとバックエンド信頼性ガードレール (`safe-migration.md`, `backend-reliability.md`)
+- **無停止マイグレーション (`safe-migration.md`)**: 本番DBスキーマ、永続キュー/キャッシュ、ローリングデプロイ契約を単一ウェーブのリファクタリングから除外し、オンライン/`CONCURRENTLY` DDL、二重書き込み、チャンク冪等バックフィル、`N-1`/`N` ロールバック確認、後続 Contract PR 分割を強制します。
+- **バックエンド信頼性 (`backend-reliability.md`)**: クエリ上限、N+1解消、DBトランザクション外への外部I/O分離、明示的タイムアウトとキャンセル伝播、一時障害限定のジッター付きリトライ、シークレット・PIIマスク済み構造化ログをオンデマンド適用します。
 
-1. **最新Web標準ガイドのリアルタイム照会**: エージェントの古い学習知識に頼る代わりに、`npx -y modern-web-guidance@latest search "<機能>"` と `retrieve "<ID>"` を自動実行し、Google Chromeチームの最新ガイドラインを参照します。
-2. **Baselineとブラウザ対応状況の自動判定**: 取得したガイドには **Web Platform Baseline** のステータスと主要4ブラウザ（Chrome、Edge、Firefox、Safari）の対応バージョンが含まれています。
-3. **適切なフォールバックの自動実装**: 広く普及した機能（`Widely available`）は余計なポリフィルなしでシンプルに実装し、一部ブラウザで未対応の最新機能にはガイド推奨の `@supports` やプログレッシブエンハンスメント用フォールバックを自動的に適用します。
+### 4. PoC ベースのセキュリティ・認可・サプライチェーン監査 (`arcus-security`)
+認証/認可、課金、PII/シークレット、外部入力シンク、CIワークフロー、依存マニフェストの変更時に隔離監査へ切り替えます。シークレットは `sk_live_***` 形式でマスク報告し、`CRITICAL`/`HIGH` 項目は本番・ステージングではなく **ローカル隔離の負テスト** で実証し、専用台帳（`S-01`, `S-02`, ...）で管理します。
+
+### 5. 最新Web標準照会・アーキテクチャ可視化・ルール衛生 (`modern-web-guidance`, `archify`, `arcus-onboard`, `arcus-correct`)
+- **最新Web標準の自動照会**: HTML/CSS/クライアントJS実装前に `npx -y modern-web-guidance@latest` で Google Chrome 公式ガイドと Web Platform Baseline を確認し、必要な `@supports` フォールバックのみ実装します。
+- **アーキテクチャ可視化 (`archify`)**: 10種の図解リクエストで `tt-a1i/archify` をOS一時ディレクトリ隔離（`D-010`）のもと最優先で使用します。
+- **ドメイン地図とルール衛生**: `arcus-onboard` が日付・出典タグ付きの `ONBOARDING.md` を維持し、`arcus-correct` が繰り返しミスを構造・型・Lint・テストへ昇格させ不要なルールを整理します。
 
 ---
 
-## 📦 コアスキル (`arcus-*`)
+## 2階層スキルカプセル化アーキテクチャ
 
-| スキル名 | カテゴリ | メリットと役割 |
+細かいルールを最上位 `skills/` に並べるとスラッシュメニュー（`/`）が溢れ、毎ターンのコンテキストを消費します。5つのエージェントが `skills/` 直下1階層だけを登録する仕様を利用し、2階層に分離しています。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/diagrams/architecture-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/diagrams/architecture-light.svg">
+  <img alt="Two-Tier Universal Skill Architecture" src="./assets/diagrams/architecture-light.svg">
+</picture>
+
+*図2. メニューには15個の公開コアスキルのみを表示し、`skills/arcus-mode/` 内部モジュール、各スキル `references/`、ルート `DECISIONS.md` を必要時のみ相対リンクで読み込む2階層構造。*
+
+- **Tier 1（公開コアスキル15種）**: `skills/arcus-*/SKILL.md` のみがメニューに表示されます。各コアスキルは固有の `references/`（11ファイル）を同梱し、部分インストールでも独立動作します。
+- **Tier 2（`skills/arcus-mode/` 内部モジュール68個 ＋ `worker.md`）**: 原則24、プレイブック23、内部補助スキル20、リファレンス1（`bugbot-triage.md`）をメニュー外に格納し、必要時のみロードします。
+
+---
+
+## `arcus-mode` vs `arcus-work-loop`
+
+| 比較項目 | `arcus-mode`（マスター動作モード） | `arcus-work-loop`（チェックリスト実行エンジン） |
 | :--- | :--- | :--- |
-| ⭐ **`arcus-mode`** | **核心 · マスターモード** | 余計な前置きを省き、簡潔な回答と検証済みのコードだけを得られるようエージェントの基準を引き上げます。状況に応じて24の設計原則、23のプレイブック、サブエージェント委譲ルールを自動適用します。 |
-| ⭐ **`arcus-plan`** | **核心 · 設計・チェックリスト** | いきなりコードを書き始めて手戻りしたり要件が漏れたりするのを防ぎます。実装前に根本原因と影響範囲を特定し、現在のタスク目標に合わせた実行・検証チェックリスト（`- [ ]`）を作成します。 |
-| ⭐ **`arcus-work-loop`** | **核心 · 自律実行ループ** | 途中で止まったり未完成のコードを残したりせず、タスクを最後まで完遂します。チェックリストを1項目ずつ実行し、実際のテスト・ビルド検証を通過した項目のみを完了（`- [x]`）に更新しながら反復実行します。 |
-| ⭐ **`arcus-review`** | **核心 · 隔離された計画・コードレビュー** | 作成者の文脈や思い込みを引き継がないよう、隔離されたサブエージェント上で固定スナップショットを基準に設計とコードを検証します。前提知識なしでの文書理解度テスト、外部仕様との照合、指摘台帳に基づくコード優先の判定を行います。 |
-| ⭐ **`arcus-explain`** | **核心 · 目標すり合わせ＆CS卒業生目線の解説** | 要件、設計計画、完了したコード変更、複雑な概念を**20代の情報系・CS学部卒業生（ジュニアエンジニア）に説明する明快なトーン**で解説します（幼稚な比喩や曖昧な美辞麗句を排し、CSのメンタルモデル・仕組み・トレードオフで翻訳）。`arcus-plan`、`arcus-work-loop`、`arcus-mode` の完了直後に自動で要点ブリーフィングを提供します。 |
-| **`arcus-security`** | セキュリティ・認可・サプライチェーン監査 | 一般論のセキュリティ指摘を排し、実際に悪用可能な欠陥だけを証拠付きで特定します。コンテキスト隔離のもとで信頼境界・認可（IDOR/BOLA）・汚染入力シンクを辿り、シークレットをマスクしたうえで非ブロッキングの依存関係・静的監査を実行し、`CRITICAL`/`HIGH` の問題をローカル隔離テストで実証してセキュリティ台帳（`S-01`, `S-02`, ...）で管理します。 |
-| **`arcus-ui-propose`** | UI 4枚スクリーンショット比較提案 | UI作業でエージェントが勝手に1つのデザインに決め打ちして書き換えるのを防ぎます。現在の作業ブランチ上で **作業前（Before）のスクリーンショット1枚** と **異なる3つの提案（Option A, B, C）のスクリーンショット** を「順次適用 ➔ 撮影 ➔ パッチ（`.patch`）保存 ➔ `git checkout` 復元」の手順で安全に取得して比較提示し、ユーザーが選んだ案だけを即座に再適用します。 |
-| **`arcus-create-verification`** | アプリ検証スキル作成 | 変更のたびに人間が手動でアプリを起動して動作確認する手間を省きます。実際のユーザーのようにアプリを操作して動作証拠を残すプロジェクト専用の検証スキル（`verify-<app>`）を作成・実証します。 |
-| **`arcus-maintain-verification`** | アプリ検証スキル保守 | コード変更に伴って既存の検証手順が古くなり動かなくなる問題を防ぎます。最新のソースコードと実際のアプリの挙動を照合し、検証スキルと機能一覧を最新の状態に保ちます。 |
-| **`arcus-ketchup`** | 進捗サマリー | 長いチャット履歴を読み返さなくても、今自分が何を判断すべきか一目で把握できます。最後のメッセージ以降の変更点とユーザーの判断待ち項目を平易な言葉と図解で要約します。 |
-| **`arcus-why`** | 変更履歴の追跡 | 既存のコードがなぜそのように書かれたのか推測して迷う時間を節約します。現在のコードだけで憶測せず、`DECISIONS.md` やGitのコミット履歴、PRの議論を辿って当時の設計理由とトレードオフを根拠付きで回答します。 |
-| **`arcus-correct`** | 繰り返しミス防止・ルール整理 | エージェントに同じ指摘を繰り返す徒労感をなくし、ルールファイルの肥大化を防ぎます。繰り返し違反されるルールは構造・型・Lint・テストで強制し、使われないルールや自明なルール、陳腐化しやすいAPIの事実記述を整理します。 |
-| **`arcus-automate-me`** | 個人スタイルの学習 | 新しいセッションのたびに自分のコーディングの好みや回答スタイルを説明し直す必要がなくなります。最近の対話履歴の分析と簡単な選択式の質問を通じて、自分専用の `*-mode` スキルを作成・更新します。 |
-| **`arcus-onboard`** | ドメイン・地雷原オンボーディング | エージェントがドメイン仕様を推測して実装したり、触れてはいけないレガシー領域を壊したりする事故を防ぎます。スキーマやルーターを自動走査した上で要点をヒアリングし、1〜2ページの `ONBOARDING.md`（システム境界、ドメイン用語とコード/DB識別子の対応、ビジネス計算式・不変条件、認可・プラン制限、レガシー地雷原、信頼できるデータ原典、エラー・文体規約）を日付・出典タグ（`[as of YYYY-MM-DD \| Source: ...]`）付きで構築・維持します。 |
-| **`arcus-skill-maker`** | スキル変換・作成 | 特定のツール専用の外部スキルを5つのエージェントすべてで使えるようにします。外部のスキルやプロンプトを解析し、全エージェント互換の `arcus-*` 形式に変換します。 |
+| **役割** | セッション全体の設計判断、簡潔な文体、サブエージェント委譲規則を統括します。 | 確定した `- [ ]` チェックリストを受け取り、実装、検証、修正、完了（`[x]`）を完走します。 |
+| **適用範囲** | 24原則・23プレイブック・20内部モジュールから状況に合う手順を自動選択します。 | `arcus-plan` のチェックリストを引き継ぎ、実ビルド・テスト通過まで反復実行します。 |
+| **使い分け** | セッション開始時や、原因調査・設計探索・性能改善など複合判断が必要なとき。 | 計画確定後、途中で止まらず最後まで実装と検証をやり切らせたいとき。 |
 
 ---
 
-## 🎯 使い方ガイド：`arcus-mode` と `arcus-work-loop` の違い＆推奨ワークフロー
+## 15個のコアスキル一覧
 
-### 1. `arcus-mode` と `arcus-work-loop` の違いは？
-
-| 比較項目 | 👑 **`arcus-mode`（マスター動作モード / OS）** | 🔄 **`arcus-work-loop`（チェックリスト実行エンジン）** |
+### 1. 日常コアパイプライン（5種）
+| スキル | いつ使うか | 得られる結果 |
 | :--- | :--- | :--- |
-| **役割** | セッション全体の設計判断基準、簡潔な文体、サブエージェント委譲を統括する上位オペレーティングモードです。 | 確定したチェックリスト（`- [ ]`）を受け取り、**実装 ➔ テスト検証 ➔ 修正 ➔ 完了（`[x]`）** を全項目クリアまで反復する実行特化エンジンです。 |
-| **適用範囲** | 広範：24の設計原則と23のプレイブック（調査、バグ修正、リファクタリング、設計比較、PR管理など）から状況に合う手順を自動選択します。 | 集中：`arcus-plan` で作成したチェックリストを引き継ぎ、実際のビルド・テスト証拠が確認できた項目のみを `- [x]` に更新しながら最後まで完走します。 |
-| **使い分け** | セッション開始時にシニアエンジニア基準の規律を適用したいとき、または調査・設計・性能改善など複合的な判断が必要なとき。 | `$arcus-plan` で計画とチェックリストが固まった後、途中で止まらず最後まで実装と検証をやり切らせたいとき。 |
+| **`arcus-mode`** | セッション開始、複合的な設計・デバッグ | 24原則・23プレイブック・簡潔文体・サブエージェント委譲の自動適用 |
+| **`arcus-plan`** | 本番コード編集前の設計・原因調査 | 根本原因、影響範囲、検証条件付きの実行チェックリスト（`- [ ]`） |
+| **`arcus-work-loop`** | 承認済み計画の完遂 | 実テスト・ビルド通過項目のみ `- [x]` にする自律実行ループ |
+| **`arcus-review`** | 計画・PR/diffの客観的監査 | 隔離サブエージェントによるコード優先判定と Findings Ledger（`F-01`..） |
+| **`arcus-explain`** | 目標すり合わせ・変更内容の理解 | 独自用語を標準CSモデル・動作原理・トレードオフで要約したブリーフィング |
 
-### 2. 推奨ステップバイステップ・パイプライン
+### 2. セキュリティ・視覚UI・アプリ検証（4種）
+| スキル | いつ使うか | 得られる結果 |
+| :--- | :--- | :--- |
+| **`arcus-security`** | 認可、課金、シークレット、CI/依存監査 | ローカル負テストPoC、シークレットマスク報告、非ブロッキング監査、`S-01`.. 台帳 |
+| **`arcus-ui-propose`** | レイアウト・スタイル・UIコンポーネント変更 | Before 1枚 ＋ 3案スクリーンショット比較、`.patch` 保存、採用案の即時適用 |
+| **`arcus-create-verification`** | ユーザー視点のアプリ検証手順がないとき | アプリを起動・操作するプロジェクト専用 `verify-<app>` スキル |
+| **`arcus-maintain-verification`** | 機能変更で既存検証手順が古くなったとき | 最新コードと実動作を照合して更新した検証スキルと機能一覧 |
 
-1. **設計とチェックリスト作成 (`$arcus-plan`)**: 実装前に根本原因と影響範囲を特定して検証条件付きのチェックリスト（`- [ ]`）を作成し、完了直後に **`arcus-explain`**（20代CS卒業生目線のメンタルモデル＆トレードオフ解説）で設計の要点をブリーフィングします。
-2. **隔離された計画クリティカルレビュー (`$arcus-review`)**: 作成者のバイアスを持たない隔離サブエージェントで計画の前提や抜け漏れを事前監査します。
-3. **チェックリスト自律実行 (`$arcus-work-loop`)**: 承認されたチェックリストを1項目ずつ実装・検証してすべて `- [x]` になるまで完遂し、最後に **`arcus-explain`** で変更の仕組みをブリーフィングします。
-4. **最終コードレビューと意思決定記録 (`$arcus-review` / `DECISIONS.md`)**: 指摘台帳（Review Ledger）に基づいて変更差分を隔離レビューします。重要な設計判断やルール昇格（`$arcus-correct`）があった場合は、ユーザーの明示的な認可を得て `DECISIONS.md` に記録するか、不要な場合はプロジェクト単位のオプトアウト設定（`.git/config`、`AGENTS.md`、`.agents/settings.json`）を記憶します。
+### 3. ドメイン知識・履歴・ルール衛生（4種）
+| スキル | いつ使うか | 得られる結果 |
+| :--- | :--- | :--- |
+| **`arcus-onboard`** | 新規リポジトリ参画・ドメイン仕様整理 | 日付・出典タグ付き1〜2ページの `ONBOARDING.md`（用語対応・不変条件・地雷原） |
+| **`arcus-why`** | 既存コードの設計意図を知りたいとき | `DECISIONS.md`・コミット・PR議論を根拠リンク付きで追跡した回答 |
+| **`arcus-correct`** | 同じミスが繰り返される・ルールが肥大化したとき | ミスを構造・型・Lint・テストへ昇格し、不要ルールや陳腐化した事実記述を削除 |
+| **`arcus-ketchup`** | 長い対話後に変更点と決定事項だけ見たいとき | 前回メッセージ以降の変更要約とすぐ判断できるアクション一覧 |
+
+### 4. 個人化・外部スキル変換（2種）
+| スキル | いつ使うか | 得られる結果 |
+| :--- | :--- | :--- |
+| **`arcus-automate-me`** | 好みのコーディングスタイルを毎回伝えたくないとき | 最近の対話分析と短いヒアリングで作る専用 `*-mode` スキル |
+| **`arcus-skill-maker`** | 外部スキルを5エージェント共通で使いたいとき | Zero-MCP 汎用仕様に準拠した `arcus-*` スキルへの変換・検証 |
+
+### 状況別コマンド早見表
+- *「この機能やバグの原因を突き止めて実行計画を作って」* -> **`$arcus-plan`**
+- *「いま作った計画やPR差分の抜け漏れ・欠陥を監査して」* -> **`$arcus-review`**
+- *「確定したチェックリストをテスト通過まで実装して」* -> **`$arcus-work-loop`**
+- *「UI変更を3案のスクリーンショットで比較して見せて」* -> **`$arcus-ui-propose`**
+- *「権限バイパス（IDOR）、シークレット漏洩、依存脆弱性を監査して」* -> **`$arcus-security`**
+- *「繰り返されるエージェントのミスを型・Lint・テストで防いで」* -> **`$arcus-correct`**
+- *「状況に合わせて上のスキルと原則を自動で選んでセッション全体を進めて」* -> **`$arcus-mode`**
 
 ---
 
-## 🏗️ アーキテクチャ：2階層スキルカプセル化構造
+## 詳細インストール・ディレクトリ構造・出典
 
-数十個の細かいスキルを最上位の `skills/` フォルダにそのまま並べると、スラッシュコマンド（`/`）の候補が溢れかえり、コンテキストも圧迫します。`arcus-stack` はこれを **2階層カプセル化構造** で解決しています。
+<details>
+<summary><strong>インストール・アップデート全手順（プロジェクト単位・プラグイン・ローカルリンク・旧スキル整理）</strong></summary>
 
-1. **ユーザー呼び出し用コアスキル（15種）**: `skills/arcus-*/SKILL.md` に配置。メニューにはこの15個の主要スキルだけがすっきり表示されます。
-2. **内部カプセル化モジュール（60ファイル以上）**: `skills/arcus-mode/` 配下（`principles/`、`playbooks/`、`internal/`、`references/`）に格納。各エージェントのスキルスキャナーは `skills/` の直下1階層のみを登録するため、24の原則、23のプレイブック、20の内部補助スキル（`unslop`、`bro`、`architect`、`swarm`、`arena`、`interrogate`、`checklist`、`decisions`、`modern-web-guidance`、`archify-visualization`、`typescript-best-practices`、`backend-reliability` など）はメニューを汚さず、エージェントが必要に応じて相対リンク経由で読み込みます。
-
----
-
-## 🚀 インストールとアップデート方法
-
-### 方法 1. `npx skills` CLI を使う（推奨 — グローバルまたはプロジェクト単位）
+### 方法 1. `npx skills` CLI（推奨）
 
 ```bash
-# PC内の5つのエージェントすべてにグローバルインストール
-npx skills add sacru2red/arcus-stack -g -y
-
-# 現在のプロジェクトに必要なスキルだけを選択してインストール
-npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
-```
-
-#### 🔄 `npx skills` でのアップデート
-新しいスキルが追加されたり更新されたりした場合は、同じコマンドを再実行（または `npx skills update`）するだけで最新版に更新されます：
-```bash
+# 5つのエージェントすべてにグローバルインストール・更新
 npx skills add sacru2red/arcus-stack -g -y
 # または
 npx skills update
+
+# 現在のプロジェクトに必要なスキルだけを選択インストール
+npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --skill arcus-work-loop
 ```
 
-> **名前が変更・削除されたスキルの整理について:** `npx skills` の `add`/`update` は、リポジトリ側で名前が変わったり削除されたりした旧スキル（例：`arcus-work` → `arcus-work-loop`、`arcus-in-your-own-words` → `arcus-explain`）を自動では削除しません。アップデート後に旧スキルが残っている場合は、以下のコマンドで削除してください：
+> **名前が変更された旧スキルの整理 (`D-003`):** `npx skills add`/`update` はリポジトリ側で改名された旧スキル（`arcus-work` -> `arcus-work-loop`、`arcus-in-your-own-words` -> `arcus-explain`）を自動削除しません。旧名が一覧に残っている場合は1度削除してください。
 > ```bash
 > npx skills remove arcus-work arcus-in-your-own-words -g -y
 > ```
 
-### 方法 2. 各エージェントのネイティブプラグインマネージャーを使う
+### 方法 2. 各エージェントのネイティブプラグインマネージャー
 
 - **Antigravity (`agy`)**:
   ```bash
-  # インストールおよびアップデート
   agy plugin install https://github.com/sacru2red/arcus-stack
   ```
 - **Claude Code**:
   ```bash
-  # インストール
   /plugin marketplace add https://github.com/sacru2red/arcus-stack
   /plugin install arcus-stack
-
   # アップデート
   /plugin update arcus-stack
   ```
 
-### 方法 3. ローカルクローン + シンボリックリンク (`scripts/install-global.ps1` / `.sh`)
+### 方法 3. ローカルクローン + グローバルシンボリックリンク (`scripts/install-global.ps1` / `.sh`)
 
-リポジトリをローカルにクローンしてスクリプトを実行すると、5つのエージェントのグローバルスキルパス（T3 Code内のAntigravity環境を含む）へ即座にリンクされます。
+5つのエージェントと T3 Code 内の Antigravity 環境へ15個の公開スキルを一括リンクします。
 
 ```powershell
 # Windows (PowerShell)
@@ -162,22 +223,19 @@ npx skills update
 ./scripts/install-global.sh
 ```
 
-#### 🔄 ローカルクローンでのアップデート
-シンボリックリンクがローカルリポジトリを直接指しているため、`git pull` するだけで全エージェントに即時反映されます（新しいスキルフォルダが追加された場合のみスクリプトを再実行してください）：
-```bash
-git pull && ./scripts/install-global.sh   # (Windowsは .\scripts\install-global.ps1)
-```
+シンボリックリンクがローカルクローンを直接指すため、`git pull` だけで即時反映されます（最上位スキルフォルダが新規追加された場合のみスクリプトを1回再実行）。
 
----
+</details>
 
-## 🗂️ ディレクトリ構造
+<details>
+<summary><strong>ディレクトリ構造と検証コマンド</strong></summary>
 
 ```text
 arcus-stack/
 ├── README.md                    # 英語メインドキュメント (English)
 ├── README.ko.md                 # 韓国語ドキュメント (Korean)
 ├── README.ja.md                 # 日本語ドキュメント (Japanese)
-├── README.zh-CN.md              # 中国語（簡体字）ドキュメント (Simplified Chinese)
+├── README.zh-CN.md              # 中国語簡体字ドキュメント (Simplified Chinese)
 ├── README.es.md                 # スペイン語ドキュメント (Spanish)
 ├── DECISIONS.md                 # アーキテクチャ意思決定記録 (D-001..D-013)
 ├── plugin.json                  # Antigravity (agy) プラグインマニフェスト
@@ -187,19 +245,26 @@ arcus-stack/
 │   └── skills.json              # ワークスペーススキル検出マニフェスト
 ├── AGENTS.md                    # ルートルールブリッジ
 ├── CLAUDE.md                    # Claude Code ルールブリッジ
+├── assets/
+│   └── diagrams/                # archify 生成 GitHub Dark/Light 静的 SVG (4ファイル)
+│       ├── pipeline-dark.svg
+│       ├── pipeline-light.svg
+│       ├── architecture-dark.svg
+│       └── architecture-light.svg
 ├── rules/
 │   └── AGENTS.md                # 5つのエージェント共通のコアエンジニアリング原則
 ├── scripts/
 │   ├── install-global.ps1       # Windows用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
-│   └── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
-└── skills/                      # ⭐ ユーザー呼び出し用 15個のコアスキル
-    ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール
+│   ├── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
+│   └── validate.ps1             # フロントマター・相対リンク・15スキル・互換性自動検証スクリプト
+└── skills/                      # 公開コアスキル 15種 (+ 個別スキル references/ 11ファイル)
+    ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール 68個 + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
-    │   ├── playbooks/           # [内部専用] 23のタスクプレイブック
-    │   ├── principles/          # [内部専用] 24の設計原則
-    │   ├── internal/            # [内部専用] 20の補助スキル (unslop, bro, modern-web-guidance, archify-visualization, typescript-best-practices, backend-reliability など)
-    │   └── references/          # [内部専用] bugbot-triage.md
+    │   ├── playbooks/           # [内部] 23のタスクプレイブック (safe-migration, opening-a-pr など)
+    │   ├── principles/          # [内部] 24の設計原則
+    │   ├── internal/            # [内部] 20の補助スキル (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization など)
+    │   └── references/          # [内部] 1リファレンス (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/
     ├── arcus-review/
@@ -215,3 +280,23 @@ arcus-stack/
     ├── arcus-onboard/
     └── arcus-skill-maker/
 ```
+
+公開スキル15種、YAMLフロントマター、相対リンクの整合性はいつでも以下のコマンドで再検証できます。
+
+```powershell
+.\scripts\validate.ps1
+```
+
+</details>
+
+<details>
+<summary><strong>着想を得た6つのオープンソースプロジェクトとライセンス表記</strong></summary>
+
+- [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *「速く進みたいなら、まず深く潜れ」*（根本原因特定、最小変更、検証可能なコード）
+- [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 自律実行ループと戦略・実行の分離
+- [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode): 役割別の委譲とオートパイロットワークフロー
+- [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity): 段階的品質ガードレールと実行証拠ベースの完了判定
+- [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance): HTML/CSS/クライアントJS向け最新Web標準のリアルタイム照会（Apache-2.0）
+- [`tt-a1i/archify`](https://github.com/tt-a1i/archify): 10種類のインタラクティブ図解・静的SVG可視化エンジン（Apache-2.0）
+
+</details>
