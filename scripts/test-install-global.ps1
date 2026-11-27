@@ -119,7 +119,11 @@ try {
     if (Test-Path $Work) {
         # Delete links first so recursive removal never walks through a junction into the repo copy.
         Get-ChildItem -Path $FakeHome -Recurse -Force -Attributes ReparsePoint -ErrorAction SilentlyContinue | ForEach-Object { $_.Delete() }
-        Remove-Item -LiteralPath $Work -Recurse -Force
+        # A just-exited child shell or a virus scanner can hold a file for a moment; retry, then warn.
+        for ($Try = 1; $Try -le 10 -and (Test-Path -LiteralPath $Work); $Try++) {
+            try { Remove-Item -LiteralPath $Work -Recurse -Force -ErrorAction Stop } catch { Start-Sleep -Milliseconds 300 }
+        }
+        if (Test-Path -LiteralPath $Work) { Write-Warning "Could not remove temp folder $Work" }
     }
 }
 

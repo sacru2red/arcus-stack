@@ -6,6 +6,14 @@ $RepoRoot = Split-Path -Parent $PSScriptRoot
 $Shell = (Get-Process -Id $PID).Path
 $Failed = 0
 
+# A just-exited child shell or a virus scanner can hold a file in the copy for a moment; retry, then warn.
+function Remove-TempTree([string]$Path) {
+    for ($Try = 1; $Try -le 10; $Try++) {
+        try { Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction Stop; return } catch { Start-Sleep -Milliseconds 300 }
+    }
+    Write-Warning "Could not remove temp folder $Path"
+}
+
 function New-RepoCopy {
     $Dir = Join-Path ([IO.Path]::GetTempPath()) ("arcus-validate-" + [guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Path $Dir | Out-Null
@@ -48,7 +56,7 @@ function Test-Case([string]$Name, [int]$ExpectedExit, [scriptblock]$Mutate, [str
             $script:Failed++
         }
     } finally {
-        Remove-Item -LiteralPath $Dir -Recurse -Force
+        Remove-TempTree $Dir
     }
 }
 
