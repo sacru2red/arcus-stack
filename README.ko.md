@@ -203,10 +203,10 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
   ```
 - **Claude Code**:
   ```bash
-  /plugin marketplace add https://github.com/sacru2red/arcus-stack
-  /plugin install arcus-stack
+  /plugin marketplace add sacru2red/arcus-stack
+  /plugin install arcus-stack@arcus-stack
   # 업데이트
-  /plugin update arcus-stack
+  /plugin update arcus-stack@arcus-stack
   ```
 
 ### 방법 3. 로컬 클론 + 전역 심볼릭 링크 (`scripts/install-global.ps1` / `.sh`)

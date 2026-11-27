@@ -203,10 +203,10 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
   ```
 - **Claude Code**:
   ```bash
-  /plugin marketplace add https://github.com/sacru2red/arcus-stack
-  /plugin install arcus-stack
+  /plugin marketplace add sacru2red/arcus-stack
+  /plugin install arcus-stack@arcus-stack
   # Update
-  /plugin update arcus-stack
+  /plugin update arcus-stack@arcus-stack
   ```
 
 ### Method 3. Local clone + global symlinks (`scripts/install-global.ps1` / `.sh`)

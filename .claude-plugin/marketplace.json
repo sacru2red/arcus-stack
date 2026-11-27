@@ -1,0 +1,15 @@
+{
+  "name": "arcus-stack",
+  "description": "Universal deep-first planning, review, and verification skills for AI coding agents.",
+  "owner": {
+    "name": "sacru2red",
+    "url": "https://github.com/sacru2red"
+  },
+  "plugins": [
+    {
+      "name": "arcus-stack",
+      "source": "./",
+      "description": "ARCUS (Agent Rules, Commands & Universal Skills) — Universal Deep-First skill & playbook stack for Antigravity (agy), Claude Code, Codex, Cursor, and OpenCode."
+    }
+  ]
+}
