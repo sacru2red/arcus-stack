@@ -129,10 +129,20 @@ $NoticeEntries = @()
 if (Test-Path -LiteralPath $NoticePath) {
     $NoticeRaw = Get-Content -LiteralPath $NoticePath -Raw
     $NoticeEntries = @([regex]::Matches($NoticeRaw, '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
-    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '\((LICENSES/[^)\s]+)\)') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
-    foreach ($Entry in @($NoticeEntries) + @($NoticeLicenseRefs)) {
+    # Any repo-relative LICENSES/ or LICENSES\ path, with or without parentheses, quotes, or backticks.
+    # Accepts a leading ./, skips URL paths and names like THIRD-PARTY-LICENSES/, stops at a #fragment,
+    # and drops trailing punctuation and Markdown emphasis. Every guard is pinned by test-validate.ps1.
+    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '(?<![\w/\\=?&.-])(?:\.[/\\])?LICENSES[/\\][^\s()\[\]"''`<>#*]*[^\s()\[\]"''`<>#*.,;:!?]') | ForEach-Object { ($_.Value -replace '\\', '/') -replace '^\./', '' } | Sort-Object -Unique)
+    foreach ($Entry in $NoticeEntries) {
         if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Entry))) {
             $Failures.Add("[License] NOTICE references '$Entry' but the file does not exist")
+        }
+    }
+    # Exact, case-sensitive name match: Test-Path on Windows ignores trailing dots and case.
+    $LicenseFiles = @(Get-ChildItem -LiteralPath (Join-Path $RepoRoot "LICENSES") -File -ErrorAction SilentlyContinue | ForEach-Object { "LICENSES/" + $_.Name })
+    foreach ($Ref in $NoticeLicenseRefs) {
+        if ($LicenseFiles -cnotcontains $Ref) {
+            $Failures.Add("[License] NOTICE references '$Ref' but no such file exists in LICENSES/")
         }
     }
 }

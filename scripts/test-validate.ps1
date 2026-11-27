@@ -91,6 +91,50 @@ Test-Case "license text referenced by NOTICE but missing fails" 1 {
     Remove-Item -LiteralPath (Join-Path (Join-Path $d "LICENSES") "yoonmoon-MIT.txt")
 }
 
+Test-Case "bare backslash LICENSES reference to a missing file fails" 1 {
+    param($d)
+    Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See LICENSES\missing-MIT.txt for details."
+}
+
+Test-Case "LICENSES reference followed by a period still fails when missing" 1 {
+    param($d)
+    Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See LICENSES/a."
+}
+
+Test-Case "./LICENSES reference to a missing file fails" 1 {
+    param($d)
+    Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See ./LICENSES/missing-MIT.txt"
+}
+
+# Each line pins one guard of the license-reference regex: dropping that guard makes the
+# reference resolve to a non-existent path (or a skipped one get checked), so the case exits 1.
+Test-Case "wrapped, punctuated, fragment, URL and THIRD-PARTY LICENSES mentions resolve or are skipped" 0 {
+    param($d)
+    $Lines = @(
+        'Double quotes: "LICENSES/pstack-MIT.txt"is',
+        'Single quotes: ''LICENSES/pstack-MIT.txt''s',
+        'Backticks: `LICENSES/Apache-2.0.txt`x',
+        'Angle brackets: <LICENSES/pstack-MIT.txt>x',
+        'Reference link: [LICENSES/pstack-MIT.txt][1]',
+        'Tight emphasis: *LICENSES/pstack-MIT.txt*x',
+        'Square brackets: [LICENSES/pstack-MIT.txt]',
+        'Emphasis: *LICENSES/pstack-MIT.txt*',
+        'Period: LICENSES/pstack-MIT.txt.',
+        'Comma: LICENSES/pstack-MIT.txt, then text',
+        'Exclamation: LICENSES/pstack-MIT.txt!',
+        'Question: LICENSES/pstack-MIT.txt?',
+        'Dot slash: ./LICENSES/pstack-MIT.txt',
+        'Fragment: LICENSES/Apache-2.0.txt#L1',
+        'URL path: https://example.com/LICENSES/none.txt',
+        'Query value: https://example.com/?f=LICENSES/none.txt',
+        'Query start: https://example.com/a?LICENSES/none.txt',
+        'Query join: https://example.com/a?x=1&LICENSES/none.txt',
+        'Dotted name: see.LICENSES/none.txt',
+        'Other tool: THIRD-PARTY-LICENSES/none.txt'
+    )
+    Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value $Lines
+}
+
 if ($Failed -gt 0) {
     Write-Host "`n$Failed validate.ps1 regression case(s) failed." -ForegroundColor Red
     exit 1
