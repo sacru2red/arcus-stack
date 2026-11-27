@@ -40,7 +40,8 @@ function Test-LinksIntoRepo($Item) {
     $Target = Get-LinkTarget $Item
     if ($null -eq $Target) { return $false }
     $Normalized = $Target -replace '^\\\\\?\\', ''
-    return $Normalized.StartsWith($SkillsSource, [StringComparison]::OrdinalIgnoreCase)
+    $Prefix = $SkillsSource.TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    return $Normalized.StartsWith($Prefix, [StringComparison]::OrdinalIgnoreCase)
 }
 
 foreach ($TargetBase in $AgentSkillDirs) {

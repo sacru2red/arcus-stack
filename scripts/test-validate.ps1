@@ -56,6 +56,14 @@ Test-Case "stray non-arcus skill folder fails" 1 {
     New-Item -ItemType Directory -Path (Join-Path $d "skills\stray") | Out-Null
 }
 
+Test-Case "non-arcus skill folder with a matching SKILL.md fails the namespace check" 1 {
+    param($d)
+    $Old = Join-Path (Join-Path $d "skills") "arcus-why"
+    $File = Join-Path $Old "SKILL.md"
+    (Get-Content -LiteralPath $File -Raw) -replace '(?m)^name:\s*arcus-why', 'name: why' | Set-Content -LiteralPath $File -NoNewline
+    Rename-Item -LiteralPath $Old -NewName "why"
+}
+
 Test-Case "tool state folder skills/.omc is ignored" 0 {
     param($d)
     New-Item -ItemType Directory -Path (Join-Path $d "skills\.omc\state") -Force | Out-Null

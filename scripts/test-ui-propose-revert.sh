@@ -54,7 +54,8 @@ dirty="$(new_repo)"
   check "dirty tree: .audit/ hidden from status" "$(git status --porcelain | grep -c '\.audit' || true)" "0"
   git apply .audit/ui-propose/t/option-b.patch
   check "dirty tree: chosen option re-applies on top of user baseline" "$(cat Y.css)" "y-option-b"
-)
+  exit "$fail"
+) || fail=1
 
 clean="$(new_repo)"
 (
@@ -64,7 +65,8 @@ clean="$(new_repo)"
   check "clean tree: Y.css back to HEAD" "$(cat Y.css)" "y-head"
   git apply .audit/ui-propose/t/option-c.patch
   check "clean tree: chosen option re-applies" "$(cat Y.css)" "y-option-c"
-)
+  exit "$fail"
+) || fail=1
 
 rm -rf "$dirty" "$clean"
 if [ "$fail" -ne 0 ]; then echo "ui-propose revert regression FAILED"; exit 1; fi

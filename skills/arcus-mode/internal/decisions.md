@@ -24,7 +24,7 @@ Next, check if the workspace already has an active decision log (`DECISIONS.md`,
 
 ## 3. Step 2 — Explicit User Authorization (Mandatory)
 
-Never create or modify `DECISIONS.md`—and never write an opt-out setting—without explicit user authorization. When a significant architectural trade-off or rule graduation occurs (skip trivial bug fixes), ask the user via your structured question tool (`ask_question` / `AskQuestion`):
+Never create or modify `DECISIONS.md`—and never write an opt-out setting—without explicit user authorization. When a significant architectural trade-off or rule graduation occurs (skip trivial bug fixes), ask the user via your structured question tool (`ask_question` / `AskQuestion` / `AskUserQuestion`) in the top-level session. Inside a [`worker.md`](../worker.md) subagent, never call a question tool: put the proposed `D-xxx` record in your report for the top-level session to ask about:
 
 - **If no `DECISIONS.md` / ADR exists yet**:
   1. **Create `DECISIONS.md` and record `D-001`** (Recommended for long-lived projects so `arcus-why` can trace rationale)

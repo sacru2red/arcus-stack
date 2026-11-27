@@ -9,7 +9,7 @@ Adversaries try to break a change or a design. A finding survives only when a ru
 
 ## Frame
 
-The scope is what the user names. Otherwise it is the branch diff from its merge base with the base branch, through the working tree. State the intent with [arcus-explain](../../arcus-explain/SKILL.md), from the user's message, the commits, and the PR description. Ask the user when the intent is unclear.
+The scope is what the user names. Otherwise it is the branch diff from its merge base with the base branch, through the working tree. State the intent with [arcus-explain](../../arcus-explain/SKILL.md), from the user's message, the commits, and the PR description. Ask the user when the intent is unclear (inside a [`worker.md`](../worker.md) subagent, state the assumed intent in your report instead of asking).
 
 ## Fan out
 
