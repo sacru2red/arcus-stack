@@ -129,7 +129,8 @@ $NoticeEntries = @()
 if (Test-Path -LiteralPath $NoticePath) {
     $NoticeRaw = Get-Content -LiteralPath $NoticePath -Raw
     $NoticeEntries = @([regex]::Matches($NoticeRaw, '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
-    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '\((LICENSES/[^)\s]+)\)') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
+    # Any LICENSES/ or LICENSES\ path, with or without surrounding parentheses
+    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '(?<![\w/\\])LICENSES[/\\][^\s()]+[^\s().,;:]') | ForEach-Object { $_.Value -replace '\\', '/' } | Sort-Object -Unique)
     foreach ($Entry in @($NoticeEntries) + @($NoticeLicenseRefs)) {
         if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Entry))) {
             $Failures.Add("[License] NOTICE references '$Entry' but the file does not exist")
