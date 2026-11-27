@@ -104,3 +104,29 @@ Licensed under the Apache License, Version 2.0 (LICENSES/Apache-2.0.txt).
 
   - skills/arcus-mode/internal/modern-web-guidance.md
     (adapted; modification notice in the file header per Apache-2.0 Section 4(b))
+
+--------------------------------------------------------------------------------
+Korean AI-writing pattern catalogs
+skills/arcus-mode/internal/unslop-ko.md takes its pattern choices, frequency
+tiers and overcorrection guards from the works below. The rules are rewritten;
+no text is copied. The notices are kept conservatively, as if the file were a
+derivative work.
+
+im-not-ai (https://github.com/epoko77-ai/im-not-ai), commit e9793d7
+Copyright (c) 2026 epoko77-ai
+Licensed under the MIT License (LICENSES/im-not-ai-MIT.txt).
+
+yoonmoon (https://github.com/amondnet/yoonmoon), commit c888531
+Copyright (c) 2026 Minsu Lee
+Licensed under the MIT License (LICENSES/yoonmoon-MIT.txt).
+
+korean-report-skills (https://github.com/JangHyun-bin/korean-report-skills), commit 3004318
+Copyright 2026 장현빈
+This product includes software developed by 장현빈.
+Licensed under the Apache License, Version 2.0 (LICENSES/Apache-2.0.txt).
+
+  - skills/arcus-mode/internal/unslop-ko.md
+
+Also consulted for pattern choices only (no text or code taken):
+humanize-korean (modu-ai, https://lobehub.com/zh/skills/modu-ai-cowork-plugins-humanize-korean),
+https://wikidocs.net/blog/@openwiki/22670/ and https://kitpa.org/news/1888.

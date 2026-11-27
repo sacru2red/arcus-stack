@@ -86,6 +86,11 @@ Test-Case "NOTICE entry for a missing file fails" 1 {
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "  - skills/arcus-mode/internal/does-not-exist.md"
 }
 
+Test-Case "license text referenced by NOTICE but missing fails" 1 {
+    param($d)
+    Remove-Item -LiteralPath (Join-Path (Join-Path $d "LICENSES") "yoonmoon-MIT.txt")
+}
+
 if ($Failed -gt 0) {
     Write-Host "`n$Failed validate.ps1 regression case(s) failed." -ForegroundColor Red
     exit 1

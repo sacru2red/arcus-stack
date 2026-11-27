@@ -16,7 +16,7 @@
   <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
   <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
   <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
-  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-69%20On--Demand-d29922?style=flat-square">
 </p>
 
 </div>
@@ -115,7 +115,7 @@ Colocar decenas de reglas granulares en el primer nivel de `skills/` satura el m
 *Figura 2. Encapsulacion en dos niveles que mantiene solo 15 habilidades publicas en el menu mientras carga bajo demanda los modulos internos de `skills/arcus-mode/`, las carpetas `references/` de cada habilidad y `DECISIONS.md` en la raiz.*
 
 - **Tier 1 (15 habilidades publicas)**: Solo `skills/arcus-*/SKILL.md` aparece en tu menu. Las habilidades autonomas incluyen sus propias `references/` (11 archivos) para funcionar en instalaciones parciales.
-- **Tier 2 (`skills/arcus-mode/` 68 modulos internos + `worker.md`)**: 24 principios, 23 playbooks, 20 sub-habilidades internas y 1 referencia (`bugbot-triage.md`) permanecen ocultos y se cargan por enlace relativo solo cuando aplican.
+- **Tier 2 (`skills/arcus-mode/` 69 modulos internos + `worker.md`)**: 24 principios, 23 playbooks, 21 sub-habilidades internas y 1 referencia (`bugbot-triage.md`) permanecen ocultos y se cargan por enlace relativo solo cuando aplican.
 
 ---
 
@@ -124,7 +124,7 @@ Colocar decenas de reglas granulares en el primer nivel de `skills/` satura el m
 | Dimension | `arcus-mode` (Modo maestro) | `arcus-work-loop` (Motor de ejecucion de checklist) |
 | :--- | :--- | :--- |
 | **Rol** | Controla el criterio de ingenieria, estilo conciso y delegacion en subagentes durante toda la sesion. | Toma una checklist `- [ ]` confirmada y ejecuta el ciclo implementar, verificar, corregir y marcar `[x]`. |
-| **Alcance** | Amplio: elige dinamicamente entre 24 principios, 23 playbooks y 20 modulos internos. | Enfocado: toma la lista de `arcus-plan` y continua hasta que pasen pruebas y compilacion reales. |
+| **Alcance** | Amplio: elige dinamicamente entre 24 principios, 23 playbooks y 21 modulos internos. | Enfocado: toma la lista de `arcus-plan` y continua hasta que pasen pruebas y compilacion reales. |
 | **Cuando usarlo** | Al iniciar sesion o ante tareas abiertas de arquitectura, depuracion o rendimiento. | Tras aprobar el plan, cuando quieres ejecucion y verificacion completas sin pausas intermedias. |
 
 ---
@@ -258,12 +258,12 @@ arcus-stack/
 │   ├── install-global.sh        # Instalador global de enlaces en macOS/Linux (5 agentes + T3 Code)
 │   └── validate.ps1             # Validador de frontmatter, enlaces relativos, 15 habilidades y portabilidad
 └── skills/                      # 15 habilidades publicas (+ 11 archivos en references/ por habilidad)
-    ├── arcus-mode/              # Modo maestro + 68 modulos internos encapsulados + worker.md
+    ├── arcus-mode/              # Modo maestro + 69 modulos internos encapsulados + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
     │   ├── playbooks/           # [Interno] 23 playbooks de tareas (safe-migration, opening-a-pr, ...)
     │   ├── principles/          # [Interno] 24 principios de ingenieria
-    │   ├── internal/            # [Interno] 20 sub-habilidades auxiliares (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization, ...)
+    │   ├── internal/            # [Interno] 21 sub-habilidades auxiliares (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization, ...)
     │   └── references/          # [Interno] 1 referencia (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/

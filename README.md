@@ -16,7 +16,7 @@
   <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
   <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
   <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
-  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-69%20On--Demand-d29922?style=flat-square">
 </p>
 
 </div>
@@ -115,7 +115,7 @@ Flattening dozens of granular rules into top-level `skills/` clutters slash menu
 *Figure 2. Two-tier encapsulation keeping only 15 public core skills in the slash menu while loading `skills/arcus-mode/` internal modules, per-skill `references/`, and root `DECISIONS.md` on demand.*
 
 - **Tier 1 (15 public core skills)**: Only `skills/arcus-*/SKILL.md` appears in your skill menu. Standalone skills keep their own `references/` (11 files) so partial installation stays self-contained.
-- **Tier 2 (`skills/arcus-mode/` 68 internal modules + `worker.md`)**: 24 principles, 23 playbooks, 20 internal sub-skills, and 1 reference (`bugbot-triage.md`) stay hidden from user menus and load via relative links only when needed.
+- **Tier 2 (`skills/arcus-mode/` 69 internal modules + `worker.md`)**: 24 principles, 23 playbooks, 21 internal sub-skills, and 1 reference (`bugbot-triage.md`) stay hidden from user menus and load via relative links only when needed.
 
 ---
 
@@ -124,7 +124,7 @@ Flattening dozens of granular rules into top-level `skills/` clutters slash menu
 | Dimension | `arcus-mode` (Master operating mode) | `arcus-work-loop` (Checklist execution engine) |
 | :--- | :--- | :--- |
 | **Role** | Governs session-wide engineering judgment, concise prose, and subagent delegation. | Drives a confirmed `- [ ]` checklist through implement, verify, repair, and check-off cycles. |
-| **Scope** | Broad: selects dynamically from 24 principles, 23 playbooks, and 20 internal modules. | Focused: takes the `arcus-plan` checklist and loops until real build and test checks pass. |
+| **Scope** | Broad: selects dynamically from 24 principles, 23 playbooks, and 21 internal modules. | Focused: takes the `arcus-plan` checklist and loops until real build and test checks pass. |
 | **When to invoke** | At session start or for open-ended architecture, debugging, and performance work. | After a plan is approved and you want verified end-to-end execution without stopping halfway. |
 
 ---
@@ -258,12 +258,12 @@ arcus-stack/
 │   ├── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
 │   └── validate.ps1             # Frontmatter, relative-link, 15-skill, and portability validator
 └── skills/                      # 15 public core skills (+ 11 per-skill references/ files)
-    ├── arcus-mode/              # Master mode + 68 encapsulated internal modules + worker.md
+    ├── arcus-mode/              # Master mode + 69 encapsulated internal modules + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
     │   ├── playbooks/           # [Internal] 23 task playbooks (safe-migration, opening-a-pr, ...)
     │   ├── principles/          # [Internal] 24 engineering principles
-    │   ├── internal/            # [Internal] 20 helper sub-skills (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization, ...)
+    │   ├── internal/            # [Internal] 21 helper sub-skills (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization, ...)
     │   └── references/          # [Internal] 1 reference (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/

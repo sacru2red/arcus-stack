@@ -16,7 +16,7 @@
   <img alt="Supported Agents" src="https://img.shields.io/badge/Agents-agy%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Cursor%20%C2%B7%20OpenCode-1f6feb?style=flat-square">
   <img alt="Zero MCP" src="https://img.shields.io/badge/Runtime-Zero%20MCP%20(Pure%20Markdown)-2ea043?style=flat-square">
   <img alt="Core Skills" src="https://img.shields.io/badge/Core%20Skills-15%20Public-8957e5?style=flat-square">
-  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-68%20On--Demand-d29922?style=flat-square">
+  <img alt="Internal Modules" src="https://img.shields.io/badge/arcus--mode%20Modules-69%20On--Demand-d29922?style=flat-square">
 </p>
 
 </div>
@@ -115,7 +115,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 *그림 2. 5개 에이전트가 최상위 15개 공개 코어 스킬만 메뉴에 노출하고, `skills/arcus-mode/` 하위 모듈과 각 스킬 `references/`는 작업 중 상대 링크로 온디맨드 로드하는 2계층 구조.*
 
 - **Tier 1 (공개 진입점 15종)**: `skills/arcus-*/SKILL.md`만 메뉴에 표시됩니다. 개별 코어 스킬은 자체 `references/`(11개 파일)를 포함해 부분 설치 시에도 깨지지 않습니다.
-- **Tier 2 (`skills/arcus-mode/` 내부 모듈 68개 + `worker.md`)**: 원칙 24개, 플레이북 23개, 내부 보조 스킬 20개, 레퍼런스 1개(`bugbot-triage.md`)가 메뉴를 가리지 않고 필요할 때만 로드됩니다.
+- **Tier 2 (`skills/arcus-mode/` 내부 모듈 69개 + `worker.md`)**: 원칙 24개, 플레이북 23개, 내부 보조 스킬 21개, 레퍼런스 1개(`bugbot-triage.md`)가 메뉴를 가리지 않고 필요할 때만 로드됩니다.
 
 ---
 
@@ -124,7 +124,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 | 구분 | `arcus-mode` (마스터 운영 모드) | `arcus-work-loop` (체크리스트 실행 엔진) |
 | :--- | :--- | :--- |
 | **핵심 역할** | 세션 전체의 엔지니어링 판단 기준, 간결한 문체, 서브에이전트 위임 규칙을 통제합니다. | 확정된 체크리스트(`- [ ]`)를 받아 구현, 검증, 수정, 완료(`[x]`) 루프를 완주합니다. |
-| **적용 범위** | 24개 원칙과 23개 플레이북, 20개 내부 모듈 중 상황에 맞는 절차를 자동 선택합니다. | `arcus-plan` 체크리스트를 이어받아 실제 테스트·빌드 증거가 통과할 때까지 반복 실행합니다. |
+| **적용 범위** | 24개 원칙과 23개 플레이북, 21개 내부 모듈 중 상황에 맞는 절차를 자동 선택합니다. | `arcus-plan` 체크리스트를 이어받아 실제 테스트·빌드 증거가 통과할 때까지 반복 실행합니다. |
 | **호출 시점** | 세션 시작 시 전반적 작업 품질을 높이거나 원인 분석·설계 탐색이 필요할 때 | 계획이 확정된 뒤 중간에 멈추지 않고 끝까지 구현·검증을 완료하고 싶을 때 |
 
 ---
@@ -258,12 +258,12 @@ arcus-stack/
 │   ├── install-global.sh        # macOS/Linux 전역 심볼릭 링크 설치기 (5개 에이전트 + T3 Code)
 │   └── validate.ps1             # 프론트매터 · 상대 링크 · 15개 스킬 · 호환성 자동 검증기
 └── skills/                      # 사용자 노출 15개 공개 코어 스킬 (+ 개별 스킬 references/ 11개)
-    ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈 68개 + worker.md
+    ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈 69개 + worker.md
     │   ├── SKILL.md
     │   ├── worker.md
     │   ├── playbooks/           # [내부] 23개 작업 플레이북 (safe-migration, opening-a-pr 등)
     │   ├── principles/          # [내부] 24개 엔지니어링 원칙
-    │   ├── internal/            # [내부] 20개 보조 스킬 (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization 등)
+    │   ├── internal/            # [내부] 21개 보조 스킬 (backend-reliability, typescript-best-practices, modern-web-guidance, archify-visualization 등)
     │   └── references/          # [내부] 1개 레퍼런스 (bugbot-triage.md)
     ├── arcus-plan/
     ├── arcus-work-loop/
