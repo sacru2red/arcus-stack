@@ -27,14 +27,22 @@ function New-RepoCopy {
     return $Dir
 }
 
-function Test-Case([string]$Name, [int]$ExpectedExit, [scriptblock]$Mutate) {
+# $Tag, when given, must appear in the validator output, so a case proves which check caught the defect.
+function Test-Case([string]$Name, [int]$ExpectedExit, [scriptblock]$Mutate, [string]$Tag = "") {
     $Dir = New-RepoCopy
     try {
         & $Mutate $Dir
-        & $Shell -NoProfile -File (Join-Path $Dir "scripts\validate.ps1") *> $null
+        # Windows PowerShell 5.1 turns redirected native stderr into a terminating error under "Stop".
+        $ErrorActionPreference = "Continue"
+        $Output = (& $Shell -NoProfile -File (Join-Path $Dir "scripts\validate.ps1") *>&1 | Out-String)
         $Actual = $LASTEXITCODE
-        if ($Actual -eq $ExpectedExit) {
+        $ErrorActionPreference = "Stop"
+        $TagSeen = ($Tag -eq "") -or $Output.Contains($Tag)
+        if ($Actual -eq $ExpectedExit -and $TagSeen) {
             Write-Host "[PASS] $Name (exit $Actual)"
+        } elseif (-not $TagSeen) {
+            Write-Host "[FAIL] $Name (exit $Actual, but no '$Tag' failure in the output)" -ForegroundColor Red
+            $script:Failed++
         } else {
             Write-Host "[FAIL] $Name (expected exit $ExpectedExit, got $Actual)" -ForegroundColor Red
             $script:Failed++
@@ -81,27 +89,27 @@ Test-Case "frontmatter name mismatch fails" 1 {
     (Get-Content -LiteralPath $File -Raw) -replace '(?m)^name:\s*arcus-why', 'name: arcus-whyy' | Set-Content -LiteralPath $File -NoNewline
 }
 
-Test-Case "NOTICE entry for a missing file fails" 1 {
+Test-Case "NOTICE entry for a missing file fails" 1 -Tag "[License] " {
     param($d)
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "  - skills/arcus-mode/internal/does-not-exist.md"
 }
 
-Test-Case "license text referenced by NOTICE but missing fails" 1 {
+Test-Case "license text referenced by NOTICE but missing fails" 1 -Tag "[License] " {
     param($d)
     Remove-Item -LiteralPath (Join-Path (Join-Path $d "LICENSES") "yoonmoon-MIT.txt")
 }
 
-Test-Case "bare backslash LICENSES reference to a missing file fails" 1 {
+Test-Case "bare backslash LICENSES reference to a missing file fails" 1 -Tag "[License] " {
     param($d)
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See LICENSES\missing-MIT.txt for details."
 }
 
-Test-Case "LICENSES reference followed by a period still fails when missing" 1 {
+Test-Case "LICENSES reference followed by a period still fails when missing" 1 -Tag "[License] " {
     param($d)
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See LICENSES/a."
 }
 
-Test-Case "./LICENSES reference to a missing file fails" 1 {
+Test-Case "./LICENSES reference to a missing file fails" 1 -Tag "[License] " {
     param($d)
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value "See ./LICENSES/missing-MIT.txt"
 }
@@ -133,6 +141,39 @@ Test-Case "wrapped, punctuated, fragment, URL and THIRD-PARTY LICENSES mentions 
         'Other tool: THIRD-PARTY-LICENSES/none.txt'
     )
     Add-Content -LiteralPath (Join-Path $d "NOTICE") -Value $Lines
+    & $Shell -NoProfile -File (Join-Path $d "scripts\sync-notices.ps1") *> $null
+}
+
+function Add-PstackEntry([string]$Dir, [string]$Entry) {
+    $File = Join-Path $Dir "NOTICE"
+    $Text = [IO.File]::ReadAllText($File)
+    [IO.File]::WriteAllText($File, $Text.Replace("  - skills/arcus-why/SKILL.md`n", "  - skills/arcus-why/SKILL.md`n$Entry`n"))
+}
+
+Test-Case "NOTICE entry for an existing file without a regenerated skill notice fails" 1 -Tag "[Notices] " {
+    param($d)
+    Add-PstackEntry $d "  - skills/arcus-plan/SKILL.md"
+}
+
+Test-Case "NOTICE entry for an existing file passes once sync-notices.ps1 regenerates" 0 {
+    param($d)
+    Add-PstackEntry $d "  - skills/arcus-plan/SKILL.md"
+    & $Shell -NoProfile -File (Join-Path $d "scripts\sync-notices.ps1") *> $null
+}
+
+Test-Case "orphaned skill notice for a skill without NOTICE entries fails" 1 -Tag "[Notices] " {
+    param($d)
+    Set-Content -LiteralPath (Join-Path $d "skills\arcus-plan\THIRD_PARTY_NOTICES.md") -Value "# stale"
+}
+
+Test-Case "deleted skill notice fails" 1 -Tag "[Notices] " {
+    param($d)
+    Remove-Item -LiteralPath (Join-Path $d "skills\arcus-why\THIRD_PARTY_NOTICES.md")
+}
+
+Test-Case "hand-edited skill notice fails" 1 -Tag "[Notices] " {
+    param($d)
+    Add-Content -LiteralPath (Join-Path $d "skills\arcus-why\THIRD_PARTY_NOTICES.md") -Value "extra"
 }
 
 if ($Failed -gt 0) {

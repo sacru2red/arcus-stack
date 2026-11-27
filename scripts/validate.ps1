@@ -1,5 +1,5 @@
 # Official ARCUS-STACK Repository Validation Script
-# Enforces D-001 (Universal Frontmatter & Relative Links), D-002/D-009/D-012 (15 Public Core Skills), and D-003 (Zero Cursor/pstack Lock-in)
+# Enforces D-001 (Universal Frontmatter & Relative Links), D-002/D-009/D-012 (15 Public Core Skills), D-003 (Zero Cursor/pstack Lock-in), and D-014 (Per-Skill Third-Party Notices)
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
@@ -30,7 +30,7 @@ foreach ($File in $SkillMarkdownFiles) {
         $Failures.Add("[Frontmatter] Missing YAML frontmatter in $($File.FullName)")
     }
 }
-Write-Host "[1/5] Checked YAML frontmatter in $FrontmatterChecked skill markdown files."
+Write-Host "[1/6] Checked YAML frontmatter in $FrontmatterChecked skill markdown files."
 
 # 2. Relative Markdown Link Resolution Check (Stripping fenced blocks, masking inline code spans)
 $AllMarkdownFiles = Get-ChildItem -Path $RepoRoot -Filter "*.md" -Recurse | Where-Object {
@@ -61,7 +61,7 @@ foreach ($File in $AllMarkdownFiles) {
         }
     }
 }
-Write-Host "[2/5] Checked $LinksChecked relative Markdown links across $($AllMarkdownFiles.Count) files."
+Write-Host "[2/6] Checked $LinksChecked relative Markdown links across $($AllMarkdownFiles.Count) files."
 
 # 3. Forbidden Unadapted pstack/Cursor Dependency Check in skills/
 $ForbiddenPattern = "disable-model-invocation|arcus-in-your-own-words|comment-sicko|decision-log-template\.tsv|scripts/log\.sh|watch-pr/watch-pr|worktree-audit\.sh|pstack-models\.mdc|cursor-team-kit|/deslop|control-ui|control-cli|(?<!make a )control skill|create-skill|/loop\b|claude-opus-5-5-|claude-fable-5-2|gemini-4-neon-xhigh|poteto-mode|poteto-agent|subagent_type|generalPurpose|environment:\s*`"(cloud|local)`"|Cursor cloud agent|Cursor's|~/.cursor/projects|\.cursor/worktrees|\*\*(ketchup|why|in-your-own-words|explain)\*\*"
@@ -69,7 +69,7 @@ $ForbiddenHits = @($SkillMarkdownFiles | Select-String -Pattern $ForbiddenPatter
 foreach ($Hit in $ForbiddenHits) {
     $Failures.Add("[Forbidden Dependency] $($Hit.Path):$($Hit.LineNumber): $($Hit.Line.Trim())")
 }
-Write-Host "[3/5] Checked $($SkillMarkdownFiles.Count) skill files for unadapted Cursor/pstack dependencies (Hits: $($ForbiddenHits.Count))."
+Write-Host "[3/6] Checked $($SkillMarkdownFiles.Count) skill files for unadapted Cursor/pstack dependencies (Hits: $($ForbiddenHits.Count))."
 
 # 4. Two-Tier Public Skill Layout, Manifest JSON & .agents/skills.json Parity Check
 $TopLevelSkills = @(Get-ChildItem -Path $SkillsRoot -Directory | Where-Object { -not $_.Name.StartsWith('.') } | Sort-Object Name)
@@ -116,7 +116,7 @@ if ($ParsedManifests.ContainsKey($SkillsJsonPath)) {
         $Failures.Add("[Manifest Parity] .agents/skills.json entries ($($EntryPaths -join ', ')) must include 'skills'")
     }
 }
-Write-Host "[4/5] Verified $($TopLevelSkills.Count) public core skills and $($ManifestFiles.Count) JSON manifests."
+Write-Host "[4/6] Verified $($TopLevelSkills.Count) public core skills and $($ManifestFiles.Count) JSON manifests."
 
 # 5. License Attribution Check (LICENSE, NOTICE, LICENSES/ texts, and every NOTICE-listed file exists)
 foreach ($Required in @("LICENSE", "NOTICE", "LICENSES\pstack-MIT.txt", "LICENSES\Apache-2.0.txt")) {
@@ -146,7 +146,18 @@ if (Test-Path -LiteralPath $NoticePath) {
         }
     }
 }
-Write-Host "[5/5] Checked license files, $($NoticeEntries.Count) NOTICE-attributed paths, and $($NoticeLicenseRefs.Count) license-text references."
+Write-Host "[5/6] Checked license files, $($NoticeEntries.Count) NOTICE-attributed paths, and $($NoticeLicenseRefs.Count) license-text references."
+
+# 6. Per-Skill Third-Party Notices (D-014): skills/<skill>/THIRD_PARTY_NOTICES.md must match what sync-notices.ps1 generates
+# Windows PowerShell 5.1 turns redirected native stderr into a terminating error under "Stop".
+$ErrorActionPreference = "Continue"
+$NoticeSync = @(& (Get-Process -Id $PID).Path -NoProfile -File (Join-Path $PSScriptRoot "sync-notices.ps1") -Check 2>&1 | ForEach-Object { "$_" })
+$NoticeSyncExit = $LASTEXITCODE
+$ErrorActionPreference = "Stop"
+if ($NoticeSyncExit -ne 0) {
+    foreach ($Line in $NoticeSync) { $Failures.Add("[Notices] $Line") }
+}
+Write-Host "[6/6] Checked per-skill third-party notices against NOTICE."
 
 if ($Failures.Count -gt 0) {
     Write-Host "`nVALIDATION FAILED ($($Failures.Count) issues):" -ForegroundColor Red
