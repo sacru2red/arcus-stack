@@ -7,7 +7,7 @@ description: Cut AI tells from any writing.
 
 Edit text to remove AI patterns. Scan for the patterns below, then rewrite. Preserve meaning and match the intended tone.
 
-When the text is Korean, also apply [unslop-ko.md](./unslop-ko.md). It lists the English rules it replaces for Korean text; where the two conflict, unslop-ko.md wins.
+When the text is Korean, also apply [unslop-ko.md](./unslop-ko.md). It lists how each English rule changes for Korean text; where the two conflict, unslop-ko.md wins.
 
 Rule numbers are stable ids that other skills cite. A removed rule leaves a gap.
 

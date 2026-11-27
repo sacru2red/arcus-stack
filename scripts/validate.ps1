@@ -129,8 +129,9 @@ $NoticeEntries = @()
 if (Test-Path -LiteralPath $NoticePath) {
     $NoticeRaw = Get-Content -LiteralPath $NoticePath -Raw
     $NoticeEntries = @([regex]::Matches($NoticeRaw, '(?m)^  - (\S+)') | ForEach-Object { $_.Groups[1].Value })
-    # Any LICENSES/ or LICENSES\ path, with or without surrounding parentheses
-    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '(?<![\w/\\])LICENSES[/\\][^\s()]+[^\s().,;:]') | ForEach-Object { $_.Value -replace '\\', '/' } | Sort-Object -Unique)
+    # Any repo-relative LICENSES/ or LICENSES\ path, with or without parentheses, quotes, or backticks.
+    # Skips URL paths and names like THIRD-PARTY-LICENSES/, stops at a #fragment, and drops trailing punctuation.
+    $NoticeLicenseRefs = @([regex]::Matches($NoticeRaw, '(?<![\w/\\=?&.-])LICENSES[/\\][^\s()\[\]"''`<>#]*[^\s()\[\]"''`<>#.,;:!?]') | ForEach-Object { $_.Value -replace '\\', '/' } | Sort-Object -Unique)
     foreach ($Entry in @($NoticeEntries) + @($NoticeLicenseRefs)) {
         if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot $Entry))) {
             $Failures.Add("[License] NOTICE references '$Entry' but the file does not exist")
