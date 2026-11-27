@@ -35,13 +35,13 @@ This document records the core architectural and directional decisions of **`arc
 ---
 
 ## `D-003`: Namespace Isolation (`arcus-*`) & Stale Link / Lockfile Pruning on Rename
-- **Date / Pin**: `2026-11-25` (`9cca575`, `671cacf`; install scope revised `2026-11-27`)
+- **Date / Pin**: `2026-11-25` (`9cca575`, `671cacf`; install scope and copied-install handling revised `2026-11-27`)
 - **Status**: `ACTIVE`
 - **Context**: Generic skill names or trigger keywords (such as `ulw` / `ultrawork`) collide with co-installed plugins (`oh-my-openagent`, `oh-my-claudecode`, `oh-my-antigravity`), causing ambiguous or double skill activation. Additionally, `npx skills add/update` does not prune upstream-renamed skills (e.g., `arcus-work` → `arcus-work-loop`, `arcus-in-your-own-words` → `arcus-explain`), leaving ghost entries in `~/.agents/.skill-lock.json` and agent skill folders.
 - **Decision & Tradeoff**:
   - Prefix all public skills with `arcus-` and remove colliding third-party trigger keywords (`ulw`, `ultrawork`) from descriptions.
   - Automatically prune stale `arcus-*` junctions/symlinks and `.skill-lock.json` entries in `scripts/install-global.ps1` and `scripts/install-global.sh`, and document `npx skills remove <old-skill> -g -y` in all 5 language READMEs.
-  - *Revision `2026-11-27`*: the installers write only to an explicit allowlist (the 6 agent skill folders plus T3 Code Antigravity instances) instead of every `~/.*/skills`, link only `skills/arcus-*` folders that contain `SKILL.md`, and prune only links that point into this repo's `skills/`. Real directories and links elsewhere are never deleted, and the lock file is rewritten as BOM-less UTF-8 so `npx skills` keeps parsing it. The cost is that a new agent folder must be added to the list by hand. Proven by [`scripts/test-install-global.ps1`](./scripts/test-install-global.ps1) and [`scripts/test-install-global.sh`](./scripts/test-install-global.sh).
+  - *Revision `2026-11-27`*: the installers write only to an explicit allowlist (the 6 agent skill folders plus T3 Code Antigravity instances) instead of every `~/.*/skills`, link only `skills/arcus-*` folders that contain `SKILL.md`, and prune only links that point into this repo's `skills/`. Links elsewhere and real directories without `SKILL.md` are never touched. A real `arcus-*` directory with `SKILL.md` is replaced by the link only when its files, folders and bytes (hidden entries included) match the repo copy. One that differs is first moved to `~/.arcus-stack-backups/<timestamp>/<agent-folder>/<skill>`, outside every agent's scan path, and an agent folder that resolves to the repo's own `skills/` is skipped. The lock file is rewritten as BOM-less UTF-8 so `npx skills` keeps parsing it. The cost is that a new agent folder must be added to the list by hand. Proven by [`scripts/test-install-global.ps1`](./scripts/test-install-global.ps1) and [`scripts/test-install-global.sh`](./scripts/test-install-global.sh).
 - **Enforced By**: [`scripts/install-global.ps1`](./scripts/install-global.ps1), [`scripts/install-global.sh`](./scripts/install-global.sh), and frontmatter description audits.
 
 ---
