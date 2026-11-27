@@ -1,0 +1,17 @@
+arcus-stack
+Copyright (c) 2026 sacru2red
+Licensed under the MIT License (see LICENSE).
+
+This project includes files adapted from third-party works licensed under the
+Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+Those files keep their original license; each carries a modification notice
+in its header as required by Apache-2.0 Section 4(b).
+
+- skills/arcus-mode/internal/archify-visualization.md
+  Adapted from tt-a1i/archify (https://github.com/tt-a1i/archify)
+  Copyright tt-a1i and Archify contributors.
+
+- skills/arcus-mode/internal/modern-web-guidance.md
+  Adapted from GoogleChrome/modern-web-guidance
+  (https://github.com/GoogleChrome/modern-web-guidance)
+  Copyright Google LLC.
