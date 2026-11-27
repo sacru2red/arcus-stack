@@ -66,11 +66,13 @@ dirty="$(new_repo)"
   printf 'x-user\n' > X.css
   printf 'y-user\n' > Y.css
   printf 'u-user\n' > U.txt
-  status="$(run_cycle Y.css)"
+  printf 'e-user\n' > E.css
+  status="$(run_cycle Y.css E.css)"
   check "dirty tree: git status matches pre-proposal state" "$status" "same"
   check "dirty tree: untouched user edit kept (X.css)" "$(cat X.css)" "x-user"
   check "dirty tree: touched user edit restored (Y.css)" "$(cat Y.css)" "y-user"
   check "dirty tree: user untracked file kept (U.txt)" "$(cat U.txt)" "u-user"
+  check "dirty tree: user untracked file a variant edited is restored, not removed (E.css)" "$(cat E.css 2>/dev/null || echo missing)" "e-user"
   check "dirty tree: .audit/ hidden from status" "$(git status --porcelain | grep -c '\.audit' || true)" "0"
   git apply "$audit/option-b.patch"
   check "dirty tree: chosen option re-applies on top of user baseline" "$(cat Y.css)" "Y.css-option-b"
@@ -101,6 +103,19 @@ staged="$(new_repo)"
   check "staged tree: partly staged file keeps its staged content (Y.css)" "$(git show :Y.css)" "y-staged"
   check "staged tree: partly staged file keeps its worktree content (Y.css)" "$(cat Y.css)" "y-worktree"
   check "staged tree: file recreated by a variant at a staged-deleted path is removed (D.css)" "$([ -e D.css ] && echo present || echo absent)" "absent"
+  exit "$fail"
+) || fail=1
+
+# Run from a subfolder with paths relative to it, as an agent working inside one package of a monorepo would.
+subdir="$(new_repo)"
+(
+  cd "$subdir"
+  mkdir -p app/src && printf 's-head\n' > app/src/S.css && git add app && git commit -qm app
+  printf 's-user\n' > app/src/S.css
+  cd app
+  status="$(run_cycle src/S.css)"
+  check "subfolder: git status matches pre-proposal state" "$status" "same"
+  check "subfolder: touched user edit restored, not removed (app/src/S.css)" "$(cat src/S.css 2>/dev/null || echo missing)" "s-user"
   exit "$fail"
 ) || fail=1
 
@@ -142,6 +157,6 @@ unborn="$(mktemp -d)"
   exit "$fail"
 ) || fail=1
 
-rm -rf "$dirty" "$clean" "$staged" "$ita" "$unmerged" "$unborn"
+rm -rf "$dirty" "$clean" "$staged" "$subdir" "$ita" "$unmerged" "$unborn"
 if [ "$fail" -ne 0 ]; then echo "ui-propose revert regression FAILED"; exit 1; fi
 echo "All ui-propose revert cases passed."
