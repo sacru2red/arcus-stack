@@ -86,7 +86,7 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 *(ステータス: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. UI 4案スクリーンショット比較と PR Before/After スクリーンショット (`arcus-ui-propose`)
-視覚的なUI変更では、作業前（`00-before.png`）1枚と異なる3案（`Option A/B/C`）を作業ブランチ上で **順次適用、撮影、`.patch` 保存、`git checkout` 復元** の手順で安全に比較します。採用案の実装完了後は同じビューポート・テーマで `99-after-final.png` を再撮影し、GitLab MR 自動アップロードまたは GitHub PR 安全ハンドオフ（ブランチへのバイナリPNG混入防止）へ連携します。
+視覚的なUI変更では、作業前（`00-before.png`）1枚と異なる3案（`Option A/B/C`）を作業ブランチ上で **順次適用、撮影、`.patch` 保存、`git restore` 復元** の手順で安全に比較します。採用案の実装完了後は同じビューポート・テーマで `99-after-final.png` を再撮影し、GitLab MR 自動アップロードまたは GitHub PR 安全ハンドオフ（ブランチへのバイナリPNG混入防止）へ連携します。
 
 ### 3. 無停止DBマイグレーションとバックエンド信頼性ガードレール (`safe-migration.md`, `backend-reliability.md`)
 - **無停止マイグレーション (`safe-migration.md`)**: 本番DBスキーマ、永続キュー/キャッシュ、ローリングデプロイ契約を単一ウェーブのリファクタリングから除外し、オンライン/`CONCURRENTLY` DDL、二重書き込み、チャンク冪等バックフィル、`N-1`/`N` ロールバック確認、後続 Contract PR 分割を強制します。

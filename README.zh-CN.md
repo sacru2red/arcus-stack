@@ -86,7 +86,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 *(状态：`OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. UI 4 图方案对比与 PR Before/After 截图 (`arcus-ui-propose`)
-在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git checkout` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
+在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git restore` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
 
 ### 3. 零停机数据库迁移与后端可靠性护栏 (`safe-migration.md`, `backend-reliability.md`)
 - **零停机迁移 (`safe-migration.md`)**：将线上数据库 Schema、持久化队列/缓存与滚动部署契约从单波次重构规则中豁免，强制采用在线/`CONCURRENTLY` DDL、双写、分块幂等回填、`N-1`/`N` 回滚校验及独立 Contract PR。

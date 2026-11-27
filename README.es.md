@@ -86,7 +86,7 @@ Un revisor que comparte la conversacion del autor comparte tambien sus puntos ci
 *(Estados: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. Comparacion visual UI de 4 opciones y capturas Before/After para PR (`arcus-ui-propose`)
-En cambios visuales de UI, captura 1 referencia (`00-before.png`) y 3 propuestas distintas (`Option A/B/C`) sobre tu rama mediante un ciclo limpio de **aplicar, capturar, guardar `.patch` y revertir con `git checkout`**. Tras pulir la opcion elegida, captura `99-after-final.png` con el mismo viewport y tema, y la integra con subida automatica en GitLab MR o entrega segura en GitHub PR sin contaminar la rama con PNGs binarios.
+En cambios visuales de UI, captura 1 referencia (`00-before.png`) y 3 propuestas distintas (`Option A/B/C`) sobre tu rama mediante un ciclo limpio de **aplicar, capturar, guardar `.patch` y revertir con `git restore`**. Tras pulir la opcion elegida, captura `99-after-final.png` con el mismo viewport y tema, y la integra con subida automatica en GitLab MR o entrega segura en GitHub PR sin contaminar la rama con PNGs binarios.
 
 ### 3. Migraciones sin tiempo de inactividad y fiabilidad backend (`safe-migration.md`, `backend-reliability.md`)
 - **Migraciones sin caida (`safe-migration.md`)**: Excluye esquemas de BD en produccion, colas/caches persistentes y contratos rolling-deploy de la refactorizacion en una sola ola, exigiendo DDL online/`CONCURRENTLY`, escritura dual, backfill idempotente por lotes, validacion de rollback `N-1`/`N` y PR Contract separado.

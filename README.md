@@ -86,7 +86,7 @@ A reviewer that shares the author's conversation context shares the author's bli
 *(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. Visual UI 4-option comparison and PR Before/After screenshots (`arcus-ui-propose`)
-For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git checkout` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
+For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git restore` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
 
 ### 3. Zero-downtime migrations and backend reliability guardrails (`safe-migration.md`, `backend-reliability.md`)
 - **Zero-downtime migrations (`safe-migration.md`)**: Exempts live database schemas, persisted queues/caches, and rolling-deploy wire contracts from single-wave refactoring, enforcing online/`CONCURRENTLY` DDL, dual-write, chunked idempotent backfills, `N-1`/`N` rollback checks, and separate Contract PRs.

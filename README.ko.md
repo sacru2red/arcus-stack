@@ -86,7 +86,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 *(상태: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. UI 4장 시안 비교 & PR Before/After 스크린샷 (`arcus-ui-propose`)
-시각적 UI 변경 시 작업 전 스크린샷(`00-before.png`) 1장과 서로 다른 3가지 대안(`Option A/B/C`)을 **순차 적용, 캡처, `.patch` 저장, `git checkout` 원복** 순서로 안전하게 비교합니다. 선택한 안으로 최종 구현을 마친 뒤에는 동일 뷰포트·테마로 `99-after-final.png`를 새로 찍어 GitLab MR 자동 업로드 또는 GitHub PR 안전 핸드오프(브랜치 바이너리 PNG 오염 차단)로 연결합니다.
+시각적 UI 변경 시 작업 전 스크린샷(`00-before.png`) 1장과 서로 다른 3가지 대안(`Option A/B/C`)을 **순차 적용, 캡처, `.patch` 저장, `git restore` 원복** 순서로 안전하게 비교합니다. 선택한 안으로 최종 구현을 마친 뒤에는 동일 뷰포트·테마로 `99-after-final.png`를 새로 찍어 GitLab MR 자동 업로드 또는 GitHub PR 안전 핸드오프(브랜치 바이너리 PNG 오염 차단)로 연결합니다.
 
 ### 3. 무중단 DB 마이그레이션 & 백엔드 신뢰성 가드레일 (`safe-migration.md`, `backend-reliability.md`)
 - **무중단 마이그레이션 (`safe-migration.md`)**: 운영 DB 스키마, 영속 큐/캐시, 롤링 배포 계약 변경은 단일 웨이브 리팩토링 예외로 지정해 `CONCURRENTLY`/온라인 DDL, 이중 쓰기, 청크 백필, `N-1`/`N` 롤백 검증, 후속 Contract PR 분리를 강제합니다.

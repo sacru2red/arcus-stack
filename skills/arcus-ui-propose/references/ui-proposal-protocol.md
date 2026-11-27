@@ -33,9 +33,14 @@ Because variants A, B, and C are applied sequentially on the active working bran
 mkdir -p .audit/ui-propose/<task-slug>
 git check-ignore -q .audit/ || echo ".audit/" >> .git/info/exclude
 
-# 1. Pin the baseline without touching the working tree
+# 1. Pin the baseline without touching the working tree (needs Git 2.23+ for git restore)
 git status --porcelain > .audit/ui-propose/<task-slug>/00-status.txt
-BASE=$(git stash create); [ -n "$BASE" ] || BASE=HEAD
+BASE=$(git stash create) || { echo "STOP: intent-to-add, unmerged, or no commit yet" >&2; exit 1; }
+if [ -n "$BASE" ]; then IDX="$BASE^2"
+elif [ -z "$(git status --porcelain -uno)" ]; then BASE=HEAD; IDX=HEAD
+else echo "STOP: tracked changes but no stash commit" >&2; exit 1; fi
+#    $BASE holds the user's working-tree files, $IDX the user's staged index.
+#    On STOP, change nothing and tell the user which files block the pin.
 #    copy pre-existing untracked files a variant will edit -> .audit/ui-propose/<task-slug>/untracked-base/
 
 # 2. Capture Baseline ("Before")
@@ -49,18 +54,24 @@ BASE=$(git stash create); [ -n "$BASE" ] || BASE=HEAD
 #       (git diff $BASE -- <target-files> > .audit/ui-propose/<task-slug>/option-X.patch)
 #       and copy any new untracked files created by Option X (preserving relative paths) into:
 #       .audit/ui-propose/<task-slug>/files-X/
-#    e) Revert <target-files> back to the pinned baseline (user's uncommitted edits included):
-#       git checkout $BASE -- <target-files>
-#       git reset -q -- <target-files>
+#    e) Revert <target-files> back to the pinned baseline (user's edits and staging included).
+#       <tracked> = the target files that exist in $BASE or $IDX; every other target file
+#       was created by Option X. git restore fails as a whole on a path in neither tree.
+#       for f in <target-files>; do
+#         { git cat-file -e "$BASE:$f" || git cat-file -e "$IDX:$f"; } 2>/dev/null && echo "$f"
+#       done
+#       git restore --source="$BASE" --worktree -- <tracked> &&
+#         git restore --source="$IDX" --staged -- <tracked> || { echo "STOP: revert failed" >&2; exit 1; }
 #       restore edited pre-existing untracked files from untracked-base/
-#       remove any untracked files created by Option X
+#       remove the other target files and any untracked files created by Option X
 
-# 4. After Option C revert, confirm working tree matches Step 1 baseline
+# 4. After Option C revert, confirm working tree matches Step 1 baseline.
+#    Any output means the revert missed something: stop and show the user the differing lines.
 git status --porcelain | diff - .audit/ui-propose/<task-slug>/00-status.txt
 
 # 5. Once user picks Option <chosen> (a, b, or c):
-#    git checkout $BASE -- <target-files>
-#    git reset -q -- <target-files>
+#    git restore --source="$BASE" --worktree -- <tracked>
+#    git restore --source="$IDX" --staged -- <tracked>
 #    git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch
 #    copy .audit/ui-propose/<task-slug>/files-<chosen>/* back to their relative workspace paths (if any)
 ```
