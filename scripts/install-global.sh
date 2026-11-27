@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_SOURCE="$REPO_ROOT/skills"
 
+# Explicit allowlist of agent skill folders; never auto-discover other tools' dot-directories.
 TARGET_BASES=(
   "$HOME/.agents/skills"
   "$HOME/.gemini/config/skills"
@@ -13,23 +14,7 @@ TARGET_BASES=(
   "$HOME/.cursor/skills"
 )
 
-# Auto-detect any other dot-directories in $HOME with a skills/ folder created by npx skills
-for dot_dir in "$HOME"/.*; do
-  [ -d "$dot_dir/skills" ] || continue
-  candidate="$dot_dir/skills"
-  already_added=0
-  for existing_base in "${TARGET_BASES[@]}"; do
-    if [ "$existing_base" = "$candidate" ]; then
-      already_added=1
-      break
-    fi
-  done
-  if [ "$already_added" -eq 0 ]; then
-    TARGET_BASES+=("$candidate")
-  fi
-done
-
-# Auto-detect T3 Code isolated Antigravity provider config directories
+# T3 Code isolated Antigravity provider config directories
 if [ -d "$HOME/.t3/userdata/providers/antigravity" ]; then
   for instance_dir in "$HOME/.t3/userdata/providers/antigravity"/*/; do
     if [ -d "$instance_dir" ]; then
@@ -48,24 +33,49 @@ if [ -d "$HOME/.t3/userdata/providers/antigravity" ]; then
   done
 fi
 
+# Only public arcus-* skill folders with a SKILL.md (skips tool state such as skills/.omc/)
+SKILL_DIRS=()
+for skill_dir in "$SKILLS_SOURCE"/arcus-*/; do
+  [ -f "${skill_dir}SKILL.md" ] && SKILL_DIRS+=("${skill_dir%/}")
+done
+
+links_into_repo() {
+  [ -L "$1" ] || return 1
+  case "$(readlink "$1")" in
+    "$SKILLS_SOURCE"/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 for target_base in "${TARGET_BASES[@]}"; do
   mkdir -p "$target_base"
 
-  # Prune stale arcus-* skill links that were renamed or removed from skills/
+  # Prune stale arcus-* links that point into this repo's skills/ but whose skill was renamed or removed.
+  # Real directories and links to anything else are left alone.
   for existing in "$target_base"/arcus-*; do
-    [ -e "$existing" ] || [ -L "$existing" ] || continue
+    [ -L "$existing" ] || continue
     existing_name="$(basename "$existing")"
-    if [ ! -d "$SKILLS_SOURCE/$existing_name" ]; then
-      rm -rf "$existing"
+    if [ ! -f "$SKILLS_SOURCE/$existing_name/SKILL.md" ] && links_into_repo "$existing"; then
+      rm -f "$existing"
       echo "[PRUNED] Removed stale skill link $existing"
     fi
   done
 
-  for skill_dir in "$SKILLS_SOURCE"/*/; do
+  for skill_dir in "${SKILL_DIRS[@]}"; do
     skill_name="$(basename "$skill_dir")"
     dest="$target_base/$skill_name"
-    rm -rf "$dest"
-    ln -s "${skill_dir%/}" "$dest"
+    if [ -L "$dest" ]; then
+      rm -f "$dest"
+    elif [ -d "$dest" ]; then
+      if [ -f "$dest/SKILL.md" ]; then
+        # A copied install of this same skill (e.g. from npx skills); replace it with the live link.
+        rm -rf "$dest"
+      else
+        echo "[WARN] Skipped $dest because it is a directory without SKILL.md that this script did not create." >&2
+        continue
+      fi
+    fi
+    ln -s "$skill_dir" "$dest"
     echo "[OK] Linked $skill_name -> $dest"
   done
 done
@@ -82,7 +92,7 @@ if [ -f "$LOCK_FILE" ]; then
       if (data && data.skills) {
         let changed = false;
         for (const key of Object.keys(data.skills)) {
-          if (key.startsWith("arcus-") && !fs.existsSync(skillsSource + "/" + key)) {
+          if (key.startsWith("arcus-") && !fs.existsSync(skillsSource + "/" + key + "/SKILL.md")) {
             delete data.skills[key];
             changed = true;
             console.log("[PRUNED] Removed stale \x27" + key + "\x27 from " + lockFile);
@@ -102,7 +112,7 @@ with open(lock_file, "r", encoding="utf-8") as f:
 skills = data.get("skills", {})
 changed = False
 for k in list(skills.keys()):
-    if k.startswith("arcus-") and not os.path.isdir(os.path.join(skills_source, k)):
+    if k.startswith("arcus-") and not os.path.isfile(os.path.join(skills_source, k, "SKILL.md")):
         del skills[k]
         changed = True
         print(f"[PRUNED] Removed stale \x27{k}\x27 from {lock_file}")
