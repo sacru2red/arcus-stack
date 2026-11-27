@@ -183,3 +183,15 @@ This document records the core architectural and directional decisions of **`arc
   - Wire on-demand triggers symmetrically across `arcus-mode`, `arcus-plan`, `arcus-work-loop`, `arcus-review`, and `review-rubric.md` with `*(when co-installed; inline fallback: ...)*` guards for `D-002` partial-install safety.
   - *Rejected Alternative*: Adding an extra public `arcus-backend` skill, duplicating backend checklists into always-on `AGENTS.md`, or encoding framework/ORM-specific API rules that rot across versions.
 - **Enforced By**: [`skills/arcus-mode/internal/backend-reliability.md`](./skills/arcus-mode/internal/backend-reliability.md), [`skills/arcus-review/references/review-rubric.md`](./skills/arcus-review/references/review-rubric.md), and [`scripts/validate.ps1`](./scripts/validate.ps1).
+
+---
+
+## `D-014`: Per-Skill Third-Party Notices Generated from Root `NOTICE`
+- **Date / Pin**: `2026-11-27` (Current)
+- **Status**: `ACTIVE`
+- **Context**: `npx skills add <repo> --skill <name>` copies only that skill folder, measured with `skills@1.9.0`. The root `NOTICE` and `LICENSES/` never reach a partial install, so 7 skills that hold pstack (MIT), Archify, modern-web-guidance or Korean-catalog (MIT and Apache-2.0) material shipped without the copyright and permission notices those licenses require on every copy.
+- **Decision & Tradeoff**:
+  - The root `NOTICE` stays the single source. [`scripts/sync-notices.ps1`](./scripts/sync-notices.ps1) writes `skills/<skill>/THIRD_PARTY_NOTICES.md` for every skill that `NOTICE` lists files for. Each file copies the matching `NOTICE` sections verbatim, including Apache-2.0 Section 4(d) lines, drops other skills' file lines, recounts the files, and embeds each referenced license text once.
+  - The file is not a `SKILL.md`, so it adds no slash-menu entry and no always-on description tokens. The cost is a regenerate step after every `NOTICE` edit.
+  - *Rejected Alternative*: A license header in each of the 72 adapted files. MIT asks for the notice once per copy, not per file, but a header can only point at a license text, and a partial install does not ship that text. Keeping only the root `NOTICE` drops the notices on partial installs.
+- **Enforced By**: [`scripts/validate.ps1`](./scripts/validate.ps1) check 6 (`sync-notices.ps1 -Check` fails on a missing, stale, hand-edited or orphaned notice), with regression cases in [`scripts/test-validate.ps1`](./scripts/test-validate.ps1).
