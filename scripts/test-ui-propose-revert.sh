@@ -26,7 +26,7 @@ audit=".audit/ui-propose/t"
 
 pin_baseline() {
   mkdir -p "$audit"
-  git check-ignore -q .audit/ || echo ".audit/" >> .git/info/exclude
+  git check-ignore -q .audit/ || echo ".audit/" >> "$(git rev-parse --git-path info/exclude)"
   git status --porcelain > "$audit/00-status.txt"
   BASE=$(git stash create 2>/dev/null) || { echo "STOP: intent-to-add, unmerged, or no commit yet" >&2; return 1; }
   if [ -n "$BASE" ]; then IDX="$BASE^2"
@@ -34,10 +34,23 @@ pin_baseline() {
   else echo "STOP: tracked changes but no stash commit" >&2; return 1; fi
 }
 
+in_baseline() {
+  { git cat-file -e "$BASE:./$1" || git cat-file -e "$IDX:./$1"; } 2>/dev/null
+}
+
+save_untracked() {
+  local f
+  for f in "$@"; do
+    if [ -n "$(git ls-files --others --exclude-standard -- "$f")" ]; then mkdir -p "$audit/untracked-base/$(dirname "$f")" && cp "$f" "$audit/untracked-base/$f"; fi
+  done
+}
+
 revert_files() {
   local f tracked=() created=()
   for f in "$@"; do
-    if { git cat-file -e "$BASE:$f" || git cat-file -e "$IDX:$f"; } 2>/dev/null; then tracked+=("$f"); else created+=("$f"); fi
+    if in_baseline "$f"; then tracked+=("$f")
+    elif [ -e "$audit/untracked-base/$f" ]; then cp "$audit/untracked-base/$f" "$f"
+    else created+=("$f"); fi
   done
   if [ "${#tracked[@]}" -gt 0 ]; then
     git restore --source="$BASE" --worktree -- "${tracked[@]}" &&
@@ -50,6 +63,7 @@ revert_files() {
 run_cycle() {
   local x f
   pin_baseline
+  save_untracked "$@"
   for x in a b c; do
     for f in "$@"; do printf '%s-option-%s\n' "$f" "$x" > "$f"; done
     printf 'new-%s\n' "$x" > "New-$x.css"

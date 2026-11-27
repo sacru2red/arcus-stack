@@ -30,8 +30,9 @@ Because variants A, B, and C are applied sequentially on the active working bran
 
 ```text
 # 0. Setup scratch folder (never committed to git, never shown in git status)
+#    Run every step from the same folder. All paths below are relative to it, including in subfolders and worktrees.
 mkdir -p .audit/ui-propose/<task-slug>
-git check-ignore -q .audit/ || echo ".audit/" >> .git/info/exclude
+git check-ignore -q .audit/ || echo ".audit/" >> "$(git rev-parse --git-path info/exclude)"
 
 # 1. Pin the baseline without touching the working tree (needs Git 2.23+ for git restore)
 git status --porcelain > .audit/ui-propose/<task-slug>/00-status.txt
@@ -41,7 +42,7 @@ elif [ -z "$(git status --porcelain -uno)" ]; then BASE=HEAD; IDX=HEAD
 else echo "STOP: tracked changes but no stash commit" >&2; exit 1; fi
 #    $BASE holds the user's working-tree files, $IDX the user's staged index.
 #    On STOP, change nothing and tell the user which files block the pin.
-#    copy pre-existing untracked files a variant will edit -> .audit/ui-propose/<task-slug>/untracked-base/
+#    copy pre-existing untracked files (`??` in git status) a variant will edit -> .audit/ui-propose/<task-slug>/untracked-base/
 
 # 2. Capture Baseline ("Before")
 <capture screenshot -> .audit/ui-propose/<task-slug>/00-before.png>
@@ -55,15 +56,16 @@ else echo "STOP: tracked changes but no stash commit" >&2; exit 1; fi
 #       and copy any new untracked files created by Option X (preserving relative paths) into:
 #       .audit/ui-propose/<task-slug>/files-X/
 #    e) Revert <target-files> back to the pinned baseline (user's edits and staging included).
-#       <tracked> = the target files that exist in $BASE or $IDX; every other target file
-#       was created by Option X. git restore fails as a whole on a path in neither tree.
-#       for f in <target-files>; do
-#         { git cat-file -e "$BASE:$f" || git cat-file -e "$IDX:$f"; } 2>/dev/null && echo "$f"
-#       done
-#       git restore --source="$BASE" --worktree -- <tracked> &&
-#         git restore --source="$IDX" --staged -- <tracked> || { echo "STOP: revert failed" >&2; exit 1; }
-#       restore edited pre-existing untracked files from untracked-base/
-#       remove the other target files and any untracked files created by Option X
+#       Split the target files into three groups and handle each one:
+#       - <tracked>: files that exist in $BASE or $IDX. The ./ prefix reads the path from the
+#         current folder, like git restore does. git restore fails as a whole on a path in neither tree.
+#           for f in <target-files>; do
+#             { git cat-file -e "$BASE:./$f" || git cat-file -e "$IDX:./$f"; } 2>/dev/null && echo "$f"
+#           done
+#           git restore --source="$BASE" --worktree -- <tracked> &&
+#             git restore --source="$IDX" --staged -- <tracked> || { echo "STOP: revert failed" >&2; exit 1; }
+#       - pre-existing untracked files: copy each one back from untracked-base/. Never remove them.
+#       - files Option X created (in neither tree and not in untracked-base/): remove only these.
 
 # 4. After Option C revert, confirm working tree matches Step 1 baseline.
 #    Any output means the revert missed something: stop and show the user the differing lines.
