@@ -173,10 +173,10 @@ Flattening dozens of granular rules into top-level `skills/` clutters slash menu
 
 ---
 
-## Installation, directory structure, and credits
+## Installation and directory structure
 
 <details>
-<summary><strong>All installation and update methods (per-project install, plugin managers, local symlinks, renamed skill cleanup)</strong></summary>
+<summary>All installation and update methods (per-project install, plugin managers, local symlinks, renamed skill cleanup)</summary>
 
 ### Method 1. `npx skills` CLI (recommended)
 
@@ -228,7 +228,7 @@ Because symlinks point to your local clone, `git pull` updates every agent immed
 </details>
 
 <details>
-<summary><strong>Full directory structure and validation command</strong></summary>
+<summary>Full directory structure and validation command</summary>
 
 ```text
 arcus-stack/
@@ -289,8 +289,7 @@ Re-verify the 15 public core skills, YAML frontmatter, relative Markdown links, 
 
 </details>
 
-<details>
-<summary><strong>Six open-source inspirations and license attributions</strong></summary>
+## Six open-source inspirations and license attributions
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Autonomous execution loops and strategy/execution separation
@@ -298,5 +297,3 @@ Re-verify the 15 public core skills, YAML frontmatter, relative Markdown links, 
 - [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity): Phased quality guardrails and execution-evidence completion gates
 - [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance): Live modern web platform guidance lookup for HTML, CSS, and client-side JS (Apache-2.0)
 - [`tt-a1i/archify`](https://github.com/tt-a1i/archify): 10-type interactive diagram and static SVG visualization engine (Apache-2.0)
-
-</details>

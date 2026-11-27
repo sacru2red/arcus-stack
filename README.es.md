@@ -173,10 +173,10 @@ Colocar decenas de reglas granulares en el primer nivel de `skills/` satura el m
 
 ---
 
-## Instalacion, estructura de directorios y creditos
+## Instalacion y estructura de directorios
 
 <details>
-<summary><strong>Todos los metodos de instalacion y actualizacion (por proyecto, plugins, enlaces locales, limpieza)</strong></summary>
+<summary>Todos los metodos de instalacion y actualizacion (por proyecto, plugins, enlaces locales, limpieza)</summary>
 
 ### Metodo 1. CLI `npx skills` (recomendado)
 
@@ -228,7 +228,7 @@ Como los enlaces apuntan a tu clon local, `git pull` actualiza todos los agentes
 </details>
 
 <details>
-<summary><strong>Estructura completa de directorios y comando de validacion</strong></summary>
+<summary>Estructura completa de directorios y comando de validacion</summary>
 
 ```text
 arcus-stack/
@@ -289,8 +289,7 @@ Vuelve a verificar las 15 habilidades publicas, el frontmatter YAML y los enlace
 
 </details>
 
-<details>
-<summary><strong>Seis proyectos open source de inspiracion y atribuciones de licencia</strong></summary>
+## Seis proyectos open source de inspiracion y atribuciones de licencia
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"Si quieres ir rapido, profundiza primero."* (Analisis de causa raiz, radio de impacto minimo, codigo verificable)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Bucles de ejecucion autonoma y separacion entre estrategia y ejecucion
@@ -298,5 +297,3 @@ Vuelve a verificar las 15 habilidades publicas, el frontmatter YAML y los enlace
 - [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity): Barreras de calidad por etapas y cierre basado en evidencia real
 - [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance): Consulta en vivo de estandares web modernos para HTML, CSS y JS cliente (Apache-2.0)
 - [`tt-a1i/archify`](https://github.com/tt-a1i/archify): Motor de visualizacion interactiva y SVG estatico en 10 tipos de diagramas (Apache-2.0)
-
-</details>

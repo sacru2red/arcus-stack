@@ -173,10 +173,10 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 
 ---
 
-## 详细安装、目录结构与致谢
+## 详细安装与目录结构
 
 <details>
-<summary><strong>完整安装与更新方式（按项目安装、插件管理器、本地符号链接、旧技能清理）</strong></summary>
+<summary>完整安装与更新方式（按项目安装、插件管理器、本地符号链接、旧技能清理）</summary>
 
 ### 方式 1. `npx skills` CLI（推荐）
 
@@ -228,7 +228,7 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 </details>
 
 <details>
-<summary><strong>完整目录结构与校验命令</strong></summary>
+<summary>完整目录结构与校验命令</summary>
 
 ```text
 arcus-stack/
@@ -289,8 +289,7 @@ arcus-stack/
 
 </details>
 
-<details>
-<summary><strong>六大开源项目灵感来源与许可证声明</strong></summary>
+## 六大开源项目灵感来源与许可证声明
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack)：*“欲速则先深潜”*（根本原因分析、最小改动面、可验证代码）
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)：自主执行循环与策略/执行分离
@@ -298,5 +297,3 @@ arcus-stack/
 - [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity)：分阶段质量护栏与基于真实执行证据的完成门禁
 - [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance)：面向 HTML/CSS/客户端 JS 的现代 Web 标准实时检索（Apache-2.0）
 - [`tt-a1i/archify`](https://github.com/tt-a1i/archify)：10 类交互式图表与静态 SVG 可视化引擎（Apache-2.0）
-
-</details>

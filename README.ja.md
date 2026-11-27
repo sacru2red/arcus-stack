@@ -173,10 +173,10 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 
 ---
 
-## 詳細インストール・ディレクトリ構造・出典
+## 詳細インストールとディレクトリ構造
 
 <details>
-<summary><strong>インストール・アップデート全手順（プロジェクト単位・プラグイン・ローカルリンク・旧スキル整理）</strong></summary>
+<summary>インストール・アップデート全手順（プロジェクト単位・プラグイン・ローカルリンク・旧スキル整理）</summary>
 
 ### 方法 1. `npx skills` CLI（推奨）
 
@@ -228,7 +228,7 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 </details>
 
 <details>
-<summary><strong>ディレクトリ構造と検証コマンド</strong></summary>
+<summary>ディレクトリ構造と検証コマンド</summary>
 
 ```text
 arcus-stack/
@@ -289,8 +289,7 @@ arcus-stack/
 
 </details>
 
-<details>
-<summary><strong>着想を得た6つのオープンソースプロジェクトとライセンス表記</strong></summary>
+## 着想を得た6つのオープンソースプロジェクトとライセンス表記
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *「速く進みたいなら、まず深く潜れ」*（根本原因特定、最小変更、検証可能なコード）
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 自律実行ループと戦略・実行の分離
@@ -298,5 +297,3 @@ arcus-stack/
 - [`oh-my-antigravity`](https://github.com/Joonghyun-Lee-Frieren/oh-my-antigravity): 段階的品質ガードレールと実行証拠ベースの完了判定
 - [`GoogleChrome/modern-web-guidance`](https://github.com/GoogleChrome/modern-web-guidance): HTML/CSS/クライアントJS向け最新Web標準のリアルタイム照会（Apache-2.0）
 - [`tt-a1i/archify`](https://github.com/tt-a1i/archify): 10種類のインタラクティブ図解・静的SVG可視化エンジン（Apache-2.0）
-
-</details>
