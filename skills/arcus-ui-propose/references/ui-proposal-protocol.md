@@ -29,11 +29,14 @@ Because variants A, B, and C are applied sequentially on the active working bran
 ### Safe Cycle Recipe
 
 ```text
-# 0. Setup scratch folder (never committed to git)
+# 0. Setup scratch folder (never committed to git, never shown in git status)
 mkdir -p .audit/ui-propose/<task-slug>
+git check-ignore -q .audit/ || echo ".audit/" >> .git/info/exclude
 
-# 1. Snapshot pre-existing uncommitted diff (if any) on the touched files
-git diff HEAD -- <target-files> > .audit/ui-propose/<task-slug>/00-base-dirty.patch
+# 1. Pin the baseline without touching the working tree
+git status --porcelain > .audit/ui-propose/<task-slug>/00-status.txt
+BASE=$(git stash create); [ -n "$BASE" ] || BASE=HEAD
+#    copy pre-existing untracked files a variant will edit -> .audit/ui-propose/<task-slug>/untracked-base/
 
 # 2. Capture Baseline ("Before")
 <capture screenshot -> .audit/ui-propose/<task-slug>/00-before.png>
@@ -42,20 +45,22 @@ git diff HEAD -- <target-files> > .audit/ui-propose/<task-slug>/00-base-dirty.pa
 #    a) Edit <target-files> (and create any new variant files) to implement Option X
 #    b) Wait for compile/HMR & verify no error overlay
 #    c) Capture screenshot -> .audit/ui-propose/<task-slug>/0N-option-X.png
-#    d) Save full tracked patch from HEAD -> .audit/ui-propose/<task-slug>/option-X.patch
-#       (git diff HEAD -- <target-files> > .audit/ui-propose/<task-slug>/option-X.patch)
+#    d) Save the tracked patch from the pinned baseline -> .audit/ui-propose/<task-slug>/option-X.patch
+#       (git diff $BASE -- <target-files> > .audit/ui-propose/<task-slug>/option-X.patch)
 #       and copy any new untracked files created by Option X (preserving relative paths) into:
 #       .audit/ui-propose/<task-slug>/files-X/
-#    e) Revert <target-files> back to pre-proposal baseline:
-#       git checkout HEAD -- <target-files>
+#    e) Revert <target-files> back to the pinned baseline (user's uncommitted edits included):
+#       git checkout $BASE -- <target-files>
+#       git reset -q -- <target-files>
+#       restore edited pre-existing untracked files from untracked-base/
 #       remove any untracked files created by Option X
-#       (if 00-base-dirty.patch is non-empty: git apply .audit/ui-propose/<task-slug>/00-base-dirty.patch)
 
 # 4. After Option C revert, confirm working tree matches Step 1 baseline
-git status --short
+git status --porcelain | diff - .audit/ui-propose/<task-slug>/00-status.txt
 
 # 5. Once user picks Option <chosen> (a, b, or c):
-#    git checkout HEAD -- <target-files>
+#    git checkout $BASE -- <target-files>
+#    git reset -q -- <target-files>
 #    git apply .audit/ui-propose/<task-slug>/option-<chosen>.patch
 #    copy .audit/ui-propose/<task-slug>/files-<chosen>/* back to their relative workspace paths (if any)
 ```

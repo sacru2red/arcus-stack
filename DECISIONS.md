@@ -108,15 +108,16 @@ This document records the core architectural and directional decisions of **`arc
 ---
 
 ## `D-009`: Visual UI 4-Screenshot Proposal (`arcus-ui-propose`) & PR/MR Before/After Visual Evidence Pipeline
-- **Date / Pin**: `2026-11-25` (extended `2026-11-26`)
+- **Date / Pin**: `2026-11-25` (extended `2026-11-26`, revert mechanism revised `2026-11-27`)
 - **Status**: `ACTIVE`
 - **Context**: In visual UI tasks, agents typically commit to the first design they think of without showing the current baseline or alternative layouts. Conversely, spawning 3 full git worktrees and 3 separate dev servers just to preview UI variants is slow, consumes ports/RAM, and breaks when local dev environments only support a single active instance. When opening PRs or GitLab MRs for UI diffs, agents also either omit Before/After visual proof, reuse stale draft screenshots, paste broken local filesystem paths into remote PR bodies, or accidentally commit raw binary PNGs to the feature branch.
 - **Decision & Tradeoff**:
   - Add `arcus-ui-propose` as the 14th public core skill ([`skills/arcus-ui-propose/SKILL.md`](./skills/arcus-ui-propose/SKILL.md)) and auto-wire it into `arcus-plan` and `arcus-mode` for visual UI tasks.
   - **Sequential Working-Branch Cycle with Dirty-Tree Protection**:
-    1. Snapshot any pre-existing uncommitted diff (`00-base-dirty.patch`) and capture **1 Baseline ("Before") screenshot** (`00-before.png`) at a locked viewport/theme.
-    2. For each of **3 genuinely distinct variants (`Option A`, `Option B`, `Option C`)**: apply the edit directly on the working branch ➔ wait for hot-reload/render ➔ capture `0N-option-X.png` ➔ export `option-X.patch` to `.audit/ui-propose/<task-slug>/` ➔ revert via `git checkout HEAD -- <files>` (plus re-applying `00-base-dirty.patch` if initially dirty).
-    3. Present all 4 screenshots side-by-side with a trade-off matrix while leaving the working tree clean, then instantaneously apply (`git apply`) whichever option (or hybrid graft) the user selects.
+    1. Hide `.audit/` via `.git/info/exclude`, record `00-status.txt`, pin the baseline with `BASE=$(git stash create)` (or `HEAD` on a clean tree) without touching the working tree, and capture **1 Baseline ("Before") screenshot** (`00-before.png`) at a locked viewport/theme.
+    2. For each of **3 genuinely distinct variants (`Option A`, `Option B`, `Option C`)**: apply the edit directly on the working branch ➔ wait for hot-reload/render ➔ capture `0N-option-X.png` ➔ export `option-X.patch` to `.audit/ui-propose/<task-slug>/` ➔ revert via `git checkout $BASE -- <files>` + `git reset -q -- <files>`.
+    3. Present all 4 screenshots side-by-side with a trade-off matrix while leaving the working tree exactly as the user had it, then instantaneously apply (`git apply`) whichever option (or hybrid graft) the user selects.
+    4. *Revision `2026-11-27`*: the original cycle saved the whole dirty tree as `00-base-dirty.patch` and re-applied it after each `git checkout HEAD`. Re-applying failed whenever some hunks were already present, which could drop user edits, and the untracked `.audit/` folder made the Step 4 status check unpassable. Restoring files from a pinned `git stash create` commit is idempotent and never re-applies a patch; the cost is that staged-only state comes back unstaged. Proven by [`scripts/test-ui-propose-revert.sh`](./scripts/test-ui-propose-revert.sh).
   - **PR/MR Before/After Visual Evidence Pipeline**:
     1. Sync `## Visual Changes` (UI diffs only; dropped if non-UI) between `## Blast Radius` and `## Verification` in both `worker.md` and `opening-a-pr.md`, keeping single-view tables inside the 40-line cap and offloading multi-screen or multi-viewport grids to a linked PR comment.
     2. Capture a fresh post-polish `99-after-final.png` matching `00-before.png` (or capture `before.png` from a temporary detached `merge-base` worktree when `arcus-ui-propose` did not run, degrading non-blockingly when `merge-base` cannot boot or capture is unavailable), and guard `git diff --cached --name-only` so zero `.audit/ui-propose/` or scratch PNGs are committed.
