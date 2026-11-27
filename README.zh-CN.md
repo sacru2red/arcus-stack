@@ -49,7 +49,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 | :--- | :--- | :--- |
 | 正在进行的会话无法对自己的产出做出真正批判性的审查 | 基于固定快照的 **隔离子智能体审查** + 先查代码后看回复的 **问题台账（`F-01`..）** | `arcus-review` |
 | 在单个 PR 中执行 `DROP/RENAME COLUMN` 或锁表 DDL 导致线上故障 | 强制按 **Expand、Backfill & Verify、Contract** 分离 PR 执行零停机迁移 | `safe-migration.md` |
-| UI 改动时助手擅自敲定单一设计并直接覆盖 | 在当前分支安全采集 **Before + 3 套方案截图** 对比选择，仅应用选定方案并衔接 PR 前后图证 | `arcus-ui-propose` |
+| UI 改动时助手擅自敲定单一设计并直接覆盖 | 在当前分支对比 **Before + 3 套方案** 仅应用选定方案，并准备好用于 PR 的 **Before/After 截图** | `arcus-ui-propose` |
 | 无分页查询、N+1 循环、数据库事务内调用外部 HTTP/LLM 穿透单测上线 | 按需加载查询上限、事务外 I/O 隔离、幂等抖动重试与 PII 日志脱敏护栏 | `backend-reliability.md` |
 | 只查认证不查对象越权（IDOR）、密钥泄露与供应链漏洞 | 上下文隔离的 **信任边界与越权审计**、密钥脱敏、本地隔离负向测试与安全台账（`S-01`..） | `arcus-security` |
 | 编写过时 Web API 兼容补丁且 `AGENTS.md` 规则文件不断膨胀 | **实时查询 Chrome 现代 Web 标准** + 将反复犯错升级为类型与 Lint 并清理无效规则 | `modern-web-guidance`, `arcus-correct` |
@@ -85,7 +85,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 
 *(状态：`OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. UI 4 张截图方案对比与 PR/MR 前后图证 (`arcus-ui-propose`)
+### 2. UI 4 图方案对比与 PR Before/After 截图 (`arcus-ui-propose`)
 在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git checkout` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
 
 ### 3. 零停机数据库迁移与后端可靠性护栏 (`safe-migration.md`, `backend-reliability.md`)

@@ -49,7 +49,7 @@ ARCUS bloquea siete fallos recurrentes de sesiones unicas de IA mediante estruct
 | :--- | :--- | :--- |
 | Una sesion en curso no puede hacer una revision verdaderamente critica de su propio trabajo | **Revision en subagente aislado** sobre snapshot fijo + **Review Ledger (`F-01`..)** evaluando el codigo antes de leer respuestas | `arcus-review` |
 | DDL destructivo (`DROP/RENAME COLUMN`) o bloqueante en un solo PR rompe despliegues rolling | Exige migracion sin caida en 4 fases (**Expand, Backfill y Verify, Contract**) en PRs separados | `safe-migration.md` |
-| El agente sobrescribe la interfaz con un unico diseno sin consultar | Captura **1 captura Before + 3 variantes** en la rama de trabajo, aplica solo la elegida y lleva evidencia Before/After al PR/MR | `arcus-ui-propose` |
+| El agente sobrescribe la interfaz con un unico diseno sin consultar | Compara **Before + 3 opciones** en la rama de trabajo, aplica solo la elegida y prepara capturas **Before/After** para el PR | `arcus-ui-propose` |
 | Consultas sin paginacion, bucles N+1 y llamadas HTTP/LLM dentro de transacciones DB llegan a produccion | Reglas bajo demanda para limites de consulta, I/O fuera de transacciones, reintentos con jitter y ocultacion de PII en logs | `backend-reliability.md` |
 | Se revisa solo autenticacion y se escapan IDOR, secretos filtrados y paquetes vulnerables | **Auditoria aislada de fronteras de confianza y authz**, ocultacion de secretos, pruebas negativas locales y registro `S-01`.. | `arcus-security` |
 | Parches antiguos de APIs web y archivos `AGENTS.md` inflados con reglas muertas | **Consulta en vivo de estandares web de Chrome** + escalado de errores repetidos a tipos, lints y tests eliminando prosa obsoleta | `modern-web-guidance`, `arcus-correct` |
@@ -85,7 +85,7 @@ Un revisor que comparte la conversacion del autor comparte tambien sus puntos ci
 
 *(Estados: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. Propuesta visual UI de 4 capturas y evidencia Before/After en PR/MR (`arcus-ui-propose`)
+### 2. Comparacion visual UI de 4 opciones y capturas Before/After para PR (`arcus-ui-propose`)
 En cambios visuales de UI, captura 1 referencia (`00-before.png`) y 3 propuestas distintas (`Option A/B/C`) sobre tu rama mediante un ciclo limpio de **aplicar, capturar, guardar `.patch` y revertir con `git checkout`**. Tras pulir la opcion elegida, captura `99-after-final.png` con el mismo viewport y tema, y la integra con subida automatica en GitLab MR o entrega segura en GitHub PR sin contaminar la rama con PNGs binarios.
 
 ### 3. Migraciones sin tiempo de inactividad y fiabilidad backend (`safe-migration.md`, `backend-reliability.md`)

@@ -49,7 +49,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 | :--- | :--- | :--- |
 | 진행 중인 세션은 자기 결과물에 대해 진짜 크리틱한 리뷰를 할 수 없음 | 고정 스냅샷 기반 **격리 서브에이전트 리뷰** + 답글보다 코드를 먼저 판정하는 **지적 장부(`F-01`..)** | `arcus-review` |
 | 단일 PR에서 `DROP/RENAME COLUMN`·블로킹 DDL을 실행해 운영 장애 유발 | **Expand, Backfill & Verify, Contract** 4단계 무중단 마이그레이션 강제 (PR 분리) | `safe-migration.md` |
-| UI 작업 시 에이전트가 임의 디자인 1개로 바로 덮어씀 | 현재 브랜치에서 **Before + 3개 대안 스크린샷**을 안전하게 비교 제안 후 선택안만 적용, PR 전후 증빙 연결 | `arcus-ui-propose` |
+| UI 작업 시 에이전트가 임의 디자인 1개로 바로 덮어씀 | 현재 브랜치에서 **Before + 3개 대안**을 비교해 선택안만 적용하고, PR용 **Before/After 스크린샷**까지 준비 | `arcus-ui-propose` |
 | 페이지네이션 없는 조회, N+1, DB 트랜잭션 내부 외부 HTTP/LLM 호출 배포 | 쿼리 상한, 트랜잭션 외부 I/O 분리, 멱등·지터 재시도, PII 로그 마스킹 가드레일 자동 적용 | `backend-reliability.md` |
 | 인증(Authn)만 확인하고 객체 권한(IDOR)·시크릿·공급망 취약점을 놓침 | 격리 컨텍스트 기반 **신뢰 경계·권한 감사**, 시크릿 마스킹, 로컬 전용 부정 테스트, 보안 장부(`S-01`..) | `arcus-security` |
 | 구식 웹 API 우회 코드 작성 및 `AGENTS.md` 규칙 비대화 | **Chrome 최신 웹 표준 실시간 조회** + 반복 실수를 타입·린트로 승격하고 죽은 규칙 삭제 | `modern-web-guidance`, `arcus-correct` |
@@ -85,7 +85,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 
 *(상태: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. UI 4장 스크린샷 비교 제안 & PR/MR 전후 시각 증빙 (`arcus-ui-propose`)
+### 2. UI 4장 시안 비교 & PR Before/After 스크린샷 (`arcus-ui-propose`)
 시각적 UI 변경 시 작업 전 스크린샷(`00-before.png`) 1장과 서로 다른 3가지 대안(`Option A/B/C`)을 **순차 적용, 캡처, `.patch` 저장, `git checkout` 원복** 순서로 안전하게 비교합니다. 선택한 안으로 최종 구현을 마친 뒤에는 동일 뷰포트·테마로 `99-after-final.png`를 새로 찍어 GitLab MR 자동 업로드 또는 GitHub PR 안전 핸드오프(브랜치 바이너리 PNG 오염 차단)로 연결합니다.
 
 ### 3. 무중단 DB 마이그레이션 & 백엔드 신뢰성 가드레일 (`safe-migration.md`, `backend-reliability.md`)

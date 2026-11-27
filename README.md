@@ -49,7 +49,7 @@ ARCUS blocks seven recurring failure modes of single-session AI coding through w
 | :--- | :--- | :--- |
 | An active session cannot give its own work a genuinely critical review | Pinned-snapshot **isolated subagent review** plus a **code-first Review Ledger (`F-01`..)** judged before reading replies | `arcus-review` |
 | Destructive `DROP/RENAME COLUMN` or blocking DDL ships in one PR and breaks rolling deploys | Enforces 4-phase zero-downtime **Expand, Backfill and Verify, Contract** across separate PRs | `safe-migration.md` |
-| Agents overwrite UI layouts with a single unreviewed design | Captures **1 Before + 3 variant screenshots** safely on the working branch, applies only the chosen option, and carries Before/After proof to PRs/MRs | `arcus-ui-propose` |
+| Agents overwrite UI layouts with a single unreviewed design | Captures **1 Before + 3 options** on the working branch, applies only the chosen option, and prepares **Before/After screenshots** for the PR | `arcus-ui-propose` |
 | Unbounded list reads, N+1 loops, and external HTTP/LLM calls inside DB transactions slip past unit tests | On-demand guardrails for query bounds, I/O outside transactions, bounded jittered retries, and PII log redaction | `backend-reliability.md` |
 | Reviews check authentication only and miss object-level IDOR, leaked secrets, and vulnerable packages | Isolated **trust-boundary and authz audit**, secret redaction, local-only negative tests, and Security Ledger (`S-01`..) | `arcus-security` |
 | Outdated web API workarounds and bloated `AGENTS.md` rule files | **Live Chrome web-platform guidance lookup** plus escalating repeated mistakes into types, lints, and tests while pruning dead prose | `modern-web-guidance`, `arcus-correct` |
@@ -85,7 +85,7 @@ A reviewer that shares the author's conversation context shares the author's bli
 
 *(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. Visual UI 4-screenshot proposal and PR/MR Before/After evidence (`arcus-ui-propose`)
+### 2. Visual UI 4-option comparison and PR Before/After screenshots (`arcus-ui-propose`)
 For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git checkout` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
 
 ### 3. Zero-downtime migrations and backend reliability guardrails (`safe-migration.md`, `backend-reliability.md`)

@@ -49,7 +49,7 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 | :--- | :--- | :--- |
 | 作業中のセッションは自分の成果物に対して本当に批判的なレビューができない | スナップショット固定の **隔離サブエージェントレビュー** ＋ 返信より先にコードを判定する **指摘台帳（`F-01`..）** | `arcus-review` |
 | 単一PRで `DROP/RENAME COLUMN` やブロッキングDDLを実行し本番障害を起こす | **Expand、Backfill & Verify、Contract** の4段階無停止マイグレーションをPR分割で強制 | `safe-migration.md` |
-| UI作業でエージェントが1つのデザインに決め打ちして上書きする | 作業ブランチで **Before ＋ 3案のスクリーンショット** を安全に比較し、選んだ案のみ適用・PR前後証跡へ連携 | `arcus-ui-propose` |
+| UI作業でエージェントが1つのデザインに決め打ちして上書きする | 作業ブランチで **Before ＋ 3案** を比較して選んだ案のみ適用し、PR用の **Before/After スクリーンショット** まで準備 | `arcus-ui-propose` |
 | ページネーションなし取得、N+1、DBトランザクション内の外部HTTP/LLM呼出を混入する | クエリ上限、トランザクション外I/O分離、冪等・ジッター付きリトライ、PIIログマスクをオンデマンド適用 | `backend-reliability.md` |
 | 認証だけ確認してオブジェクト認可（IDOR）・シークレット漏洩・依存脆弱性を見落とす | 隔離コンテキストによる **信頼境界・認可監査**、シークレットマスク、ローカル専用負テスト、セキュリティ台帳（`S-01`..） | `arcus-security` |
 | 古いWeb APIの回避コード量産と `AGENTS.md` ルール肥大化 | **Chrome最新Web標準のリアルタイム照会** ＋ 繰り返しミスを型・Lintへ昇格し不要ルールを削除 | `modern-web-guidance`, `arcus-correct` |
@@ -85,7 +85,7 @@ $arcus-work-loop -> 実際のビルド・テスト証拠を通過した項目だ
 
 *(ステータス: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
-### 2. UI 4枚スクリーンショット比較提案と PR/MR 前後証跡 (`arcus-ui-propose`)
+### 2. UI 4案スクリーンショット比較と PR Before/After スクリーンショット (`arcus-ui-propose`)
 視覚的なUI変更では、作業前（`00-before.png`）1枚と異なる3案（`Option A/B/C`）を作業ブランチ上で **順次適用、撮影、`.patch` 保存、`git checkout` 復元** の手順で安全に比較します。採用案の実装完了後は同じビューポート・テーマで `99-after-final.png` を再撮影し、GitLab MR 自動アップロードまたは GitHub PR 安全ハンドオフ（ブランチへのバイナリPNG混入防止）へ連携します。
 
 ### 3. 無停止DBマイグレーションとバックエンド信頼性ガードレール (`safe-migration.md`, `backend-reliability.md`)
