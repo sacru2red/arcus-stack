@@ -225,6 +225,8 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 
 심볼릭 링크가 로컬 클론을 직접 가리키므로 `git pull`만으로 즉시 반영됩니다(새 최상위 스킬이 추가된 경우에만 스크립트 1회 재실행).
 
+같은 이름의 스킬 폴더가 실제 복사본이면(예: `npx skills add`로 설치) 저장소 원본과 바이트 단위로 같을 때만 링크로 바꿉니다. 다르면 먼저 `~/.arcus-stack-backups/<시각>/`으로 옮기고 `[BACKUP]`으로 알립니다. 스킬별 `THIRD_PARTY_NOTICES.md`가 생기기 전에 만든 복사본은 다르다고 판정되므로, 업데이트 후 첫 실행에서 한 번 백업됩니다.
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows 전역 심볼릭 링크 설치기 (5개 에이전트 + T3 Code)
 │   ├── install-global.sh        # macOS/Linux 전역 심볼릭 링크 설치기 (5개 에이전트 + T3 Code)
+│   ├── sync-notices.ps1         # NOTICE에서 스킬별 THIRD_PARTY_NOTICES.md 생성
 │   └── validate.ps1             # 프론트매터 · 상대 링크 · 15개 스킬 · 호환성 자동 검증기
 └── skills/                      # 사용자 노출 15개 공개 코어 스킬 (+ 개별 스킬 references/ 11개)
     ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈 69개 + worker.md
@@ -291,7 +294,7 @@ arcus-stack/
 
 ## 영감을 받은 6개 오픈소스 프로젝트 및 라이선스 고지
 
-이 프로젝트는 MIT 라이선스입니다([`LICENSE`](./LICENSE)). pstack(MIT, Copyright (c) 2026 Lauren Tan), Archify, modern-web-guidance(둘 다 Apache-2.0)에서 가져온 파일과 각 저작권 고지는 [`NOTICE`](./NOTICE)에, 라이선스 전문은 [`LICENSES/`](./LICENSES/)에 있습니다.
+이 프로젝트는 MIT 라이선스입니다([`LICENSE`](./LICENSE)). pstack(MIT, Copyright (c) 2026 Lauren Tan), Archify, modern-web-guidance(둘 다 Apache-2.0)에서 가져온 파일과 각 저작권 고지는 [`NOTICE`](./NOTICE)에, 라이선스 전문은 [`LICENSES/`](./LICENSES/)에 있습니다. 가져온 파일이 있는 스킬은 생성된 `THIRD_PARTY_NOTICES.md`도 함께 담고 있어서, 스킬 하나만 설치해도 고지가 빠지지 않습니다.
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"빠르게 가려면 먼저 깊게 파고들어라."* (근본 원인 파악, 최소 변경, 검증 가능한 코드)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 자율 실행 루프와 전략·실행 분리

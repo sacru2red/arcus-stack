@@ -225,6 +225,8 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 
 シンボリックリンクがローカルクローンを直接指すため、`git pull` だけで即時反映されます（最上位スキルフォルダが新規追加された場合のみスクリプトを1回再実行）。
 
+同じ名前のスキルフォルダが実体のコピー（例: `npx skills add` でのインストール）の場合、リポジトリ版とバイト単位で一致するときだけリンクに置き換えます。異なる場合は先に `~/.arcus-stack-backups/<時刻>/` へ移し、`[BACKUP]` と表示します。スキル別の `THIRD_PARTY_NOTICES.md` ができる前のコピーは異なると判定されるため、更新後の初回実行で一度だけバックアップされます。
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
 │   ├── install-global.sh        # macOS/Linux用グローバルシンボリックリンクインストーラー (5エージェント + T3 Code)
+│   ├── sync-notices.ps1         # NOTICE からスキル別 THIRD_PARTY_NOTICES.md を生成
 │   └── validate.ps1             # フロントマター・相対リンク・15スキル・互換性自動検証スクリプト
 └── skills/                      # 公開コアスキル 15種 (+ 個別スキル references/ 11ファイル)
     ├── arcus-mode/              # マスターモード + 内部カプセル化モジュール 69個 + worker.md
@@ -291,7 +294,7 @@ arcus-stack/
 
 ## 着想を得た6つのオープンソースプロジェクトとライセンス表記
 
-本プロジェクトは MIT ライセンスです（[`LICENSE`](./LICENSE)）。pstack（MIT, Copyright (c) 2026 Lauren Tan）、Archify、modern-web-guidance（いずれも Apache-2.0）から取り込んだファイルと各著作権表示は [`NOTICE`](./NOTICE) に、ライセンス全文は [`LICENSES/`](./LICENSES/) にあります。
+本プロジェクトは MIT ライセンスです（[`LICENSE`](./LICENSE)）。pstack（MIT, Copyright (c) 2026 Lauren Tan）、Archify、modern-web-guidance（いずれも Apache-2.0）から取り込んだファイルと各著作権表示は [`NOTICE`](./NOTICE) に、ライセンス全文は [`LICENSES/`](./LICENSES/) にあります。取り込んだファイルを含むスキルには生成された `THIRD_PARTY_NOTICES.md` も同梱されるため、スキルを1つだけインストールしても表示が欠けません。
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *「速く進みたいなら、まず深く潜れ」*（根本原因特定、最小変更、検証可能なコード）
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 自律実行ループと戦略・実行の分離
