@@ -90,7 +90,8 @@ function Get-BackupRun {
     return $script:BackupRun
 }
 
-# Copies a modified skill folder out of every agent's scan path, verifies the copy, then removes the original.
+# Moves a modified skill folder out of every agent's scan path. A move is one rename, so nested links stay
+# links and a failure leaves the original in place.
 function Backup-SkillFolder([string]$Dest, [string]$TargetBase, [string]$SkillName) {
     $Relative = if ($TargetBase.StartsWith($HOME, [StringComparison]::OrdinalIgnoreCase)) { $TargetBase.Substring($HOME.Length) } else { $TargetBase }
     $Slug = $Relative.Trim('\', '/') -replace '[\\/:]', '_'
@@ -98,11 +99,7 @@ function Backup-SkillFolder([string]$Dest, [string]$TargetBase, [string]$SkillNa
     New-Item -ItemType Directory -Path $SlugDir -Force | Out-Null
     $Backup = Join-Path $SlugDir $SkillName
     if (Test-Path -LiteralPath $Backup) { throw "Backup target $Backup already exists" }
-    Copy-Item -LiteralPath $Dest -Destination $Backup -Recurse -Force
-    if ((Get-TreeManifest $Backup) -cne (Get-TreeManifest $Dest)) {
-        throw "Backup copy of $Dest does not match the original"
-    }
-    Remove-Item -LiteralPath $Dest -Recurse -Force
+    Move-Item -LiteralPath $Dest -Destination $Backup -ErrorAction Stop
     return $Backup
 }
 
@@ -127,7 +124,13 @@ foreach ($TargetBase in $AgentSkillDirs) {
             if ($null -ne (Get-LinkTarget $Existing)) {
                 $Existing.Delete()
             } elseif (Test-Path -LiteralPath (Join-Path $Dest "SKILL.md")) {
-                if (Test-SameFolder $Skill.FullName $Dest) {
+                try {
+                    $SameFolder = Test-SameFolder $Dest $Skill.FullName
+                } catch {
+                    Write-Warning "Skipped $Dest because the installer could not check whether it is this repo's own folder: $($_.Exception.Message)"
+                    continue
+                }
+                if ($SameFolder) {
                     Write-Warning "Skipped $Dest because it is this repo's own skills/$($Skill.Name) folder (the agent folder links into the repo)."
                     continue
                 }
