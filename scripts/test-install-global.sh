@@ -41,6 +41,9 @@ mkdir -p "$AGENTS/arcus-plan" && printf -- '---\nname: arcus-plan\n---\nuser edi
 cp -R "$COPY_SKILLS/arcus-why" "$CODEX/arcus-why"
 cp -R "$COPY_SKILLS/arcus-ketchup" "$CURSOR/arcus-ketchup" && echo "hidden user note" > "$CURSOR/arcus-ketchup/.user-notes"
 cp -R "$COPY_SKILLS/arcus-correct" "$GEMINI/arcus-correct" && mkdir "$GEMINI/arcus-correct/extra"
+# A copy that holds a link must be moved as is, never copied through the link.
+mkdir -p "$WORK/outside" && echo "linked data" > "$WORK/outside/big.txt"
+cp -R "$COPY_SKILLS/arcus-why" "$CLAUDE/arcus-why" && ln -s "$WORK/outside" "$CLAUDE/arcus-why/linked"
 
 # An agent skills folder that is itself a link to the repo's skills/ must never lose the repo's files.
 ln -s "$COPY_SKILLS" "$OPENCODE"
@@ -84,6 +87,8 @@ check "copy with an extra hidden file (cursor arcus-ketchup) replaced by a link"
 check "copy with an extra hidden file backed up with that file" '[ -f "$run/.cursor_skills/arcus-ketchup/.user-notes" ]'
 check "copy with an extra empty folder (gemini arcus-correct) replaced by a link" 'is_repo_link "$GEMINI/arcus-correct"'
 check "copy with an extra empty folder backed up with that folder" '[ -d "$run/.gemini_config_skills/arcus-correct/extra" ]'
+check "copy holding a link (claude arcus-why) replaced by a link" 'is_repo_link "$CLAUDE/arcus-why"'
+check "copy holding a link backed up with the link itself, not a copy of its target" '[ -L "$run/.claude_skills/arcus-why/linked" ]'
 check "backups live outside every agent skills folder" 'case "$BACKUP_ROOT" in "$CLAUDE"*|"$AGENTS"*|"$CODEX"*|"$CURSOR"*|"$GEMINI"*|"$OPENCODE"*) false ;; *) true ;; esac'
 
 check "second run exits 0" 'HOME="$FAKE_HOME" bash "$COPY/scripts/install-global.sh" > "$WORK/install-2.log" 2>&1'

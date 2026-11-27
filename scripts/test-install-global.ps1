@@ -69,6 +69,12 @@ try {
     (Get-Item -LiteralPath $HiddenFile -Force).Attributes = "Hidden"
     Copy-Item -LiteralPath (Join-Path $CopySkills "arcus-correct") -Destination (Join-Path $Gemini "arcus-correct") -Recurse
     New-Item -ItemType Directory -Path (Join-Path $Gemini "arcus-correct\extra") | Out-Null
+    # A copy that holds a link must be moved as is, never copied through the link.
+    $Outside = Join-Path $Work "outside"
+    New-Item -ItemType Directory -Path $Outside | Out-Null
+    Set-Content -LiteralPath (Join-Path $Outside "big.txt") -Value "linked data"
+    Copy-Item -LiteralPath (Join-Path $CopySkills "arcus-why") -Destination (Join-Path $Claude "arcus-why") -Recurse
+    New-Item -ItemType Junction -Path (Join-Path $Claude "arcus-why\linked") -Target $Outside | Out-Null
 
     # An agent skills folder that is itself a link to the repo's skills/ must never lose the repo's files.
     New-Item -ItemType Junction -Path $OpenCode -Target $CopySkills | Out-Null
@@ -105,6 +111,9 @@ try {
     Assert-That "copy with an extra hidden file backed up with that file" (Test-Path -LiteralPath (Join-Path $Run ".cursor_skills\arcus-ketchup\.user-notes"))
     Assert-That "copy with an extra empty folder (gemini arcus-correct) replaced by a link" (Test-IsRepoLink (Join-Path $Gemini "arcus-correct"))
     Assert-That "copy with an extra empty folder backed up with that folder" (Test-Path -LiteralPath (Join-Path $Run ".gemini_config_skills\arcus-correct\extra"))
+    Assert-That "copy holding a link (claude arcus-why) replaced by a link" (Test-IsRepoLink (Join-Path $Claude "arcus-why"))
+    $LinkedBackup = Get-Item -LiteralPath (Join-Path $Run ".claude_skills\arcus-why\linked") -Force -ErrorAction SilentlyContinue
+    Assert-That "copy holding a link backed up with the link itself, not a copy of its target" ($null -ne $LinkedBackup -and -not [string]::IsNullOrEmpty($LinkedBackup.LinkType))
     $ScanBases = @($Claude, $Agents, $Codex, $Cursor, $Gemini, $OpenCode)
     Assert-That "backups live outside every agent skills folder" (@($ScanBases | Where-Object { $BackupRoot.StartsWith($_, [StringComparison]::OrdinalIgnoreCase) }).Count -eq 0)
 
