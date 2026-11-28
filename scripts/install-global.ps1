@@ -90,8 +90,8 @@ function Get-BackupRun {
     return $script:BackupRun
 }
 
-# Moves a modified skill folder out of every agent's scan path. A move is one rename, so nested links stay
-# links and a failure leaves the original in place.
+# Moves a modified skill folder out of every agent's scan path. Directory.Move only renames, so nested links
+# stay links and a failure leaves the original in place. Move-Item would copy and delete across drives.
 function Backup-SkillFolder([string]$Dest, [string]$TargetBase, [string]$SkillName) {
     $Relative = if ($TargetBase.StartsWith($HOME, [StringComparison]::OrdinalIgnoreCase)) { $TargetBase.Substring($HOME.Length) } else { $TargetBase }
     $Slug = $Relative.Trim('\', '/') -replace '[\\/:]', '_'
@@ -99,7 +99,7 @@ function Backup-SkillFolder([string]$Dest, [string]$TargetBase, [string]$SkillNa
     New-Item -ItemType Directory -Path $SlugDir -Force | Out-Null
     $Backup = Join-Path $SlugDir $SkillName
     if (Test-Path -LiteralPath $Backup) { throw "Backup target $Backup already exists" }
-    Move-Item -LiteralPath $Dest -Destination $Backup -ErrorAction Stop
+    [IO.Directory]::Move($Dest, $Backup)
     return $Backup
 }
 
