@@ -47,6 +47,46 @@ links_into_repo() {
   esac
 }
 
+# True when both paths are the same folder on disk, through any chain of links.
+same_dir() {
+  [ "$(cd "$1" && pwd -P)" = "$(cd "$2" && pwd -P)" ]
+}
+
+# True only when both trees hold the same files, folders and bytes, hidden entries included.
+# Any symlink inside the copy, or a diff error such as a broken link (exit 2), counts as different.
+tree_identical() {
+  [ -z "$(find "$2" -type l -print -quit)" ] && diff -rq "$1" "$2" >/dev/null 2>&1
+}
+
+BACKUP_ROOT="$HOME/.arcus-stack-backups"
+BACKUP_RUN=""
+BACKUP_DEST=""
+
+# Moves a modified skill folder out of every agent's scan path and sets BACKUP_DEST to where it went.
+# Runs in the current shell (not $(...)) so BACKUP_RUN persists across calls.
+backup_skill() {
+  local dest="$1" target_base="$2" skill_name="$3" rel slug n=0 stamp candidate
+  if [ -z "$BACKUP_RUN" ]; then
+    mkdir -p "$BACKUP_ROOT" || return 1
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    candidate="$BACKUP_ROOT/$stamp"
+    # mkdir without -p fails on an existing folder, so two runs never share a backup folder.
+    until mkdir "$candidate" 2>/dev/null; do
+      n=$((n + 1))
+      [ "$n" -le 100 ] || return 1
+      candidate="$BACKUP_ROOT/$stamp-$n"
+    done
+    BACKUP_RUN="$candidate"
+  fi
+  rel="${target_base#"$HOME"}"
+  rel="${rel#/}"
+  slug="${rel//\//_}"
+  BACKUP_DEST="$BACKUP_RUN/$slug/$skill_name"
+  mkdir -p "$BACKUP_RUN/$slug" || return 1
+  [ ! -e "$BACKUP_DEST" ] || return 1
+  mv "$dest" "$BACKUP_DEST" || return 1
+}
+
 for target_base in "${TARGET_BASES[@]}"; do
   mkdir -p "$target_base"
 
@@ -68,8 +108,18 @@ for target_base in "${TARGET_BASES[@]}"; do
       rm -f "$dest"
     elif [ -d "$dest" ]; then
       if [ -f "$dest/SKILL.md" ]; then
-        # A copied install of this same skill (e.g. from npx skills); replace it with the live link.
-        rm -rf "$dest"
+        if same_dir "$skill_dir" "$dest"; then
+          echo "[WARN] Skipped $dest because it is this repo's own skills/$skill_name folder (the agent folder links into the repo)." >&2
+          continue
+        elif tree_identical "$skill_dir" "$dest"; then
+          # An unmodified copied install of this skill (e.g. from npx skills); replace it with the live link.
+          rm -rf "$dest"
+        elif backup_skill "$dest" "$target_base" "$skill_name"; then
+          echo "[BACKUP] $dest differs from the repo copy; moved it to $BACKUP_DEST"
+        else
+          echo "[WARN] Skipped $dest because it differs from the repo copy and backing it up failed." >&2
+          continue
+        fi
       else
         echo "[WARN] Skipped $dest because it is a directory without SKILL.md that this script did not create." >&2
         continue

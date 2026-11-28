@@ -86,7 +86,7 @@ $arcus-work-loop -> 테스트·빌드 증거를 통과한 항목만 완료하며
 *(상태: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. UI 4장 시안 비교 & PR Before/After 스크린샷 (`arcus-ui-propose`)
-시각적 UI 변경 시 작업 전 스크린샷(`00-before.png`) 1장과 서로 다른 3가지 대안(`Option A/B/C`)을 **순차 적용, 캡처, `.patch` 저장, `git checkout` 원복** 순서로 안전하게 비교합니다. 선택한 안으로 최종 구현을 마친 뒤에는 동일 뷰포트·테마로 `99-after-final.png`를 새로 찍어 GitLab MR 자동 업로드 또는 GitHub PR 안전 핸드오프(브랜치 바이너리 PNG 오염 차단)로 연결합니다.
+시각적 UI 변경 시 작업 전 스크린샷(`00-before.png`) 1장과 서로 다른 3가지 대안(`Option A/B/C`)을 **순차 적용, 캡처, `.patch` 저장, `git restore` 원복** 순서로 안전하게 비교합니다. 선택한 안으로 최종 구현을 마친 뒤에는 동일 뷰포트·테마로 `99-after-final.png`를 새로 찍어 GitLab MR 자동 업로드 또는 GitHub PR 안전 핸드오프(브랜치 바이너리 PNG 오염 차단)로 연결합니다.
 
 ### 3. 무중단 DB 마이그레이션 & 백엔드 신뢰성 가드레일 (`safe-migration.md`, `backend-reliability.md`)
 - **무중단 마이그레이션 (`safe-migration.md`)**: 운영 DB 스키마, 영속 큐/캐시, 롤링 배포 계약 변경은 단일 웨이브 리팩토링 예외로 지정해 `CONCURRENTLY`/온라인 DDL, 이중 쓰기, 청크 백필, `N-1`/`N` 롤백 검증, 후속 Contract PR 분리를 강제합니다.
@@ -225,6 +225,8 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 
 심볼릭 링크가 로컬 클론을 직접 가리키므로 `git pull`만으로 즉시 반영됩니다(새 최상위 스킬이 추가된 경우에만 스크립트 1회 재실행).
 
+같은 이름의 스킬 폴더가 실제 복사본이면(예: `npx skills add`로 설치) 저장소 원본과 바이트 단위로 같을 때만 링크로 바꿉니다. 다르면 먼저 `~/.arcus-stack-backups/<시각>/`으로 옮기고 `[BACKUP]`으로 알립니다. 스킬별 `THIRD_PARTY_NOTICES.md`가 생기기 전에 만든 복사본은 다르다고 판정되므로, 업데이트 후 첫 실행에서 한 번 백업됩니다.
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows 전역 심볼릭 링크 설치기 (5개 에이전트 + T3 Code)
 │   ├── install-global.sh        # macOS/Linux 전역 심볼릭 링크 설치기 (5개 에이전트 + T3 Code)
+│   ├── sync-notices.ps1         # NOTICE에서 스킬별 THIRD_PARTY_NOTICES.md 생성
 │   └── validate.ps1             # 프론트매터 · 상대 링크 · 15개 스킬 · 호환성 자동 검증기
 └── skills/                      # 사용자 노출 15개 공개 코어 스킬 (+ 개별 스킬 references/ 11개)
     ├── arcus-mode/              # 마스터 모드 + 내부 캡슐화 모듈 69개 + worker.md
@@ -291,7 +294,7 @@ arcus-stack/
 
 ## 영감을 받은 6개 오픈소스 프로젝트 및 라이선스 고지
 
-이 프로젝트는 MIT 라이선스입니다([`LICENSE`](./LICENSE)). pstack(MIT, Copyright (c) 2026 Lauren Tan), Archify, modern-web-guidance(둘 다 Apache-2.0)에서 가져온 파일과 각 저작권 고지는 [`NOTICE`](./NOTICE)에, 라이선스 전문은 [`LICENSES/`](./LICENSES/)에 있습니다.
+이 프로젝트는 MIT 라이선스입니다([`LICENSE`](./LICENSE)). pstack(MIT, Copyright (c) 2026 Lauren Tan), Archify, modern-web-guidance(둘 다 Apache-2.0)에서 가져온 파일과 각 저작권 고지는 [`NOTICE`](./NOTICE)에, 라이선스 전문은 [`LICENSES/`](./LICENSES/)에 있습니다. 가져온 파일이 있는 스킬은 생성된 `THIRD_PARTY_NOTICES.md`도 함께 담고 있어서, 스킬 하나만 설치해도 고지가 빠지지 않습니다.
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"빠르게 가려면 먼저 깊게 파고들어라."* (근본 원인 파악, 최소 변경, 검증 가능한 코드)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): 자율 실행 루프와 전략·실행 분리

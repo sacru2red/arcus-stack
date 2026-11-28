@@ -86,7 +86,7 @@ Un revisor que comparte la conversacion del autor comparte tambien sus puntos ci
 *(Estados: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. Comparacion visual UI de 4 opciones y capturas Before/After para PR (`arcus-ui-propose`)
-En cambios visuales de UI, captura 1 referencia (`00-before.png`) y 3 propuestas distintas (`Option A/B/C`) sobre tu rama mediante un ciclo limpio de **aplicar, capturar, guardar `.patch` y revertir con `git checkout`**. Tras pulir la opcion elegida, captura `99-after-final.png` con el mismo viewport y tema, y la integra con subida automatica en GitLab MR o entrega segura en GitHub PR sin contaminar la rama con PNGs binarios.
+En cambios visuales de UI, captura 1 referencia (`00-before.png`) y 3 propuestas distintas (`Option A/B/C`) sobre tu rama mediante un ciclo limpio de **aplicar, capturar, guardar `.patch` y revertir con `git restore`**. Tras pulir la opcion elegida, captura `99-after-final.png` con el mismo viewport y tema, y la integra con subida automatica en GitLab MR o entrega segura en GitHub PR sin contaminar la rama con PNGs binarios.
 
 ### 3. Migraciones sin tiempo de inactividad y fiabilidad backend (`safe-migration.md`, `backend-reliability.md`)
 - **Migraciones sin caida (`safe-migration.md`)**: Excluye esquemas de BD en produccion, colas/caches persistentes y contratos rolling-deploy de la refactorizacion en una sola ola, exigiendo DDL online/`CONCURRENTLY`, escritura dual, backfill idempotente por lotes, validacion de rollback `N-1`/`N` y PR Contract separado.
@@ -225,6 +225,8 @@ Enlaza las 15 habilidades publicas a las carpetas globales de los 5 agentes, inc
 
 Como los enlaces apuntan a tu clon local, `git pull` actualiza todos los agentes al instante (vuelve a ejecutar el script solo si se agrega una nueva carpeta de habilidad).
 
+Si una carpeta de habilidad con el mismo nombre es una copia real (por ejemplo, de `npx skills add`), solo se reemplaza por el enlace cuando coincide byte a byte con la copia del repositorio. Si difiere, primero se mueve a `~/.arcus-stack-backups/<fecha-hora>/` y se informa con `[BACKUP]`. Las copias anteriores a los archivos `THIRD_PARTY_NOTICES.md` por habilidad cuentan como distintas, así que la primera ejecución tras actualizar las respalda una vez.
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Instalador global de enlaces en Windows (5 agentes + T3 Code)
 │   ├── install-global.sh        # Instalador global de enlaces en macOS/Linux (5 agentes + T3 Code)
+│   ├── sync-notices.ps1         # Genera THIRD_PARTY_NOTICES.md por habilidad a partir de NOTICE
 │   └── validate.ps1             # Validador de frontmatter, enlaces relativos, 15 habilidades y portabilidad
 └── skills/                      # 15 habilidades publicas (+ 11 archivos en references/ por habilidad)
     ├── arcus-mode/              # Modo maestro + 69 modulos internos encapsulados + worker.md
@@ -291,7 +294,7 @@ Vuelve a verificar las 15 habilidades publicas, el frontmatter YAML y los enlace
 
 ## Seis proyectos open source de inspiracion y atribuciones de licencia
 
-El proyecto usa la licencia MIT ([`LICENSE`](./LICENSE)). Los archivos adaptados de pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify y modern-web-guidance (ambos Apache-2.0) se listan con sus avisos de copyright en [`NOTICE`](./NOTICE); los textos completos de las licencias están en [`LICENSES/`](./LICENSES/).
+El proyecto usa la licencia MIT ([`LICENSE`](./LICENSE)). Los archivos adaptados de pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify y modern-web-guidance (ambos Apache-2.0) se listan con sus avisos de copyright en [`NOTICE`](./NOTICE); los textos completos de las licencias están en [`LICENSES/`](./LICENSES/). Cada habilidad con archivos adaptados incluye además un `THIRD_PARTY_NOTICES.md` generado, así que instalar una sola habilidad conserva sus avisos.
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"Si quieres ir rapido, profundiza primero."* (Analisis de causa raiz, radio de impacto minimo, codigo verificable)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Bucles de ejecucion autonoma y separacion entre estrategia y ejecucion

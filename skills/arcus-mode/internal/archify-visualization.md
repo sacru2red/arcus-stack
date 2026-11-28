@@ -4,7 +4,8 @@ description: "Internal sub-skill for prioritizing tt-a1i/archify interactive HTM
 ---
 
 <!--
-  Copyright tt-a1i and Archify contributors.
+  Copyright (c) 2026 tt-a1i (Archify)
+  Copyright (c) 2025 Cocoon AI
   Source: https://github.com/tt-a1i/archify (Licensed under Apache License 2.0)
   Modification Notice (Apache-2.0 Section 4(b)): Adapted for arcus-stack — encapsulated as an on-demand visualization bridge with a cross-platform 5-agent skill locator, OS temp-dir output isolation to prevent working-tree pollution, and a non-blocking 3-tier bootstrap/fallback chain.
 -->

@@ -44,13 +44,72 @@ function Test-LinksIntoRepo($Item) {
     return $Normalized.StartsWith($Prefix, [StringComparison]::OrdinalIgnoreCase)
 }
 
+# Relative path, kind and SHA256 of every entry, hidden ones and empty folders included.
+# Nested links and unreadable files make the tree unique so it never compares equal.
+function Get-TreeManifest([string]$Root) {
+    $PrefixLength = $Root.TrimEnd('\').Length + 1
+    $Lines = @(Get-ChildItem -LiteralPath $Root -Recurse -Force | ForEach-Object {
+        $Rel = $_.FullName.Substring($PrefixLength).Replace('\', '/')
+        if (-not [string]::IsNullOrEmpty($_.LinkType)) {
+            "L $Rel $([guid]::NewGuid())"
+        } elseif ($_.PSIsContainer) {
+            "D $Rel"
+        } else {
+            try { "F $Rel $((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash)" } catch { "F $Rel $([guid]::NewGuid())" }
+        }
+    })
+    [Array]::Sort($Lines, [StringComparer]::Ordinal)
+    return ($Lines -join "`n")
+}
+
+# True when both paths are the same folder on disk, through any chain of links (probe file).
+function Test-SameFolder([string]$A, [string]$B) {
+    $Probe = ".arcus-install-probe-" + [guid]::NewGuid().ToString("N")
+    $ProbePath = Join-Path $A $Probe
+    [IO.File]::WriteAllText($ProbePath, "")
+    try { return (Test-Path -LiteralPath (Join-Path $B $Probe)) } finally { Remove-Item -LiteralPath $ProbePath -Force }
+}
+
+$BackupRoot = Join-Path $HOME ".arcus-stack-backups"
+$BackupRun = $null
+function Get-BackupRun {
+    if ($null -eq $script:BackupRun) {
+        New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null
+        $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+        # New-Item without -Force fails on an existing folder, so two runs never share a backup folder.
+        for ($N = 0; $null -eq $script:BackupRun; $N++) {
+            $Path = Join-Path $BackupRoot $(if ($N -eq 0) { $Stamp } else { "$Stamp-$N" })
+            try {
+                New-Item -ItemType Directory -Path $Path -ErrorAction Stop | Out-Null
+                $script:BackupRun = $Path
+            } catch {
+                if ($N -ge 100) { throw "Could not create a backup folder under ${BackupRoot}: $($_.Exception.Message)" }
+            }
+        }
+    }
+    return $script:BackupRun
+}
+
+# Moves a modified skill folder out of every agent's scan path. Directory.Move only renames, so nested links
+# stay links and a failure leaves the original in place. Move-Item would copy and delete across drives.
+function Backup-SkillFolder([string]$Dest, [string]$TargetBase, [string]$SkillName) {
+    $Relative = if ($TargetBase.StartsWith($HOME, [StringComparison]::OrdinalIgnoreCase)) { $TargetBase.Substring($HOME.Length) } else { $TargetBase }
+    $Slug = $Relative.Trim('\', '/') -replace '[\\/:]', '_'
+    $SlugDir = Join-Path (Get-BackupRun) $Slug
+    New-Item -ItemType Directory -Path $SlugDir -Force | Out-Null
+    $Backup = Join-Path $SlugDir $SkillName
+    if (Test-Path -LiteralPath $Backup) { throw "Backup target $Backup already exists" }
+    [IO.Directory]::Move($Dest, $Backup)
+    return $Backup
+}
+
 foreach ($TargetBase in $AgentSkillDirs) {
     if (-not (Test-Path $TargetBase)) {
         New-Item -ItemType Directory -Path $TargetBase -Force | Out-Null
     }
 
     # Prune stale arcus-* links that point into this repo's skills/ but whose skill was renamed or removed.
-    # Real directories and links to anything else are left alone.
+    # Real directories and links to anything else are left alone here; real copies are handled below.
     Get-ChildItem -Path $TargetBase -Filter "arcus-*" -Force -ErrorAction SilentlyContinue | ForEach-Object {
         if (($ActiveSkillNames -notcontains $_.Name) -and (Test-LinksIntoRepo $_)) {
             $_.Delete()
@@ -65,8 +124,28 @@ foreach ($TargetBase in $AgentSkillDirs) {
             if ($null -ne (Get-LinkTarget $Existing)) {
                 $Existing.Delete()
             } elseif (Test-Path -LiteralPath (Join-Path $Dest "SKILL.md")) {
-                # A copied install of this same skill (e.g. from npx skills); replace it with the live link.
-                Remove-Item -LiteralPath $Dest -Recurse -Force
+                try {
+                    $SameFolder = Test-SameFolder $Dest $Skill.FullName
+                } catch {
+                    Write-Warning "Skipped $Dest because the installer could not check whether it is this repo's own folder: $($_.Exception.Message)"
+                    continue
+                }
+                if ($SameFolder) {
+                    Write-Warning "Skipped $Dest because it is this repo's own skills/$($Skill.Name) folder (the agent folder links into the repo)."
+                    continue
+                }
+                if ((Get-TreeManifest $Dest) -ceq (Get-TreeManifest $Skill.FullName)) {
+                    # An unmodified copied install of this skill (e.g. from npx skills); replace it with the live link.
+                    Remove-Item -LiteralPath $Dest -Recurse -Force
+                } else {
+                    try {
+                        $Backup = Backup-SkillFolder $Dest $TargetBase $Skill.Name
+                    } catch {
+                        Write-Warning "Skipped $Dest because it differs from the repo copy and backing it up failed: $($_.Exception.Message)"
+                        continue
+                    }
+                    Write-Host "[BACKUP] $Dest differs from the repo copy; moved it to $Backup"
+                }
             } else {
                 Write-Warning "Skipped $Dest because it is a directory without SKILL.md that this script did not create."
                 continue

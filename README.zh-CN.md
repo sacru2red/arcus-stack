@@ -86,7 +86,7 @@ $arcus-work-loop -> 仅在真实测试与构建验证通过后逐项勾选完成
 *(状态：`OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. UI 4 图方案对比与 PR Before/After 截图 (`arcus-ui-propose`)
-在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git checkout` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
+在视觉 UI 改动中，按 **依次应用、截图、保存 `.patch`、`git restore` 还原** 流程在当前分支安全采集 1 张改动前（`00-before.png`）与 3 套不同提案（`Option A/B/C`）截图供挑选。最终实现并验证通过后，按相同视口与主题重新采集 `99-after-final.png`，接入 GitLab MR 自动上传或 GitHub PR 安全交接（避免向特性分支提交二进制 PNG）。
 
 ### 3. 零停机数据库迁移与后端可靠性护栏 (`safe-migration.md`, `backend-reliability.md`)
 - **零停机迁移 (`safe-migration.md`)**：将线上数据库 Schema、持久化队列/缓存与滚动部署契约从单波次重构规则中豁免，强制采用在线/`CONCURRENTLY` DDL、双写、分块幂等回填、`N-1`/`N` 回滚校验及独立 Contract PR。
@@ -225,6 +225,8 @@ npx skills add sacru2red/arcus-stack --skill arcus-mode --skill arcus-plan --ski
 
 由于符号链接指向本地仓库，执行 `git pull` 即可同步生效（仅在新增顶层技能目录时重新运行一次脚本）。
 
+如果同名技能目录是实际副本（例如通过 `npx skills add` 安装），只有与仓库版本逐字节一致时才替换为链接。不一致时先移到 `~/.arcus-stack-backups/<时间>/` 并输出 `[BACKUP]`。在按技能生成 `THIRD_PARTY_NOTICES.md` 之前安装的副本会被判定为不一致，因此更新后首次运行会备份一次。
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows 全局符号链接安装脚本 (5 个助手 + T3 Code)
 │   ├── install-global.sh        # macOS/Linux 全局符号链接安装脚本 (5 个助手 + T3 Code)
+│   ├── sync-notices.ps1         # 根据 NOTICE 生成各技能的 THIRD_PARTY_NOTICES.md
 │   └── validate.ps1             # Frontmatter、相对链接、15 项公开技能与跨工具兼容性校验脚本
 └── skills/                      # 面向用户的 15 个公开核心技能 (+ 各技能 references/ 11 个文件)
     ├── arcus-mode/              # 主控模式 + 69 个内部封装模块 + worker.md
@@ -291,7 +294,7 @@ arcus-stack/
 
 ## 六大开源项目灵感来源与许可证声明
 
-本项目采用 MIT 许可证（[`LICENSE`](./LICENSE)）。源自 pstack（MIT, Copyright (c) 2026 Lauren Tan）、Archify 和 modern-web-guidance（均为 Apache-2.0）的文件及其版权声明列于 [`NOTICE`](./NOTICE)，许可证全文位于 [`LICENSES/`](./LICENSES/)。
+本项目采用 MIT 许可证（[`LICENSE`](./LICENSE)）。源自 pstack（MIT, Copyright (c) 2026 Lauren Tan）、Archify 和 modern-web-guidance（均为 Apache-2.0）的文件及其版权声明列于 [`NOTICE`](./NOTICE)，许可证全文位于 [`LICENSES/`](./LICENSES/)。包含引入文件的技能还附带生成的 `THIRD_PARTY_NOTICES.md`，因此只安装单个技能也不会丢失声明。
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack)：*“欲速则先深潜”*（根本原因分析、最小改动面、可验证代码）
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent)：自主执行循环与策略/执行分离

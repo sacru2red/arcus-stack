@@ -86,7 +86,7 @@ A reviewer that shares the author's conversation context shares the author's bli
 *(Statuses: `OPEN` · `RESOLVED` · `UNRESOLVED` · `VALID_PUSHBACK` · `DISPUTED`)*
 
 ### 2. Visual UI 4-option comparison and PR Before/After screenshots (`arcus-ui-propose`)
-For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git checkout` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
+For visual UI work, `arcus-ui-propose` captures 1 baseline (`00-before.png`) and 3 distinct variants (`Option A/B/C`) on your working branch through a clean **apply, capture, export `.patch`, `git restore` revert** cycle. After final polish, it captures a fresh `99-after-final.png` at the exact same viewport and theme and connects it to GitLab MR auto-upload or a safe GitHub PR handoff without committing binary PNGs to the feature branch.
 
 ### 3. Zero-downtime migrations and backend reliability guardrails (`safe-migration.md`, `backend-reliability.md`)
 - **Zero-downtime migrations (`safe-migration.md`)**: Exempts live database schemas, persisted queues/caches, and rolling-deploy wire contracts from single-wave refactoring, enforcing online/`CONCURRENTLY` DDL, dual-write, chunked idempotent backfills, `N-1`/`N` rollback checks, and separate Contract PRs.
@@ -225,6 +225,8 @@ Links all 15 public skills directly into the global directories of all 5 agents,
 
 Because symlinks point to your local clone, `git pull` updates every agent immediately (re-run the script once only when a new top-level skill folder is added).
 
+A same-name skill folder that is a real copy (for example from `npx skills add`) is replaced by the link only when it matches the repo copy byte for byte. A copy that differs is moved to `~/.arcus-stack-backups/<timestamp>/` first and reported as `[BACKUP]`. Copies made before per-skill `THIRD_PARTY_NOTICES.md` files existed count as different, so the first run after updating backs them up once.
+
 </details>
 
 <details>
@@ -256,6 +258,7 @@ arcus-stack/
 ├── scripts/
 │   ├── install-global.ps1       # Windows global symlink installer (5 agents + T3 Code)
 │   ├── install-global.sh        # macOS/Linux global symlink installer (5 agents + T3 Code)
+│   ├── sync-notices.ps1         # Generates per-skill THIRD_PARTY_NOTICES.md from NOTICE
 │   └── validate.ps1             # Frontmatter, relative-link, 15-skill, and portability validator
 └── skills/                      # 15 public core skills (+ 11 per-skill references/ files)
     ├── arcus-mode/              # Master mode + 69 encapsulated internal modules + worker.md
@@ -291,7 +294,7 @@ Re-verify the 15 public core skills, YAML frontmatter, relative Markdown links, 
 
 ## Six open-source inspirations and license attributions
 
-The project is MIT-licensed ([`LICENSE`](./LICENSE)). Files adapted from pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify, and modern-web-guidance (both Apache-2.0) are listed with their copyright notices in [`NOTICE`](./NOTICE); full license texts are in [`LICENSES/`](./LICENSES/).
+The project is MIT-licensed ([`LICENSE`](./LICENSE)). Files adapted from pstack (MIT, Copyright (c) 2026 Lauren Tan), Archify, and modern-web-guidance (both Apache-2.0) are listed with their copyright notices in [`NOTICE`](./NOTICE); full license texts are in [`LICENSES/`](./LICENSES/). Each skill that contains adapted files also ships a generated `THIRD_PARTY_NOTICES.md`, so installing a single skill keeps its notices.
 
 - [`pstack`](https://github.com/cursor/plugins/tree/main/pstack): *"If you want to go fast, go deep first."* (Root-cause analysis, minimal blast radius, verifiable code)
 - [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent): Autonomous execution loops and strategy/execution separation
