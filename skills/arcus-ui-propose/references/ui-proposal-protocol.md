@@ -42,19 +42,22 @@ elif [ -z "$(git status --porcelain -uno)" ]; then BASE=HEAD; IDX=HEAD
 else echo "STOP: tracked changes but no stash commit" >&2; exit 1; fi
 #    $BASE holds the user's working-tree files, $IDX the user's staged index.
 #    On STOP, change nothing and tell the user which files block the pin.
-#    copy pre-existing untracked files (`??` in git status) a variant will edit -> .audit/ui-propose/<task-slug>/untracked-base/
+#    "Outside git" below means a file in neither $BASE nor $IDX: untracked or ignored.
 
 # 2. Capture Baseline ("Before")
 <capture screenshot -> .audit/ui-propose/<task-slug>/00-before.png>
 
 # 3. Variant Loop (for X in a, b, c; N in 1, 2, 3):
-#    a) Edit <target-files> (and create any new variant files) to implement Option X
+#    a) Before editing, copy each target file that is on disk, outside git, and not yet in
+#       .audit/ui-propose/<task-slug>/untracked-base/ into it (preserving relative paths). Ignored files
+#       count: git status does not list them, so Step 4 would not catch their loss.
+#       Then edit <target-files> (and create any new variant files) to implement Option X
 #    b) Wait for compile/HMR & verify no error overlay
 #    c) Capture screenshot -> .audit/ui-propose/<task-slug>/0N-option-X.png
 #    d) Save the tracked patch from the pinned baseline -> .audit/ui-propose/<task-slug>/option-X.patch
 #       (git diff $BASE -- <target-files> > .audit/ui-propose/<task-slug>/option-X.patch)
-#       and copy any new untracked files created by Option X (preserving relative paths) into:
-#       .audit/ui-propose/<task-slug>/files-X/
+#       and copy every target file outside git, edited or created by Option X (preserving relative
+#       paths), into .audit/ui-propose/<task-slug>/files-X/. The patch leaves these files out.
 #    e) Revert <target-files> back to the pinned baseline (user's edits and staging included).
 #       Split the target files into three groups and handle each one:
 #       - <tracked>: files that exist in $BASE or $IDX. The ./ prefix reads the path from the
@@ -64,8 +67,8 @@ else echo "STOP: tracked changes but no stash commit" >&2; exit 1; fi
 #           done
 #           git restore --source="$BASE" --worktree -- <tracked> &&
 #             git restore --source="$IDX" --staged -- <tracked> || { echo "STOP: revert failed" >&2; exit 1; }
-#       - pre-existing untracked files: copy each one back from untracked-base/. Never remove them.
-#       - files Option X created (in neither tree and not in untracked-base/): remove only these.
+#       - files in untracked-base/: copy each one back. Never remove them.
+#       - files Option X created (outside git and not in untracked-base/): remove only these.
 
 # 4. After Option C revert, confirm working tree matches Step 1 baseline.
 #    Any output means the revert missed something: stop and show the user the differing lines.

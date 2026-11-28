@@ -38,10 +38,22 @@ in_baseline() {
   { git cat-file -e "$BASE:./$1" || git cat-file -e "$IDX:./$1"; } 2>/dev/null
 }
 
+# Before each variant: back up every target file on disk that git does not hold (untracked or ignored).
 save_untracked() {
   local f
   for f in "$@"; do
-    if [ -n "$(git ls-files --others --exclude-standard -- "$f")" ]; then mkdir -p "$audit/untracked-base/$(dirname "$f")" && cp "$f" "$audit/untracked-base/$f"; fi
+    if [ -e "$f" ] && ! in_baseline "$f" && [ ! -e "$audit/untracked-base/$f" ]; then
+      mkdir -p "$audit/untracked-base/$(dirname "$f")" && cp "$f" "$audit/untracked-base/$f"
+    fi
+  done
+}
+
+# After each variant: save every target file git does not hold, edited or created, for re-applying.
+save_variant_files() {
+  local dir="$1" f
+  shift
+  for f in "$@"; do
+    if [ -e "$f" ] && ! in_baseline "$f"; then mkdir -p "$dir/$(dirname "$f")" && cp "$f" "$dir/$f"; fi
   done
 }
 
@@ -64,13 +76,13 @@ revert_files() {
 run_cycle() {
   local x f targets
   pin_baseline
-  save_untracked "$@"
   for x in a b c; do
     targets=("$@" "New-$x.css")
     if [ "$x" = c ] && [ -n "${LATE:-}" ]; then targets+=("$LATE"); fi
+    save_untracked "${targets[@]}"
     for f in "${targets[@]}"; do printf '%s-option-%s\n' "$f" "$x" > "$f"; done
     git diff "$BASE" -- "${targets[@]}" > "$audit/option-$x.patch"
-    mkdir -p "$audit/files-$x" && cp "New-$x.css" "$audit/files-$x/"
+    save_variant_files "$audit/files-$x" "${targets[@]}"
     revert_files "${targets[@]}"
   done
   git status --porcelain | diff -q - "$audit/00-status.txt" >/dev/null && echo same || echo differs
