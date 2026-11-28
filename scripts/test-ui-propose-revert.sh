@@ -60,16 +60,18 @@ revert_files() {
 }
 
 # Applies three variants to the given files plus one new file each, reverting after every variant.
+# $LATE, when set, names one more file that only Option C edits.
 run_cycle() {
-  local x f
+  local x f targets
   pin_baseline
   save_untracked "$@"
   for x in a b c; do
-    for f in "$@"; do printf '%s-option-%s\n' "$f" "$x" > "$f"; done
-    printf 'new-%s\n' "$x" > "New-$x.css"
-    git diff "$BASE" -- "$@" > "$audit/option-$x.patch"
+    targets=("$@" "New-$x.css")
+    if [ "$x" = c ] && [ -n "${LATE:-}" ]; then targets+=("$LATE"); fi
+    for f in "${targets[@]}"; do printf '%s-option-%s\n' "$f" "$x" > "$f"; done
+    git diff "$BASE" -- "${targets[@]}" > "$audit/option-$x.patch"
     mkdir -p "$audit/files-$x" && cp "New-$x.css" "$audit/files-$x/"
-    revert_files "$@" "New-$x.css"
+    revert_files "${targets[@]}"
   done
   git status --porcelain | diff -q - "$audit/00-status.txt" >/dev/null && echo same || echo differs
 }
@@ -81,15 +83,22 @@ dirty="$(new_repo)"
   printf 'y-user\n' > Y.css
   printf 'u-user\n' > U.txt
   printf 'e-user\n' > E.css
-  status="$(run_cycle Y.css E.css)"
+  printf 'g-user\n' > G.local.css && echo "*.local.css" >> .git/info/exclude
+  printf 'l-user\n' > L.css
+  status="$(LATE=L.css run_cycle Y.css E.css G.local.css)"
   check "dirty tree: git status matches pre-proposal state" "$status" "same"
   check "dirty tree: untouched user edit kept (X.css)" "$(cat X.css)" "x-user"
   check "dirty tree: touched user edit restored (Y.css)" "$(cat Y.css)" "y-user"
   check "dirty tree: user untracked file kept (U.txt)" "$(cat U.txt)" "u-user"
   check "dirty tree: user untracked file a variant edited is restored, not removed (E.css)" "$(cat E.css 2>/dev/null || echo missing)" "e-user"
+  check "dirty tree: user ignored file a variant edited is restored, not removed (G.local.css)" "$(cat G.local.css 2>/dev/null || echo missing)" "g-user"
+  check "dirty tree: user untracked file only Option C edited is restored, not removed (L.css)" "$(cat L.css 2>/dev/null || echo missing)" "l-user"
   check "dirty tree: .audit/ hidden from status" "$(git status --porcelain | grep -c '\.audit' || true)" "0"
-  git apply "$audit/option-b.patch"
+  git apply "$audit/option-b.patch" && cp -R "$audit/files-b/." .
   check "dirty tree: chosen option re-applies on top of user baseline" "$(cat Y.css)" "Y.css-option-b"
+  check "dirty tree: chosen option re-applies its edit to a user untracked file (E.css)" "$(cat E.css)" "E.css-option-b"
+  check "dirty tree: chosen option re-applies its edit to a user ignored file (G.local.css)" "$(cat G.local.css)" "G.local.css-option-b"
+  check "dirty tree: chosen option re-applies its new file (New-b.css)" "$(cat New-b.css 2>/dev/null || echo missing)" "New-b.css-option-b"
   exit "$fail"
 ) || fail=1
 
